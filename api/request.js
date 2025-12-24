@@ -1,7 +1,11 @@
+import { mockRequest } from '@/common/mock.js'
+
 let _config = {
 	baseURL: '',
 	timeout: 15000,
 	showErrorToast: true,
+	useMock: true,
+	mock: mockRequest,
 	getToken: null,
 	tokenHeader: 'Authorization',
 	tokenPrefix: 'Bearer '
@@ -33,6 +37,22 @@ function _toast(title) {
 	})
 }
 
+function _handleBody(body, resolve, reject) {
+	if (body && typeof body === 'object' && Object.prototype.hasOwnProperty.call(body, 'code')) {
+		if (body.code === 0) {
+			resolve(body.data)
+			return true
+		}
+
+		_toast(body.msg)
+		reject(body)
+		return true
+	}
+
+	resolve(body)
+	return true
+}
+
 export function request(options = {}) {
 	return new Promise((resolve, reject) => {
 		const url = options.url || ''
@@ -45,6 +65,26 @@ export function request(options = {}) {
 		const token = typeof _config.getToken === 'function' ? _config.getToken() : uni.getStorageSync('token')
 		if (token && !header[_config.tokenHeader]) {
 			header[_config.tokenHeader] = _config.tokenPrefix ? _config.tokenPrefix + token : token
+		}
+
+		const method = (options.method || 'GET').toUpperCase()
+		if (_config.useMock && typeof _config.mock === 'function' && !_isAbsoluteUrl(url) && url.startsWith('/')) {
+			Promise.resolve(
+				_config.mock({
+					url,
+					method,
+					data: options.data,
+					header
+				})
+			)
+				.then((body) => {
+					_handleBody(body, resolve, reject)
+				})
+				.catch((err) => {
+					_toast(err?.msg || err?.errMsg || '网络异常')
+					reject(err)
+				})
+			return
 		}
 
 		uni.request({
@@ -62,18 +102,7 @@ export function request(options = {}) {
 					return
 				}
 
-				if (body && typeof body === 'object' && Object.prototype.hasOwnProperty.call(body, 'code')) {
-					if (body.code === 0) {
-						resolve(body.data)
-						return
-					}
-
-					_toast(body.msg)
-					reject(body)
-					return
-				}
-
-				resolve(body)
+				_handleBody(body, resolve, reject)
 			},
 			fail: (err) => {
 				_toast(err?.errMsg || '网络异常')
