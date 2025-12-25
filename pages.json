@@ -52,13 +52,13 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "时光小账本",
-		"navigationBarBackgroundColor": "#F2E8CF",
-		"backgroundColor": "#F2E8CF"
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FAF7F2"
 	},
 	"tabBar": {
-		"color": "#666666",
-		"selectedColor": "#A3B18A",
-		"backgroundColor": "#F2E8CF",
+		"color": "#8E8E93",
+		"selectedColor": "#FF9500",
+		"backgroundColor": "#FFFFFF",
 		"list": [
 			{
 				"pagePath": "pages/dashboard/index",

@@ -6,7 +6,7 @@
 		</view>
 
 		<view class="card mt">
-			<view class="row">
+			<view class="segRow">
 				<view class="seg" :class="{ on: range === 'week' }" @click="setRange('week')">周</view>
 				<view class="seg" :class="{ on: range === 'month' }" @click="setRange('month')">月</view>
 				<view class="seg" :class="{ on: range === 'year' }" @click="setRange('year')">年</view>
@@ -142,10 +142,10 @@ onShow(() => {
 }
 
 .card {
-	background: rgba(255, 255, 255, 0.65);
+	background: $app-surface;
 	border-radius: 24rpx;
 	padding: 28rpx;
-	box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.06);
+	box-shadow: $app-shadow;
 }
 
 .title {
@@ -165,20 +165,31 @@ onShow(() => {
 	align-items: center;
 }
 
+.segRow {
+	display: flex;
+	align-items: center;
+	padding: 6rpx;
+	border-radius: 20rpx;
+	background: $app-fill;
+	border: 1rpx solid $app-border;
+}
+
 .seg {
 	flex: 1;
 	text-align: center;
-	padding: 14rpx 0;
-	border-radius: 18rpx;
-	background: rgba(163, 177, 138, 0.10);
-	color: $app-text;
+	padding: 12rpx 0;
+	border-radius: 16rpx;
+	background: transparent;
+	color: $app-subtext;
 	font-size: 26rpx;
+	font-weight: 600;
 }
 
 .seg.on {
-	background: rgba(163, 177, 138, 0.22);
+	background: $app-surface;
 	color: $app-text;
-	font-weight: 800;
+	font-weight: 700;
+	box-shadow: $app-shadow-sm;
 }
 
 .sectionTitle {
@@ -201,7 +212,7 @@ onShow(() => {
 	flex: 1;
 	padding: 14rpx 16rpx;
 	border-radius: 16rpx;
-	background: rgba(242, 232, 207, 0.55);
+	background: $app-fill;
 	font-size: 28rpx;
 	color: $app-text;
 }
@@ -226,7 +237,7 @@ onShow(() => {
 	margin-top: 14rpx;
 	padding: 18rpx 18rpx;
 	border-radius: 18rpx;
-	background: rgba(242, 232, 207, 0.55);
+	background: $app-fill;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -267,7 +278,7 @@ onShow(() => {
 	margin-top: 14rpx;
 	padding: 18rpx;
 	border-radius: 18rpx;
-	background: rgba(163, 177, 138, 0.10);
+	background: $app-primary-soft;
 }
 
 .reportRow {

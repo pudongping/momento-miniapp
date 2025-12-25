@@ -70,10 +70,10 @@ onShow(() => {
 
 .card {
 	width: 100%;
-	background: rgba(255, 255, 255, 0.65);
+	background: $app-surface;
 	border-radius: 24rpx;
 	padding: 32rpx;
-	box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.06);
+	box-shadow: $app-shadow;
 }
 
 .title {
@@ -102,7 +102,7 @@ onShow(() => {
 .uid {
 	padding: 18rpx 20rpx;
 	border-radius: 16rpx;
-	background: rgba(163, 177, 138, 0.12);
+	background: $app-primary-soft;
 	color: $app-text;
 	font-size: 26rpx;
 	word-break: break-all;
@@ -111,8 +111,8 @@ onShow(() => {
 .input {
 	padding: 18rpx 20rpx;
 	border-radius: 16rpx;
-	background: rgba(255, 255, 255, 0.8);
-	border: 2rpx solid rgba(163, 177, 138, 0.35);
+	background: $app-surface;
+	border: 2rpx solid $app-border;
 	color: $app-text;
 	font-size: 28rpx;
 }

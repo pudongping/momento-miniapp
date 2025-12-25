@@ -79,10 +79,10 @@ onShow(() => {
 }
 
 .card {
-	background: rgba(255, 255, 255, 0.65);
+	background: $app-surface;
 	border-radius: 24rpx;
 	padding: 28rpx;
-	box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.06);
+	box-shadow: $app-shadow;
 }
 
 .title {
@@ -107,7 +107,7 @@ onShow(() => {
 	margin-top: 16rpx;
 	padding: 18rpx 20rpx;
 	border-radius: 18rpx;
-	background: rgba(242, 232, 207, 0.55);
+	background: $app-fill;
 	font-size: 36rpx;
 	font-weight: 800;
 	color: $app-text;

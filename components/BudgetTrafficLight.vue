@@ -32,9 +32,9 @@ const percent = computed(() => {
 })
 
 const color = computed(() => {
-	if (percent.value < 50) return '#4cd964'
-	if (percent.value < 80) return '#f0ad4e'
-	return '#BC4749'
+	if (percent.value < 50) return '#34C759'
+	if (percent.value < 80) return '#FFCC00'
+	return '#FF3B30'
 })
 
 const fillStyle = computed(() => ({
@@ -45,10 +45,10 @@ const fillStyle = computed(() => ({
 
 <style lang="scss" scoped>
 .card {
-	background: rgba(255, 255, 255, 0.65);
+	background: $app-surface;
 	border-radius: 24rpx;
 	padding: 24rpx;
-	box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.06);
+	box-shadow: $app-shadow;
 }
 
 .row {
@@ -78,7 +78,7 @@ const fillStyle = computed(() => ({
 	margin-top: 18rpx;
 	height: 18rpx;
 	border-radius: 99rpx;
-	background: rgba(0, 0, 0, 0.06);
+	background: $app-fill;
 	overflow: hidden;
 }
 
