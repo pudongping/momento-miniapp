@@ -1,29 +1,54 @@
 <template>
   <view class="login-container">
-    <view class="logo-section">
-      <image src="/static/images/app-logo.png" mode="aspectFit" class="app-logo"></image>
-      <text class="app-name">时光小账本</text>
-      <text class="app-slogan">记录每一笔，温暖每一天</text>
+    <view class="background-decoration">
+      <view class="decoration-circle decoration-1"></view>
+      <view class="decoration-circle decoration-2"></view>
+      <view class="decoration-circle decoration-3"></view>
     </view>
     
-    <view class="welcome-section">
-      <text class="welcome-title">欢迎使用</text>
-      <text class="welcome-desc">微信授权登录后，即可使用全部功能</text>
-    </view>
-    
-    <view class="login-action">
-      <button 
-        class="wx-login-btn" 
-        open-type="getUserInfo" 
-        @getuserinfo="handleUserInfo"
-      >
-        <view class="btn-inner">
-          <image src="/static/images/wechat-icon.png" mode="aspectFit" class="wechat-icon"></image>
-          <text>微信一键登录</text>
+    <view class="content-wrapper">
+      <view class="logo-section">
+        <view class="logo-wrapper">
+          <image src="/static/images/app-logo.png" mode="aspectFit" class="app-logo"></image>
         </view>
-      </button>
+        <text class="app-name">时光小账本</text>
+        <text class="app-slogan">记录每一笔，温暖每一天</text>
+      </view>
       
-      <text class="privacy-tip">登录即表示同意《用户协议》和《隐私政策》</text>
+      <view class="welcome-section">
+        <text class="welcome-title">欢迎回来</text>
+        <text class="welcome-desc">微信授权登录后，即可使用全部功能</text>
+      </view>
+      
+      <view class="login-action">
+        <button 
+          class="wx-login-btn" 
+          open-type="getUserInfo" 
+          @getuserinfo="handleUserInfo"
+        >
+          <view class="btn-inner">
+            <image src="/static/images/wechat-icon.png" mode="aspectFit" class="wechat-icon"></image>
+            <text>微信一键登录</text>
+          </view>
+        </button>
+        
+        <view class="features-list">
+          <view class="feature-item">
+            <view class="feature-icon">✓</view>
+            <text class="feature-text">快速登录</text>
+          </view>
+          <view class="feature-item">
+            <view class="feature-icon">✓</view>
+            <text class="feature-text">数据同步</text>
+          </view>
+          <view class="feature-item">
+            <view class="feature-icon">✓</view>
+            <text class="feature-text">隐私保护</text>
+          </view>
+        </view>
+        
+        <text class="privacy-tip">登录即表示同意《用户协议》和《隐私政策》</text>
+      </view>
     </view>
   </view>
 </template>
@@ -157,11 +182,103 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0rpx);
+  }
+  50% {
+    transform: translateY(-20rpx);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .login-container {
   min-height: 100vh;
-  background: $background-color;
+  background: linear-gradient(135deg, #F5F7FA 0%, #E9F0F8 100%);
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.background-decoration {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.decoration-circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.1;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.decoration-1 {
+  width: 400rpx;
+  height: 400rpx;
+  background: linear-gradient(135deg, #FF9A5A, #FFD166);
+  top: -100rpx;
+  right: -100rpx;
+  animation-delay: 0s;
+}
+
+.decoration-2 {
+  width: 300rpx;
+  height: 300rpx;
+  background: linear-gradient(135deg, #FF9A5A, #FFD166);
+  bottom: 100rpx;
+  left: -80rpx;
+  animation-delay: 1s;
+}
+
+.decoration-3 {
+  width: 250rpx;
+  height: 250rpx;
+  background: linear-gradient(135deg, #FF9A5A, #FFD166);
+  bottom: 300rpx;
+  right: 50rpx;
+  animation-delay: 2s;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   padding: 60rpx 40rpx;
 }
 
@@ -169,78 +286,144 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 100rpx;
+  margin-top: 60rpx;
+  animation: slideUp 0.8s ease-out;
+}
+
+.logo-wrapper {
+  width: 180rpx;
+  height: 180rpx;
+  background: linear-gradient(135deg, #FF9A5A, #FFD166);
+  border-radius: 90rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30rpx;
+  box-shadow: 0 12rpx 32rpx rgba(255, 154, 90, 0.25);
+  animation: float 3s ease-in-out infinite;
 }
 
 .app-logo {
-  width: 160rpx;
-  height: 160rpx;
-  margin-bottom: 20rpx;
+  width: 140rpx;
+  height: 140rpx;
 }
 
 .app-name {
-  font-size: 40rpx;
-  font-weight: 600;
-  color: $text-primary;
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #2C3E50;
   margin-bottom: 12rpx;
+  letter-spacing: 1rpx;
 }
 
 .app-slogan {
   font-size: 28rpx;
-  color: $text-secondary;
+  color: #7F8C8D;
+  font-weight: 400;
+  letter-spacing: 0.5rpx;
 }
 
 .welcome-section {
   text-align: center;
-  margin: 120rpx 0 60rpx;
+  margin: 80rpx 0 40rpx;
+  animation: slideUp 0.8s ease-out 0.2s both;
 }
 
 .welcome-title {
-  font-size: 48rpx;
-  font-weight: 600;
-  color: $text-primary;
-  margin-bottom: 20rpx;
+  font-size: 52rpx;
+  font-weight: 700;
+  color: #2C3E50;
+  margin-bottom: 16rpx;
+  letter-spacing: 1rpx;
 }
 
 .welcome-desc {
-  font-size: 30rpx;
-  color: $text-secondary;
+  font-size: 28rpx;
+  color: #95A5A6;
+  font-weight: 400;
+  line-height: 1.6;
 }
 
 .login-action {
   margin-top: auto;
-  padding: 40rpx 0;
+  padding: 40rpx 0 60rpx;
+  animation: slideUp 0.8s ease-out 0.4s both;
 }
 
 .wx-login-btn {
-  background: linear-gradient(to right, #FF9A5A, #FFD166);
+  background: linear-gradient(135deg, #FF9A5A 0%, #FFD166 100%);
   color: #FFFFFF;
-  height: 96rpx;
-  border-radius: 48rpx;
+  height: 100rpx;
+  border-radius: 50rpx;
   font-size: 32rpx;
-  font-weight: 500;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
-  box-shadow: 0 8rpx 16rpx rgba(255, 154, 90, 0.3);
+  box-shadow: 0 12rpx 28rpx rgba(255, 154, 90, 0.35);
+  transition: all 0.3s ease;
+  letter-spacing: 0.5rpx;
+}
+
+.wx-login-btn:active {
+  transform: translateY(4rpx);
+  box-shadow: 0 6rpx 16rpx rgba(255, 154, 90, 0.25);
 }
 
 .btn-inner {
   display: flex;
   align-items: center;
+  gap: 12rpx;
 }
 
 .wechat-icon {
   width: 40rpx;
   height: 40rpx;
-  margin-right: 12rpx;
+}
+
+.features-list {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 40rpx;
+  padding: 30rpx 20rpx;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 20rpx;
+  backdrop-filter: blur(10px);
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.feature-icon {
+  width: 44rpx;
+  height: 44rpx;
+  background: linear-gradient(135deg, #FF9A5A, #FFD166);
+  border-radius: 22rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 28rpx;
+}
+
+.feature-text {
+  font-size: 24rpx;
+  color: #2C3E50;
+  font-weight: 500;
 }
 
 .privacy-tip {
-  font-size: 24rpx;
-  color: $text-tertiary;
+  font-size: 22rpx;
+  color: #BDC3C7;
   text-align: center;
-  margin-top: 30rpx;
+  margin-top: 32rpx;
+  line-height: 1.5;
+  font-weight: 400;
 }
 </style>

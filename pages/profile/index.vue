@@ -254,16 +254,34 @@ export default {
     logout() {
       uni.showModal({
         title: '退出登录',
-        content: '确定要退出登录吗？',
+        content: '确定要退出登录吗？\n\n退出后需要重新登录才能使用应用',
+        cancelText: '取消',
+        confirmText: '退出',
         success: (res) => {
           if (!res.confirm) return;
 
-          uni.removeStorageSync('token');
-          uni.removeStorageSync('userInfo');
-
-          uni.reLaunch({
-            url: '/pages/login/index'
+          uni.showLoading({
+            title: '退出中...',
+            mask: true
           });
+
+          setTimeout(() => {
+            uni.removeStorageSync('token');
+            uni.removeStorageSync('userInfo');
+
+            uni.hideLoading();
+            uni.showToast({
+              title: '已退出登录',
+              icon: 'success',
+              duration: 1500
+            });
+
+            setTimeout(() => {
+              uni.reLaunch({
+                url: '/pages/login/index'
+              });
+            }, 1500);
+          }, 500);
         }
       });
     }
