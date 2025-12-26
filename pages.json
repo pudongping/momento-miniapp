@@ -1,86 +1,17 @@
 {
-	"pages": [
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/bind/index",
+			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "时光小账本"
-			}
-		},
-		{
-			"path": "pages/dashboard/index",
-			"style": {
-				"navigationBarTitleText": "时光小账本"
-			}
-		},
-		{
-			"path": "pages/record/index",
-			"style": {
-				"navigationBarTitleText": "记一笔"
-			}
-		},
-		{
-			"path": "pages/statistics/index",
-			"style": {
-				"navigationBarTitleText": "统计"
-			}
-		},
-		{
-			"path": "pages/gifts/index",
-			"style": {
-				"navigationBarTitleText": "人情往来"
-			}
-		},
-		{
-			"path": "pages/mine/index",
-			"style": {
-				"navigationBarTitleText": "我的"
-			}
-		},
-		{
-			"path": "pages/anniversary/index",
-			"style": {
-				"navigationBarTitleText": "纪念日管理"
-			}
-		},
-		{
-			"path": "pages/budget/index",
-			"style": {
-				"navigationBarTitleText": "预算设置"
+				"navigationBarTitleText": "uni-app"
 			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "时光小账本",
-		"navigationBarBackgroundColor": "#F2E8CF",
-		"backgroundColor": "#F2E8CF"
-	},
-	"tabBar": {
-		"color": "#666666",
-		"selectedColor": "#A3B18A",
-		"backgroundColor": "#F2E8CF",
-		"list": [
-			{
-				"pagePath": "pages/dashboard/index",
-				"text": "首页"
-			},
-			{
-				"pagePath": "pages/record/index",
-				"text": "记账"
-			},
-			{
-				"pagePath": "pages/statistics/index",
-				"text": "统计"
-			},
-			{
-				"pagePath": "pages/gifts/index",
-				"text": "人情"
-			},
-			{
-				"pagePath": "pages/mine/index",
-				"text": "我的"
-			}
-		]
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
 	},
 	"uniIdRouter": {}
 }

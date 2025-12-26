@@ -15,10 +15,10 @@
 /* 颜色变量 */
 
 /* 行为相关颜色 */
-$uni-color-primary: #A3B18A;
+$uni-color-primary: #007aff;
 $uni-color-success: #4cd964;
-$uni-color-warning: #BC4749;
-$uni-color-error: #BC4749;
+$uni-color-warning: #f0ad4e;
+$uni-color-error: #dd524d;
 
 /* 文字基本颜色 */
 $uni-text-color:#333;//基本色
@@ -28,17 +28,10 @@ $uni-text-color-placeholder: #808080;
 $uni-text-color-disable:#c0c0c0;
 
 /* 背景颜色 */
-$uni-bg-color:#F2E8CF;
+$uni-bg-color:#ffffff;
 $uni-bg-color-grey:#f8f8f8;
 $uni-bg-color-hover:#f1f1f1;//点击状态颜色
 $uni-bg-color-mask:rgba(0, 0, 0, 0.4);//遮罩颜色
-
-/* 应用主题色（时光小账本） */
-$app-primary: #A3B18A;
-$app-bg: #F2E8CF;
-$app-warning: #BC4749;
-$app-text: #333333;
-$app-subtext: #666666;
 
 /* 边框颜色 */
 $uni-border-color:#c8c7cc;
