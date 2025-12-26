@@ -12,11 +12,14 @@
           <image src="/static/images/app-logo.png" mode="aspectFit" class="app-logo"></image>
         </view>
         <text class="app-name">时光小账本</text>
-        <text class="app-slogan">记录每一笔，温暖每一天</text>
+        <text class="app-slogan">每一笔账单，都是生活的旁白</text>
       </view>
       
       <view class="welcome-section">
-        <text class="welcome-title">欢迎回来</text>
+        <view class="welcome-header">
+          <text class="welcome-title">欢迎回来</text>
+          <view class="welcome-line"></view>
+        </view>
         <text class="welcome-desc">微信授权登录后，即可使用全部功能</text>
       </view>
       
@@ -47,7 +50,9 @@
           </view>
         </view>
         
-        <text class="privacy-tip">登录即表示同意《用户协议》和《隐私政策》</text>
+        <view class="privacy-container">
+          <text class="privacy-tip">登录即表示同意《用户协议》和《隐私政策》</text>
+        </view>
       </view>
     </view>
   </view>
@@ -286,8 +291,8 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 60rpx;
-  animation: slideUp 0.8s ease-out;
+  margin-top: 120rpx;
+  animation: fadeIn 0.8s ease-out both;
 }
 
 .logo-wrapper {
@@ -309,10 +314,11 @@ export default {
 }
 
 .app-name {
-  font-size: 44rpx;
+  font-size: 48rpx;
   font-weight: 700;
   color: #2C3E50;
-  margin-bottom: 12rpx;
+  margin-top: 32rpx;
+  margin-bottom: 16rpx;
   letter-spacing: 1rpx;
 }
 
@@ -325,8 +331,15 @@ export default {
 
 .welcome-section {
   text-align: center;
-  margin: 80rpx 0 40rpx;
+  margin: 100rpx 0 60rpx;
   animation: slideUp 0.8s ease-out 0.2s both;
+}
+
+.welcome-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24rpx;
 }
 
 .welcome-title {
@@ -335,6 +348,14 @@ export default {
   color: #2C3E50;
   margin-bottom: 16rpx;
   letter-spacing: 1rpx;
+}
+
+.welcome-line {
+  width: 80rpx;
+  height: 6rpx;
+  background: linear-gradient(135deg, #FF9A5A, #FFD166);
+  border-radius: 3rpx;
+  margin-top: 16rpx;
 }
 
 .welcome-desc {
@@ -418,11 +439,16 @@ export default {
   font-weight: 500;
 }
 
+.privacy-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 32rpx;
+}
+
 .privacy-tip {
   font-size: 22rpx;
   color: #BDC3C7;
   text-align: center;
-  margin-top: 32rpx;
   line-height: 1.5;
   font-weight: 400;
 }

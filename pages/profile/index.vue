@@ -28,6 +28,17 @@
     
     <!-- 功能菜单 -->
     <view class="menu-section">
+      <view class="menu-item" @click="navigateTo('/pages/account-books/index')">
+        <view class="menu-icon">
+          <uni-icons type="list" size="24" color="#FF9A5A"></uni-icons>
+        </view>
+        <view class="menu-content">
+          <text class="menu-title">账本管理</text>
+          <text class="menu-desc">创建和管理账本，邀请成员共同记账</text>
+        </view>
+        <uni-icons type="right" size="16" color="#CCCCCC"></uni-icons>
+      </view>
+
       <view class="menu-item" @click="navigateTo('/pages/budget/index')">
         <view class="menu-icon">
           <uni-icons type="wallet" size="24" color="#FF9A5A"></uni-icons>
@@ -51,17 +62,12 @@
       </view>
     </view>
 
-    <view class="menu-section">
-      <view class="menu-item" @click="logout">
-        <view class="menu-icon">
-          <uni-icons type="logout" size="24" color="#FF9A5A"></uni-icons>
-        </view>
-        <view class="menu-content">
-          <text class="menu-title">退出登录</text>
-          <text class="menu-desc">清除本地登录状态并返回登录页</text>
-        </view>
-        <uni-icons type="right" size="16" color="#CCCCCC"></uni-icons>
-      </view>
+    <!-- 退出登录按钮 -->
+    <view class="logout-section">
+      <button class="logout-button" @click="logout">
+        <uni-icons type="logout" size="20" color="#FFFFFF"></uni-icons>
+        <text>退出登录</text>
+      </button>
     </view>
 
     <!-- 修改昵称弹窗 -->
@@ -420,8 +426,38 @@ export default {
 }
 
 .menu-desc {
-  font-size: 24rpx;
+  font-size: 22rpx;
   color: $text-secondary;
+}
+
+.logout-section {
+  padding: 60rpx 20rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.logout-button {
+  background: linear-gradient(135deg, #FF6B6B, #FF9A5A);
+  color: #FFFFFF;
+  border-radius: 40rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  box-shadow: 0 6rpx 16rpx rgba(255, 107, 107, 0.25);
+  border: none;
+  transition: all 0.3s ease;
+  letter-spacing: 2rpx;
+}
+
+.logout-button:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 8rpx rgba(255, 107, 107, 0.15);
 }
 
 /* 修改昵称弹窗 */

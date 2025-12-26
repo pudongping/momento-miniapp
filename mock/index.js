@@ -6,6 +6,19 @@
 import { wxLogin, getUserInfo, updateUserInfo, bindPhone } from './user.js';
 import { getBudget, updateBudget } from './budget.js';
 import { getFestivals, addFestival, updateFestival, deleteFestival, toggleFestivalVisibility } from './festivals.js';
+import { 
+  getAccountBooks, 
+  createAccountBook, 
+  deleteAccountBook, 
+  inviteUser, 
+  getInvitations, 
+  acceptInvitation, 
+  rejectInvitation, 
+  exitAccountBook, 
+  setDefaultAccountBook, 
+  getAccountBookMembers, 
+  removeAccountBookMember 
+} from './account-books.js';
 
 // 统一返回格式
 function success(data = null) {
@@ -94,5 +107,88 @@ export const mockApis = {
       return error('操作失败：参数不完整');
     }
     return success(toggleFestivalVisibility({ festival_id, is_show_home }));
+  },
+
+  // 账本相关接口
+  '/accountBooks/list': () => {
+    return success(getAccountBooks());
+  },
+  '/accountBooks/create': (options) => {
+    const { name } = options.data;
+    if (!name) {
+      return error('创建失败：缺少name参数');
+    }
+    return success(createAccountBook({ name }));
+  },
+  '/accountBooks/delete': (options) => {
+    const { book_id } = options.data;
+    if (!book_id) {
+      return error('删除失败：缺少book_id参数');
+    }
+    return success(deleteAccountBook(book_id));
+  },
+  '/accountBooks/invite': (options) => {
+    const { book_id, target_uid } = options.data;
+    if (!book_id || !target_uid) {
+      return error('邀请失败：参数不完整');
+    }
+    try {
+      return success(inviteUser({ book_id, target_uid }));
+    } catch (err) {
+      return error(err.message);
+    }
+  },
+  '/accountBooks/invitations': () => {
+    return success(getInvitations());
+  },
+  '/accountBooks/accept': (options) => {
+    const { invitation_id } = options.data;
+    if (!invitation_id) {
+      return error('操作失败：缺少invitation_id参数');
+    }
+    try {
+      return success(acceptInvitation(invitation_id));
+    } catch (err) {
+      return error(err.message);
+    }
+  },
+  '/accountBooks/reject': (options) => {
+    const { invitation_id } = options.data;
+    if (!invitation_id) {
+      return error('操作失败：缺少invitation_id参数');
+    }
+    try {
+      return success(rejectInvitation(invitation_id));
+    } catch (err) {
+      return error(err.message);
+    }
+  },
+  '/accountBooks/exit': (options) => {
+    const { book_id } = options.data;
+    if (!book_id) {
+      return error('操作失败：缺少book_id参数');
+    }
+    return success(exitAccountBook(book_id));
+  },
+  '/accountBooks/setDefault': (options) => {
+    const { book_id } = options.data;
+    if (!book_id) {
+      return error('操作失败：缺少book_id参数');
+    }
+    return success(setDefaultAccountBook(book_id));
+  },
+  '/accountBooks/members': (options) => {
+    const { book_id } = options.data;
+    if (!book_id) {
+      return error('操作失败：缺少book_id参数');
+    }
+    return success(getAccountBookMembers(book_id));
+  },
+  '/accountBooks/removeMember': (options) => {
+    const { book_id, target_uid } = options.data;
+    if (!book_id || !target_uid) {
+      return error('操作失败：参数不完整');
+    }
+    return success(removeAccountBookMember({ book_id, target_uid }));
   }
 };

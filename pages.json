@@ -54,6 +54,15 @@
 				"navigationBarTextStyle": "black",
 				"backgroundColor": "#FAFAFA"
 			}
+		},
+		{
+			"path": "pages/account-books/index",
+			"style": {
+				"navigationBarTitleText": "账本管理",
+				"navigationBarBackgroundColor": "#FAFAFA",
+				"navigationBarTextStyle": "black",
+				"backgroundColor": "#FAFAFA"
+			}
 		}
 	],
 	"globalStyle": {
