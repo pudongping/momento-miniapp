@@ -13,7 +13,7 @@
 					<view class="meta">{{ item.date }}</view>
 				</view>
 				<view class="right">
-					<switch :checked="!!item.showOnHome" color="#FF9500" @change="onToggleHome(item, $event)" />
+					<switch :checked="!!item.showOnHome" color="#A3B18A" @change="onToggleHome(item, $event)" />
 					<view class="del" @click="deleteItem(item)">删除</view>
 				</view>
 			</view>
@@ -134,10 +134,10 @@ onShow(() => {
 }
 
 .card {
-	background: $app-surface;
+	background: rgba(255, 255, 255, 0.65);
 	border-radius: 24rpx;
 	padding: 28rpx;
-	box-shadow: $app-shadow;
+	box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.06);
 }
 
 .title {
@@ -161,7 +161,7 @@ onShow(() => {
 	margin-top: 14rpx;
 	padding: 18rpx;
 	border-radius: 18rpx;
-	background: $app-fill;
+	background: rgba(242, 232, 207, 0.55);
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -196,7 +196,7 @@ onShow(() => {
 	color: $app-warning;
 	padding: 10rpx 12rpx;
 	border-radius: 14rpx;
-	background: $app-warning-soft;
+	background: rgba(188, 71, 73, 0.10);
 }
 
 .btn {

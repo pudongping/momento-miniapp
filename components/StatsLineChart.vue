@@ -40,7 +40,7 @@ function draw() {
 	ctx.clearRect(0, 0, w, h)
 
 	// 背景网格
-	ctx.setStrokeStyle('rgba(60, 60, 67, 0.18)')
+	ctx.setStrokeStyle('rgba(0,0,0,0.06)')
 	ctx.setLineWidth(1)
 	for (let i = 0; i <= 4; i++) {
 		const y = pad + (chartH / 4) * i
@@ -68,7 +68,7 @@ function draw() {
 	}
 
 	// 折线
-	ctx.setStrokeStyle('#FF9500')
+	ctx.setStrokeStyle('#A3B18A')
 	ctx.setLineWidth(2)
 	ctx.beginPath()
 	const p0 = toPoint(0)
@@ -80,7 +80,7 @@ function draw() {
 	ctx.stroke()
 
 	// 点
-	ctx.setFillStyle('#FF9500')
+	ctx.setFillStyle('#A3B18A')
 	for (let i = 0; i < values.length; i++) {
 		const p = toPoint(i)
 		ctx.beginPath()
@@ -89,7 +89,7 @@ function draw() {
 	}
 
 	// 仅显示首尾 label（避免拥挤）
-	ctx.setFillStyle('rgba(60, 60, 67, 0.65)')
+	ctx.setFillStyle('rgba(0,0,0,0.5)')
 	ctx.setFontSize(10)
 	if (labels.length > 0) {
 		ctx.fillText(String(labels[0]), pad, h - 4)
@@ -112,10 +112,10 @@ watch(
 
 <style lang="scss" scoped>
 .card {
-	background: $app-surface;
+	background: rgba(255, 255, 255, 0.65);
 	border-radius: 24rpx;
 	padding: 24rpx;
-	box-shadow: $app-shadow;
+	box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.06);
 }
 
 .title {
@@ -128,7 +128,7 @@ watch(
 	margin-top: 14rpx;
 	padding: 26rpx;
 	border-radius: 18rpx;
-	background: $app-primary-soft;
+	background: rgba(163, 177, 138, 0.10);
 	font-size: 26rpx;
 	color: $app-subtext;
 }
@@ -137,6 +137,6 @@ watch(
 	width: 100%;
 	margin-top: 14rpx;
 	border-radius: 18rpx;
-	background: rgba($app-primary, 0.06);
+	background: rgba(163, 177, 138, 0.06);
 }
 </style>

@@ -95,10 +95,10 @@ function addComment(bill) {
 
 <style lang="scss" scoped>
 .card {
-	background: $app-surface;
+	background: rgba(255, 255, 255, 0.65);
 	border-radius: 24rpx;
 	padding: 24rpx;
-	box-shadow: $app-shadow;
+	box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.06);
 }
 
 .title {
@@ -135,7 +135,7 @@ function addComment(bill) {
 	align-items: center;
 	padding: 18rpx 16rpx;
 	border-radius: 18rpx;
-	background: $app-fill;
+	background: rgba(242, 232, 207, 0.55);
 	margin-top: 12rpx;
 }
 
@@ -150,7 +150,7 @@ function addComment(bill) {
 	width: 56rpx;
 	height: 56rpx;
 	border-radius: 50%;
-	background: $app-primary-soft-strong;
+	background: rgba(163, 177, 138, 0.18);
 	overflow: hidden;
 	display: flex;
 	align-items: center;

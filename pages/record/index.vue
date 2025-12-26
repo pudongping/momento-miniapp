@@ -12,7 +12,7 @@
 				type="digit"
 				v-model="amount"
 				placeholder="0.00"
-				placeholder-style="color: #C7C7CC"
+				placeholder-style="color: #999999"
 			/>
 
 			<view class="sectionTitle mtSm">备注</view>
@@ -183,7 +183,7 @@ async function pickTag(defaultTag) {
 		const idx = Math.max(0, list.findIndex((x) => x === defaultTag))
 		uni.showActionSheet({
 			itemList: list,
-			itemColor: '#1C1C1E',
+			itemColor: '#333333',
 			popDirection: 'bottom',
 			success: (r) => resolve(list[r.tapIndex]),
 			fail: () => resolve(null)
@@ -295,10 +295,10 @@ onShow(() => {
 }
 
 .card {
-	background: $app-surface;
+	background: rgba(255, 255, 255, 0.65);
 	border-radius: 24rpx;
 	padding: 28rpx;
-	box-shadow: $app-shadow;
+	box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.06);
 }
 
 .mt {
@@ -342,7 +342,7 @@ onShow(() => {
 	margin-top: 14rpx;
 	padding: 18rpx 20rpx;
 	border-radius: 18rpx;
-	background: $app-fill;
+	background: rgba(242, 232, 207, 0.55);
 	font-size: 44rpx;
 	font-weight: 800;
 	color: $app-text;
@@ -352,7 +352,7 @@ onShow(() => {
 	margin-top: 14rpx;
 	padding: 18rpx 20rpx;
 	border-radius: 18rpx;
-	background: $app-fill;
+	background: rgba(242, 232, 207, 0.55);
 	font-size: 28rpx;
 	color: $app-text;
 }
@@ -367,25 +367,24 @@ onShow(() => {
 .chip {
 	padding: 12rpx 18rpx;
 	border-radius: 999rpx;
-	background: $app-fill;
+	background: rgba(163, 177, 138, 0.10);
 	color: $app-text;
 	font-size: 26rpx;
-	border: 2rpx solid transparent;
+	border: 2rpx solid rgba(163, 177, 138, 0.0);
 }
 
 .chip.on {
-	background: $app-primary-soft;
-	border-color: $app-primary-border;
-	color: $app-primary;
+	background: rgba(163, 177, 138, 0.22);
+	border-color: rgba(163, 177, 138, 0.55);
 	font-weight: 700;
 }
 
 .chip.custom {
-	background: $app-fill;
+	background: rgba(255, 255, 255, 0.75);
 }
 
 .chip.add {
-	background: $app-primary-soft;
+	background: rgba(163, 177, 138, 0.18);
 	color: $app-primary;
 	font-weight: 700;
 }
@@ -398,7 +397,7 @@ onShow(() => {
 }
 
 .btn.ghost {
-	background: $app-primary-soft;
+	background: rgba(163, 177, 138, 0.12);
 	color: $app-primary;
 }
 
@@ -412,7 +411,7 @@ onShow(() => {
 	margin-top: 14rpx;
 	padding: 18rpx 18rpx;
 	border-radius: 18rpx;
-	background: $app-fill;
+	background: rgba(242, 232, 207, 0.55);
 }
 
 .ruleTop {

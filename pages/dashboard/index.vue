@@ -120,10 +120,10 @@ onShow(() => {
 }
 
 .card {
-	background: $app-surface;
+	background: rgba(255, 255, 255, 0.65);
 	border-radius: 24rpx;
 	padding: 24rpx;
-	box-shadow: $app-shadow;
+	box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.06);
 }
 
 .hero {

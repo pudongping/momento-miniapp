@@ -101,10 +101,10 @@ onShow(() => {
 }
 
 .card {
-	background: $app-surface;
+	background: rgba(255, 255, 255, 0.65);
 	border-radius: 24rpx;
 	padding: 28rpx;
-	box-shadow: $app-shadow;
+	box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.06);
 }
 
 .title {
@@ -122,35 +122,29 @@ onShow(() => {
 .row {
 	display: flex;
 	align-items: center;
-	padding: 6rpx;
-	border-radius: 20rpx;
-	background: $app-fill;
-	border: 1rpx solid $app-border;
+	gap: 14rpx;
 }
 
 .seg {
 	flex: 1;
 	text-align: center;
-	padding: 12rpx 0;
-	border-radius: 16rpx;
-	background: transparent;
-	color: $app-subtext;
+	padding: 14rpx 0;
+	border-radius: 18rpx;
+	background: rgba(163, 177, 138, 0.10);
+	color: $app-text;
 	font-size: 26rpx;
-	font-weight: 600;
 }
 
 .seg.on {
-	background: $app-surface;
-	font-weight: 700;
-	color: $app-text;
-	box-shadow: $app-shadow-sm;
+	background: rgba(163, 177, 138, 0.22);
+	font-weight: 800;
 }
 
 .search {
 	margin-top: 16rpx;
 	padding: 16rpx 18rpx;
 	border-radius: 18rpx;
-	background: $app-fill;
+	background: rgba(242, 232, 207, 0.55);
 	font-size: 28rpx;
 	color: $app-text;
 }
@@ -163,7 +157,7 @@ onShow(() => {
 .item {
 	padding: 18rpx 18rpx;
 	border-radius: 18rpx;
-	background: $app-fill;
+	background: rgba(242, 232, 207, 0.55);
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -201,7 +195,7 @@ onShow(() => {
 }
 
 .right.income {
-	color: $app-success;
+	color: $app-primary;
 }
 
 .right.outcome {

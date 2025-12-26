@@ -20,11 +20,6 @@
 	}
 </script>
 
-<style lang="scss">
+<style>
 	/*每个页面公共css */
-	page {
-		background-color: $app-bg;
-		color: $app-text;
-		font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-	}
 </style>
