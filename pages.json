@@ -1,6 +1,16 @@
 {
 	"pages": [
 		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"navigationBarBackgroundColor": "#FAFAFA",
+				"navigationBarTextStyle": "black",
+				"backgroundColor": "#FAFAFA",
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/home/index",
 			"style": {
 				"navigationBarTitleText": "时光小账本",
@@ -22,6 +32,24 @@
 			"path": "pages/profile/index",
 			"style": {
 				"navigationBarTitleText": "我的",
+				"navigationBarBackgroundColor": "#FAFAFA",
+				"navigationBarTextStyle": "black",
+				"backgroundColor": "#FAFAFA"
+			}
+		},
+		{
+			"path": "pages/budget/index",
+			"style": {
+				"navigationBarTitleText": "预算设置",
+				"navigationBarBackgroundColor": "#FAFAFA",
+				"navigationBarTextStyle": "black",
+				"backgroundColor": "#FAFAFA"
+			}
+		},
+		{
+			"path": "pages/festivals/index",
+			"style": {
+				"navigationBarTitleText": "节日设置",
 				"navigationBarBackgroundColor": "#FAFAFA",
 				"navigationBarTextStyle": "black",
 				"backgroundColor": "#FAFAFA"

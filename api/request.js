@@ -1,10 +1,13 @@
+import { mockApis } from '../mock/index.js';
+
 let _config = {
 	baseURL: '',
 	timeout: 15000,
 	showErrorToast: true,
 	getToken: null,
 	tokenHeader: 'Authorization',
-	tokenPrefix: 'Bearer '
+	tokenPrefix: 'Bearer ',
+	useMock: true // 使用mock数据，生产环境请设置为false
 }
 
 export function setRequestConfig(partialConfig = {}) {
@@ -36,6 +39,37 @@ function _toast(title) {
 export function request(options = {}) {
 	return new Promise((resolve, reject) => {
 		const url = options.url || ''
+		const method = (options.method || 'GET').toUpperCase()
+		
+		// 处理mock数据
+		if (_config.useMock && mockApis[url]) {
+			console.log(`[MOCK] ${method} ${url}`, options.data)
+			try {
+				const mockResult = mockApis[url]({ ...options, method })
+				console.log(`[MOCK] 结果:`, mockResult)
+				
+				if (mockResult.code === 0) {
+					// 模拟网络延迟
+					setTimeout(() => {
+						resolve(mockResult.data)
+					}, 300)
+					return
+				} else {
+					_toast(mockResult.msg)
+					setTimeout(() => {
+						reject(mockResult)
+					}, 300)
+					return
+				}
+			} catch (err) {
+				console.error(`[MOCK] Error:`, err)
+				_toast(err?.message || 'Mock数据处理异常')
+				reject(err)
+				return
+			}
+		}
+		
+		// 真实请求处理
 		const requestUrl = _isAbsoluteUrl(url) ? url : _joinUrl(_config.baseURL, url)
 
 		const header = {
