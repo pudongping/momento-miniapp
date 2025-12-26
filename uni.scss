@@ -14,27 +14,59 @@
 
 /* 颜色变量 */
 
+/* 时光小账本主题色系 */
+$primary-color: #FF9A5A; // 暖橘色
+$primary-light: #FFD166; // 浅金色
+$secondary-color: #F5F5F5; // 浅灰白
+$background-color: #FAFAFA; // 背景色
+$card-background: #FFFFFF; // 卡片背景
+$text-primary: #333333; // 主要文字
+$text-secondary: #666666; // 次要文字
+$text-placeholder: #999999; // 占位文字
+$border-color: #E5E5E5; // 边框色
+$success-color: #52C41A; // 成功色（收入）
+$error-color: #FF4D4F; // 错误色（支出）
+
 /* 行为相关颜色 */
-$uni-color-primary: #007aff;
-$uni-color-success: #4cd964;
-$uni-color-warning: #f0ad4e;
-$uni-color-error: #dd524d;
+$uni-color-primary: $primary-color;
+$uni-color-success: $success-color;
+$uni-color-warning: #FAAD14;
+$uni-color-error: $error-color;
 
 /* 文字基本颜色 */
-$uni-text-color:#333;//基本色
-$uni-text-color-inverse:#fff;//反色
-$uni-text-color-grey:#999;//辅助灰色，如加载更多的提示信息
-$uni-text-color-placeholder: #808080;
-$uni-text-color-disable:#c0c0c0;
+$uni-text-color: $text-primary;
+$uni-text-color-inverse: #fff;
+$uni-text-color-grey: $text-secondary;
+$uni-text-color-placeholder: $text-placeholder;
+$uni-text-color-disable: #c0c0c0;
 
 /* 背景颜色 */
-$uni-bg-color:#ffffff;
-$uni-bg-color-grey:#f8f8f8;
-$uni-bg-color-hover:#f1f1f1;//点击状态颜色
-$uni-bg-color-mask:rgba(0, 0, 0, 0.4);//遮罩颜色
+$uni-bg-color: $background-color;
+$uni-bg-color-grey: #f8f8f8;
+$uni-bg-color-hover: #f1f1f1;
+$uni-bg-color-mask: rgba(0, 0, 0, 0.4);
 
 /* 边框颜色 */
-$uni-border-color:#c8c7cc;
+$uni-border-color: $border-color;
+
+/* 渐变色 */
+$gradient-primary: linear-gradient(135deg, $primary-color 0%, $primary-light 100%);
+
+/* 阴影 */
+$shadow-light: 0 2px 12px rgba(0, 0, 0, 0.08);
+$shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.12);
+
+/* 圆角 */
+$border-radius-small: 8rpx;
+$border-radius-medium: 16rpx;
+$border-radius-large: 24rpx;
+
+/* 间距 */
+$spacing-xs: 8rpx;
+$spacing-sm: 16rpx;
+$spacing-md: 24rpx;
+$spacing-lg: 32rpx;
+$spacing-xl: 48rpx;
 
 /* 尺寸变量 */
 
