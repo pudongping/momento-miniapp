@@ -42,15 +42,21 @@
 		"list": [
 			{
 				"pagePath": "pages/home/index",
-				"text": "首页"
+				"text": "首页",
+				"iconPath": "static/tabbar/home.png",
+				"selectedIconPath": "static/tabbar/home-active.png"
 			},
 			{
 				"pagePath": "pages/record/index",
-				"text": "记账"
+				"text": "记账",
+				"iconPath": "static/tabbar/plus.png",
+				"selectedIconPath": "static/tabbar/plus-active.png"
 			},
 			{
 				"pagePath": "pages/profile/index",
-				"text": "我的"
+				"text": "我的",
+				"iconPath": "static/tabbar/person.png",
+				"selectedIconPath": "static/tabbar/person-active.png"
 			}
 		]
 	},
