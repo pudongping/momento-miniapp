@@ -10,18 +10,9 @@
         <view class="book-switcher" @click="showBookPicker">
           <view class="switcher-inner">
             <text class="current-book-name">{{ currentBook?.name || '未选择' }}</text>
-            <view class="switcher-hint">
-              <uni-icons type="arrowdown" size="14" color="#FF9A5A"></uni-icons>
-              <text class="tap-hint">点击切换</text>
-            </view>
+            <uni-icons type="arrowdown" size="16" color="#FF9A5A"></uni-icons>
           </view>
         </view>
-      </view>
-      <!-- 新增提示气泡 -->
-      <view class="switcher-tooltip" v-if="showSwitcherTooltip">
-        <text>点击这里可以切换账本哦！</text>
-        <view class="tooltip-arrow"></view>
-        <view class="tooltip-close" @click.stop="closeSwitcherTooltip">×</view>
       </view>
     </view>
 
@@ -190,22 +181,24 @@
               <view 
                 v-for="transaction in group" 
                 :key="transaction.transaction_id" 
-                class="transaction-item"
-                :class="{ 'income-item': transaction.type === 'income' }"
-                @click="editTransaction(transaction)"
+                class="transaction-item" 
+                :class="{ 'income-item': transaction.type === 'income' }" 
+                @click="navigateToTransactionDetail(transaction)"
               >
-                <view class="transaction-tag" :style="{ backgroundColor: transaction.tag_color }">
-                  <uni-icons :type="transaction.tag_icon" size="20" color="#FFFFFF"></uni-icons>
+                <view class="transaction-tag" :style="{ backgroundColor: transaction.tag_color || '#FF9A5A' }">
+                  <uni-icons :type="transaction.tag_icon || 'shop'" size="24" color="#FFFFFF"></uni-icons>
                 </view>
                 
                 <view class="transaction-content">
                   <view class="transaction-main">
                     <view class="transaction-info">
                       <text class="transaction-name">{{ transaction.tag_name }}</text>
-                      <text class="transaction-remark">{{ transaction.remark || '无备注' }}</text>
+                      <text class="transaction-remark" v-if="transaction.remark">
+                        {{ transaction.remark }}
+                      </text>
                     </view>
-                    <text class="transaction-amount" :class="{ 'income-amount': transaction.type === 'income' }">
-                      {{ transaction.type === 'income' ? '+' : '-' }}¥{{ formatAmount(transaction.amount) }}
+                    <text :class="['transaction-amount', transaction.type === 'income' ? 'income-amount' : '']">
+                      {{ transaction.type === 'income' ? '+' : '-' }}{{ formatAmount(transaction.amount) }}
                     </text>
                   </view>
                   
@@ -883,7 +876,7 @@ export default {
     // 编辑交易
     editTransaction(transaction) {
       uni.navigateTo({
-        url: `/pages/record/edit?id=${transaction.transaction_id}`
+        url: `/pages/record/index?transaction_id=${transaction.transaction_id}&edit=true`
       });
     },
     
@@ -1277,20 +1270,8 @@ export default {
   display: flex;
   align-items: center;
   position: relative;
-  border: 2rpx dashed #FF9A5A;
-  animation: pulse-border 2s infinite;
-}
-
-@keyframes pulse-border {
-  0% {
-    border-color: #FF9A5A;
-  }
-  50% {
-    border-color: #FFD166;
-  }
-  100% {
-    border-color: #FF9A5A;
-  }
+  border: 1rpx solid #EEEEEE;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
 }
 
 .switcher-inner {
@@ -1735,6 +1716,7 @@ export default {
   background: #FFFFFF;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.03);
   position: relative;
+  flex-wrap: nowrap;
 }
 
 .transaction-item:active {
@@ -1759,6 +1741,7 @@ export default {
 .transaction-content {
   flex: 1;
   margin-right: 16rpx;
+  min-width: 0; /* Prevent flex item from overflowing */
 }
 
 .transaction-main {
@@ -1789,6 +1772,8 @@ export default {
   font-size: 32rpx;
   font-weight: 600;
   color: #FF6B6B;
+  margin-right: 10rpx;
+  white-space: nowrap;
 }
 
 .income-amount {
@@ -1824,9 +1809,8 @@ export default {
 }
 
 .transaction-actions {
-  position: absolute;
-  right: 16rpx;
-  top: 16rpx;
+  display: flex;
+  margin-left: 10rpx;
   z-index: 5;
 }
 
