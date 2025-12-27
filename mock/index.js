@@ -19,6 +19,30 @@ import {
   getAccountBookMembers, 
   removeAccountBookMember 
 } from './account-books.js';
+import {
+  getTransactions,
+  addTransaction,
+  updateTransaction,
+  deleteTransaction,
+  getTransactionStats
+} from './transactions.js';
+import {
+  getTags,
+  getSystemTags,
+  getUserTags,
+  getTagsByType,
+  addTag,
+  updateTag,
+  deleteTag
+} from './tags.js';
+import {
+  getRecurringTransactions,
+  addRecurringTransaction,
+  updateRecurringTransaction,
+  deleteRecurringTransaction,
+  toggleRecurringTransaction,
+  processRecurringTransactions
+} from './recurring-transactions.js';
 
 // 统一返回格式
 function success(data = null) {
@@ -190,5 +214,162 @@ export const mockApis = {
       return error('操作失败：参数不完整');
     }
     return success(removeAccountBookMember({ book_id, target_uid }));
+  },
+
+  // 交易记录相关接口
+  '/transactions/list': (options) => {
+    return success(getTransactions(options.data || {}));
+  },
+  '/transactions/add': (options) => {
+    const { book_id, type, amount, tag_id } = options.data;
+    if (!book_id || !amount || !tag_id) {
+      return error('添加失败：参数不完整');
+    }
+    try {
+      return success(addTransaction(options.data));
+    } catch (err) {
+      return error(err.message);
+    }
+  },
+  '/transactions/update': (options) => {
+    const { transaction_id } = options.data;
+    if (!transaction_id) {
+      return error('更新失败：缺少transaction_id参数');
+    }
+    try {
+      return success(updateTransaction(options.data));
+    } catch (err) {
+      return error(err.message);
+    }
+  },
+  '/transactions/delete': (options) => {
+    const { transaction_id } = options.data;
+    if (!transaction_id) {
+      return error('删除失败：缺少transaction_id参数');
+    }
+    try {
+      return success(deleteTransaction(transaction_id));
+    } catch (err) {
+      return error(err.message);
+    }
+  },
+  '/transactions/stats': (options) => {
+    return success(getTransactionStats(options.data || {}));
+  },
+
+  // 标签相关接口
+  '/tags/list': (options) => {
+    const { type } = options.data || {};
+    if (type) {
+      return success(getTagsByType(type));
+    }
+    return success(getTags());
+  },
+  '/tags/system': () => {
+    return success(getSystemTags());
+  },
+  '/tags/user': () => {
+    return success(getUserTags());
+  },
+  '/tags/add': (options) => {
+    const { name, color } = options.data;
+    if (!name || !color) {
+      return error('添加失败：参数不完整');
+    }
+    try {
+      return success(addTag(options.data));
+    } catch (err) {
+      return error(err.message);
+    }
+  },
+  '/tags/update': (options) => {
+    const { tag_id } = options.data;
+    if (!tag_id) {
+      return error('更新失败：缺少tag_id参数');
+    }
+    try {
+      return success(updateTag(options.data));
+    } catch (err) {
+      return error(err.message);
+    }
+  },
+  '/tags/delete': (options) => {
+    const { tag_id } = options.data;
+    if (!tag_id) {
+      return error('删除失败：缺少tag_id参数');
+    }
+    try {
+      return success(deleteTag(tag_id));
+    } catch (err) {
+      return error(err.message);
+    }
+  },
+
+  // 周期性记账相关接口
+  '/recurring/list': (options) => {
+    return success(getRecurringTransactions(options.data || {}));
+  },
+  '/recurring/add': (options) => {
+    const { book_id, name, amount, tag_id, recurring_type, recurring_day } = options.data;
+    if (!book_id || !name || !amount || !tag_id || !recurring_type || recurring_day === undefined) {
+      return error('添加失败：参数不完整');
+    }
+    try {
+      return success(addRecurringTransaction(options.data));
+    } catch (err) {
+      return error(err.message);
+    }
+  },
+  '/recurring/update': (options) => {
+    const { recurring_id } = options.data;
+    if (!recurring_id) {
+      return error('更新失败：缺少recurring_id参数');
+    }
+    try {
+      return success(updateRecurringTransaction(options.data));
+    } catch (err) {
+      return error(err.message);
+    }
+  },
+  '/recurring/delete': (options) => {
+    const { recurring_id } = options.data;
+    if (!recurring_id) {
+      return error('删除失败：缺少recurring_id参数');
+    }
+    try {
+      return success(deleteRecurringTransaction(recurring_id));
+    } catch (err) {
+      return error(err.message);
+    }
+  },
+  '/recurring/toggle': (options) => {
+    const { recurring_id, status } = options.data;
+    if (!recurring_id || status === undefined) {
+      return error('操作失败：参数不完整');
+    }
+    try {
+      return success(toggleRecurringTransaction(recurring_id, status));
+    } catch (err) {
+      return error(err.message);
+    }
+  },
+  '/recurring/process': () => {
+    try {
+      return success(processRecurringTransactions());
+    } catch (err) {
+      return error(err.message);
+    }
+  },
+  
+  // 预算相关接口
+  '/budget/get': () => {
+    return success(getBudget());
+  },
+  '/budget/update': (options) => {
+    const { budget } = options.data;
+    if (!budget || isNaN(Number(budget)) || Number(budget) <= 0) {
+      return error('更新失败：预算金额无效');
+    }
+    return success(updateBudget(budget));
   }
 };
