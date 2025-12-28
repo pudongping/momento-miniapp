@@ -9,8 +9,10 @@
         </view>
         <view class="book-switcher" @click="showBookPicker">
           <view class="switcher-inner">
-            <text class="current-book-name">{{ currentBook?.name || '未选择' }}</text>
-            <uni-icons type="arrowdown" size="16" color="#FF9A5A"></uni-icons>
+            <text class="current-book-name">{{ currentBook?.name || '请选择账本' }}</text>
+            <view class="arrow-icon">
+              <uni-icons type="down" size="16" color="#FF9A5A"></uni-icons>
+            </view>
           </view>
         </view>
       </view>
@@ -556,9 +558,6 @@ export default {
   methods: {
     async initBooks() {
       try {
-        // 尝试从本地存储恢复
-        const savedBook = restoreAccountBookState();
-        
         // 获取最新的账本列表
         const books = await getAccountBooksApi();
         if (books && Array.isArray(books)) {
@@ -566,25 +565,42 @@ export default {
           this.createdBooks = books.filter(b => b.is_creator);
           this.joinedBooks = books.filter(b => !b.is_creator);
           
-          // 如果有保存的账本且仍在列表中，使用它；否则使用默认账本
+          // 尝试从本地存储恢复
+          const savedBook = restoreAccountBookState();
+          
+          // 选择账本的优先级：
+          // 1. 如果有保存的账本且仍在列表中，使用它
+          // 2. 如果有标记为默认的账本，使用它
+          // 3. 否则使用列表中的第一个账本
+          
           if (savedBook && books.some(b => b.book_id === savedBook.book_id)) {
-            this.currentBook = savedBook;
+            this.currentBook = books.find(b => b.book_id === savedBook.book_id);
           } else {
-            const defaultBook = books.find(b => b.is_default) || books[0];
-            this.currentBook = defaultBook;
+            // 优先选择标记为默认的账本
+            const defaultBook = books.find(b => b.is_default);
             if (defaultBook) {
-              setCurrentBook(defaultBook);
+              this.currentBook = defaultBook;
+            } else if (books.length > 0) {
+              // 如果没有默认账本，使用第一个账本
+              this.currentBook = books[0];
             }
           }
           
-          // 加载交易数据
+          // 将选中的账本保存到本地存储
           if (this.currentBook) {
+            setCurrentBook(this.currentBook);
+            
+            // 加载交易数据
             this.loadTransactions();
             this.loadMonthStats();
           }
         }
       } catch (error) {
         console.error('初始化账本失败', error);
+        uni.showToast({
+          title: '加载账本失败，请重试',
+          icon: 'none'
+        });
       }
     },
     
@@ -1248,30 +1264,20 @@ export default {
 }
 
 .book-switcher {
-  position: relative;
-}
-
-.switcher-inner {
+  padding: 8rpx 20rpx;
   display: flex;
   align-items: center;
-  gap: 8rpx;
-  padding: 12rpx 20rpx;
-  background: #FFFFFF;
+  position: relative;
+  background-color: rgba(255, 154, 90, 0.1);
   border-radius: 30rpx;
-  border: 1px solid #F0F0F0;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  border: 1rpx solid rgba(255, 154, 90, 0.2);
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
 }
 
-.book-switcher {
-  background: #F5F5F5;
-  border-radius: 30rpx;
-  padding: 10rpx 20rpx;
-  display: flex;
-  align-items: center;
-  position: relative;
-  border: 1rpx solid #EEEEEE;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+.book-switcher:active {
+  background-color: rgba(255, 154, 90, 0.2);
+  transform: translateY(1rpx);
 }
 
 .switcher-inner {
@@ -1280,6 +1286,8 @@ export default {
   justify-content: space-between;
   width: 100%;
   gap: 10rpx;
+  padding: 6rpx 0;
+  transition: all 0.3s ease;
 }
 
 .current-book-name {
@@ -1290,6 +1298,25 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.arrow-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5rpx);
+  }
+  60% {
+    transform: translateY(-3rpx);
+  }
 }
 
 .switcher-hint {
@@ -1306,16 +1333,18 @@ export default {
 
 .switcher-tooltip {
   position: absolute;
-  top: 100rpx;
-  right: 30rpx;
-  background: rgba(0, 0, 0, 0.7);
+  top: 80rpx;
+  right: 10rpx;
+  background: rgba(255, 154, 90, 0.9);
   color: #FFFFFF;
   padding: 16rpx 24rpx;
   border-radius: 12rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
+  font-weight: 500;
   z-index: 10;
   max-width: 400rpx;
   animation: fadeIn 0.3s;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.15);
 }
 
 @keyframes fadeIn {
@@ -1331,7 +1360,7 @@ export default {
   height: 0;
   border-left: 16rpx solid transparent;
   border-right: 16rpx solid transparent;
-  border-bottom: 16rpx solid rgba(0, 0, 0, 0.7);
+  border-bottom: 16rpx solid rgba(255, 154, 90, 0.9);
 }
 
 .tooltip-close {
