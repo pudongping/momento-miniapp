@@ -145,8 +145,8 @@
         </view>
       </view>
       
-      <!-- 周期记账开关 -->
-      <view class="recurring-section">
+      <!-- 周期记账开关 (编辑模式下隐藏) -->
+      <view v-if="!isEditMode" class="recurring-section">
         <view class="recurring-header">
           <text class="section-title">周期记账</text>
           <switch 
@@ -188,7 +188,7 @@
       
       <!-- 保存按钮 -->
       <view class="save-section">
-        <button class="btn-save" @click="saveTransaction">保存</button>
+        <button class="btn-save" @click="saveTransaction">{{ isEditMode ? '更新' : '保存' }}</button>
       </view>
     </view>
     
@@ -296,6 +296,7 @@ import {
   getTagsApi, 
   addTagApi, 
   addTransactionApi,
+  updateTransactionApi,
   addRecurringTransactionApi
 } from '@/api/index.js';
 
@@ -351,7 +352,11 @@ export default {
         monthly: '每月',
         quarterly: '每季度',
         yearly: '每年'
-      }
+      },
+      
+      // 编辑模式
+      isEditMode: false,
+      editTransactionId: null
     };
   },
 
@@ -361,13 +366,61 @@ export default {
     }
   },
 
-  onShow() {
+  async onShow() {
     this.initBooks();
-    this.initTags();
+    await this.initTags();
     this.initDatePicker();
+    this.checkEditMode();
   },
 
   methods: {
+    // 检查编辑模式
+    checkEditMode() {
+      try {
+        const editData = uni.getStorageSync('editTransactionData');
+        if (editData && editData.edit && editData.transactionData) {
+          console.log('检测到编辑数据:', editData);
+          
+          // 设置编辑模式
+          this.isEditMode = true;
+          this.editTransactionId = editData.transaction_id;
+          
+          // 回显交易数据
+          const transaction = editData.transactionData;
+          this.transactionType = transaction.type;
+          this.amount = transaction.amount.toString();
+          this.remark = transaction.remark || '';
+          
+          // 使用 $nextTick 确保交易类型更新后再设置标签ID
+          this.$nextTick(() => {
+            this.selectedTagId = transaction.tag_id;
+            console.log('设置标签ID:', transaction.tag_id);
+            console.log('当前交易类型:', this.transactionType);
+            console.log('过滤后的标签:', this.filteredTags.map(t => ({id: t.tag_id, name: t.name})));
+            console.log('选中的标签ID匹配:', this.filteredTags.some(t => t.tag_id === transaction.tag_id));
+          });
+          
+          // 回显日期
+          if (transaction.timestamp) {
+            this.selectedDate = new Date(transaction.timestamp * 1000);
+          }
+          
+          // 清除存储的编辑数据
+          uni.removeStorageSync('editTransactionData');
+          
+          console.log('编辑数据回显完成');
+        } else {
+          // 重置为新增模式
+          this.isEditMode = false;
+          this.editTransactionId = null;
+        }
+      } catch (error) {
+        console.error('检查编辑模式失败:', error);
+        this.isEditMode = false;
+        this.editTransactionId = null;
+      }
+    },
+    
     // 账本相关方法
     async initBooks() {
       try {
@@ -633,8 +686,8 @@ export default {
         return;
       }
       
-      // 验证周期记账参数
-      if (this.isRecurring && this.recurringType !== 'daily') {
+      // 验证周期记账参数 (编辑模式下跳过周期记账验证)
+      if (!this.isEditMode && this.isRecurring && this.recurringType !== 'daily') {
         if (!this.recurringDay) {
           uni.showToast({
             title: '请输入周期日期',
@@ -681,33 +734,50 @@ export default {
           timestamp: Math.floor(this.selectedDate.getTime() / 1000)
         };
         
-        // 如果是周期记账
-        if (this.isRecurring) {
-          const recurringData = {
+        if (this.isEditMode) {
+          // 编辑模式 - 更新交易
+          const updateData = {
             ...transactionData,
-            name: this.remark.trim() || `周期${this.transactionType === 'expense' ? '支出' : '收入'}`,
-            recurring_type: this.recurringType,
-            recurring_day: this.recurringType === 'daily' ? 0 : parseInt(this.recurringDay),
-            recurring_time: '09:00',
-            is_active: true
+            transaction_id: this.editTransactionId
           };
           
-          await addRecurringTransactionApi(recurringData);
+          await updateTransactionApi(updateData);
           
           uni.hideLoading();
           uni.showToast({
-            title: '周期记账设置成功',
+            title: '更新成功',
             icon: 'success'
           });
         } else {
-          // 普通交易
-          await addTransactionApi(transactionData);
-          
-          uni.hideLoading();
-          uni.showToast({
-            title: '记账成功',
-            icon: 'success'
-          });
+          // 新增模式
+          if (this.isRecurring) {
+            // 周期记账
+            const recurringData = {
+              ...transactionData,
+              name: this.remark.trim() || `周期${this.transactionType === 'expense' ? '支出' : '收入'}`,
+              recurring_type: this.recurringType,
+              recurring_day: this.recurringType === 'daily' ? 0 : parseInt(this.recurringDay),
+              recurring_time: '09:00',
+              is_active: true
+            };
+            
+            await addRecurringTransactionApi(recurringData);
+            
+            uni.hideLoading();
+            uni.showToast({
+              title: '周期记账设置成功',
+              icon: 'success'
+            });
+          } else {
+            // 普通交易
+            await addTransactionApi(transactionData);
+            
+            uni.hideLoading();
+            uni.showToast({
+              title: '记账成功',
+              icon: 'success'
+            });
+          }
         }
         
         // 返回首页

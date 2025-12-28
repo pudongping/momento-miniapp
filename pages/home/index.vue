@@ -934,9 +934,36 @@ export default {
     
     // 编辑交易
     editTransaction(transaction) {
-      uni.navigateTo({
-        url: `/pages/record/index?transaction_id=${transaction.transaction_id}&edit=true`
-      });
+      // 由于record页面是tabbar页面，不能使用navigateTo传参
+      // 先将编辑数据存储到本地存储，然后切换到记账页面
+      try {
+        uni.setStorageSync('editTransactionData', {
+          transaction_id: transaction.transaction_id,
+          edit: true,
+          transactionData: transaction
+        });
+        
+        uni.switchTab({
+          url: '/pages/record/index',
+          success: () => {
+            // 切换成功后，记账页面会自动读取存储的编辑数据
+            console.log('切换到编辑页面成功');
+          },
+          fail: (error) => {
+            console.error('切换到编辑页面失败', error);
+            uni.showToast({
+              title: '打开编辑页面失败',
+              icon: 'none'
+            });
+          }
+        });
+      } catch (error) {
+        console.error('存储编辑数据失败', error);
+        uni.showToast({
+          title: '编辑功能暂时不可用',
+          icon: 'none'
+        });
+      }
     },
     
     // 确认删除交易
