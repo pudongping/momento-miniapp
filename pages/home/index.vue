@@ -2452,13 +2452,25 @@ export default {
 }
 
 .btn-add-recurring {
-  background: #4CAF50;
+  background: linear-gradient(135deg, #4CAF50, #66BB6A);
   color: #FFFFFF;
   border: none;
   border-radius: 50rpx;
-  padding: 20rpx 40rpx;
-  font-size: 28rpx;
-  font-weight: 500;
+  padding: 20rpx 48rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6rpx 20rpx rgba(76, 175, 80, 0.3);
+  transition: all 0.3s ease;
+  min-width: 200rpx;
+  height: 80rpx;
+}
+
+.btn-add-recurring:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(76, 175, 80, 0.2);
 }
 
 .summary-header {
@@ -2825,13 +2837,23 @@ export default {
 .btn-add-record {
   background: linear-gradient(135deg, #FF9A5A, #FFD166);
   color: #FFFFFF;
-  border-radius: 40rpx;
-  font-size: 28rpx;
+  border-radius: 50rpx;
+  font-size: 30rpx;
   font-weight: 600;
-  padding: 16rpx 40rpx;
-  display: inline-block;
-  box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
+  padding: 20rpx 48rpx;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6rpx 20rpx rgba(255, 154, 90, 0.3);
   border: none;
+  transition: all 0.3s ease;
+  min-width: 200rpx;
+  height: 80rpx;
+}
+
+.btn-add-record:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
 }
 
 /* 搜索弹窗 */

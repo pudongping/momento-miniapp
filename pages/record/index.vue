@@ -108,16 +108,35 @@
             v-for="tag in filteredTags" 
             :key="tag.tag_id"
             class="tag-item"
-            :class="{ active: selectedTagId === tag.tag_id }"
+            :class="{ active: selectedTagId === tag.tag_id, 'custom-tag-item': !tag.is_system }"
             :style="{ backgroundColor: selectedTagId === tag.tag_id ? tag.color : '#F5F5F5' }"
             @click="selectTag(tag)"
           >
-            <uni-icons :type="tag.icon" size="18" :color="selectedTagId === tag.tag_id ? '#FFFFFF' : tag.color"></uni-icons>
+            <!-- 自定义标签删除按钮 -->
+            <view 
+              v-if="!tag.is_system" 
+              class="delete-tag-btn" 
+              @click.stop="confirmDeleteTag(tag)"
+            >
+              <text class="delete-icon">−</text>
+            </view>
+            
+            <!-- FA图标或uni-icons -->
+            <view v-if="tag.fa_icon" class="fa-icon" :style="{ color: selectedTagId === tag.tag_id ? '#FFFFFF' : tag.color }">
+              <text class="fa" :class="tag.fa_icon"></text>
+            </view>
+            <uni-icons 
+              v-else-if="tag.icon" 
+              :type="tag.icon" 
+              size="18" 
+              :color="selectedTagId === tag.tag_id ? '#FFFFFF' : tag.color"
+            ></uni-icons>
+            
             <text :style="{ color: selectedTagId === tag.tag_id ? '#FFFFFF' : '#333333' }">
               {{ tag.name }}
             </text>
           </view>
-          <view class="tag-item custom-tag" @click="showCustomTagModal">
+          <view class="tag-item custom-tag" @click="openCustomTagModal">
             <uni-icons type="plus" size="18" color="#666666"></uni-icons>
             <text>自定义</text>
           </view>
@@ -390,11 +409,30 @@
                 </view>
               </view>
             </view>
+            
           </view>
         </view>
         <view class="modal-footer">
           <button class="btn-cancel" @click="closeCustomTagModal">取消</button>
           <button class="btn-confirm" @click="saveCustomTag">保存</button>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 删除标签确认弹窗 -->
+    <view v-if="showDeleteTagModal" class="modal-mask" @click="closeDeleteTagModal">
+      <view class="modal-content delete-tag-modal" @click.stop>
+        <view class="modal-header">
+          <text class="modal-title">确认删除</text>
+          <view class="close-btn" @click="closeDeleteTagModal">✕</view>
+        </view>
+        <view class="modal-body">
+          <text class="delete-message">确定要删除标签"{{ tagToDelete?.name }}"吗？</text>
+          <text class="delete-warning">删除后无法恢复，使用该标签的记录不会受到影响。</text>
+        </view>
+        <view class="modal-footer">
+          <button class="btn-cancel" @click="closeDeleteTagModal">取消</button>
+          <button class="btn-delete" @click="deleteTag">删除</button>
         </view>
       </view>
     </view>
@@ -407,6 +445,7 @@ import {
   getAccountBooksApi, 
   getTagsApi, 
   addTagApi, 
+  deleteTagApi,
   addTransactionApi
 } from '@/api/index.js';
 
@@ -432,16 +471,21 @@ export default {
       showCustomTagModal: false,
       customTagName: '',
       customTagColor: '#FF9A5A',
-      customTagIcon: 'tag',
+      customTagIcon: 'home',
+      showDeleteTagModal: false,
+      tagToDelete: null,
       tagColors: [
         '#FF9A5A', '#F44336', '#E91E63', '#9C27B0', '#673AB7',
         '#3F51B5', '#2196F3', '#03A9F4', '#00BCD4', '#009688',
         '#4CAF50', '#8BC34A', '#CDDC39', '#FFC107', '#FF9800'
       ],
       tagIcons: [
-        'tag', 'home', 'cart', 'car', 'food', 'gift', 'wallet',
-        'shop', 'medal', 'heart', 'star', 'phone', 'fire', 'flag',
-        'cloud', 'email', 'staff', 'sound', 'videocam', 'trash'
+        'home', 'shop', 'cart', 'car', 'food',
+        'gift', 'wallet', 'heart', 'star', 'phone',
+        'email', 'sound', 'videocam', 'trash', 'fire',
+        'flag', 'cloud', 'plane', 'bus', 'book',
+        'laptop', 'mobile-alt', 'tv', 'headphones', 'mic',
+        'medal', 'staff', 'bicycle', 'coffee', 'more'
       ],
       
       // 日期选择器
@@ -562,10 +606,8 @@ export default {
       this.selectedTagId = tag.tag_id;
     },
     
-    showCustomTagModal() {
-      this.customTagName = '';
-      this.customTagColor = '#FF9A5A';
-      this.customTagIcon = 'tag';
+    openCustomTagModal() {
+      this.resetCustomTagForm();
       this.showCustomTagModal = true;
     },
     
@@ -582,6 +624,14 @@ export default {
         return;
       }
       
+      if (this.customTagName.trim().length > 6) {
+        uni.showToast({
+          title: '标签名称不能超过6个字符',
+          icon: 'none'
+        });
+        return;
+      }
+      
       try {
         const newTag = await addTagApi({
           name: this.customTagName.trim(),
@@ -593,6 +643,7 @@ export default {
         if (newTag) {
           this.tags.push(newTag);
           this.selectedTagId = newTag.tag_id;
+          this.resetCustomTagForm();
           this.closeCustomTagModal();
           
           uni.showToast({
@@ -604,6 +655,59 @@ export default {
         console.error('添加标签失败', error);
         uni.showToast({
           title: '添加标签失败',
+          icon: 'none'
+        });
+      }
+    },
+
+    // 重置自定义标签表单
+    resetCustomTagForm() {
+      this.customTagName = '';
+      this.customTagColor = '#FF9A5A';
+      this.customTagIcon = 'home';
+    },
+
+    // 确认删除标签
+    confirmDeleteTag(tag) {
+      this.tagToDelete = tag;
+      this.showDeleteTagModal = true;
+    },
+
+    // 关闭删除标签弹窗
+    closeDeleteTagModal() {
+      this.showDeleteTagModal = false;
+      this.tagToDelete = null;
+    },
+
+    // 删除标签
+    async deleteTag() {
+      if (!this.tagToDelete) return;
+      
+      try {
+        await deleteTagApi(this.tagToDelete.tag_id);
+        
+        // 从本地列表中移除
+        const index = this.tags.findIndex(t => t.tag_id === this.tagToDelete.tag_id);
+        if (index !== -1) {
+          this.tags.splice(index, 1);
+        }
+        
+        // 如果删除的是当前选中的标签，重新选择第一个标签
+        if (this.selectedTagId === this.tagToDelete.tag_id) {
+          const defaultTags = this.tags.filter(tag => tag.type === this.transactionType);
+          this.selectedTagId = defaultTags.length > 0 ? defaultTags[0].tag_id : null;
+        }
+        
+        this.closeDeleteTagModal();
+        
+        uni.showToast({
+          title: '删除成功',
+          icon: 'success'
+        });
+      } catch (error) {
+        console.error('删除标签失败', error);
+        uni.showToast({
+          title: '删除失败',
           icon: 'none'
         });
       }
@@ -1138,6 +1242,7 @@ export default {
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
   min-width: 80rpx;
   flex: 0 0 auto;
+  position: relative;
 }
 
 .tag-item.active {
@@ -1153,6 +1258,54 @@ export default {
 .custom-tag {
   background: #FFFFFF;
   border: 1px dashed #CCCCCC;
+}
+
+/* 自定义标签项样式 */
+.custom-tag-item {
+  position: relative;
+}
+
+/* 删除标签按钮 */
+.delete-tag-btn {
+  position: absolute;
+  top: -6rpx;
+  right: -6rpx;
+  width: 28rpx;
+  height: 28rpx;
+  background: linear-gradient(135deg, #FF6B6B, #FF5252);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 107, 0.4);
+  transition: all 0.3s ease;
+  border: 2rpx solid #FFFFFF;
+}
+
+.delete-tag-btn:active {
+  transform: scale(0.9);
+  box-shadow: 0 2rpx 6rpx rgba(255, 107, 107, 0.3);
+}
+
+.delete-icon {
+  color: #FFFFFF;
+  font-size: 18rpx;
+  font-weight: bold;
+  line-height: 1;
+  transform: translateY(-1rpx);
+}
+
+/* FA图标样式 */
+.fa-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fa {
+  font-family: 'FontAwesome';
+  font-size: 18rpx;
 }
 
 /* 备注输入 */
@@ -1592,9 +1745,9 @@ export default {
 .color-option {
   width: 60rpx;
   height: 60rpx;
-  border-radius: 30rpx;
+  border-radius: 16rpx;
   transition: all 0.3s ease;
-  border: 2rpx solid transparent;
+  position: relative;
 }
 
 .color-option.active {
@@ -1611,19 +1764,29 @@ export default {
 }
 
 .icon-option {
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 12rpx;
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 16rpx;
   background: #F5F5F5;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  border: 2rpx solid transparent;
 }
 
 .icon-option.active {
-  background: #FFE8D9;
-  box-shadow: 0 0 0 2rpx #FF9A5A;
+  background: #FF9A5A;
+  border-color: #FF9A5A;
+  transform: scale(1.1);
+}
+
+.icon-option uni-icons {
+  transition: all 0.3s ease;
+}
+
+.icon-option.active uni-icons {
+  color: #FFFFFF !important;
 }
 
 /* 账本相关样式 */
@@ -1746,5 +1909,66 @@ export default {
   color: #FFB800;
   font-weight: 700;
   margin-left: 12rpx;
+}
+
+/* 删除标签弹窗样式 */
+.delete-tag-modal .modal-mask {
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-tag-modal .modal-content {
+  width: 600rpx;
+  border-radius: 24rpx;
+  animation: scaleIn 0.3s ease-out;
+  padding: 0;
+}
+
+.delete-tag-modal .modal-body {
+  padding: 40rpx 32rpx 32rpx;
+}
+
+.delete-tag-modal .modal-footer {
+  padding: 0 32rpx 32rpx;
+  display: flex;
+  gap: 20rpx;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.delete-message {
+  font-size: 30rpx;
+  color: #333333;
+  margin-bottom: 16rpx;
+  text-align: center;
+  font-weight: 600;
+}
+
+.delete-warning {
+  font-size: 24rpx;
+  color: #999999;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, #FF6B6B, #FF5252);
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 107, 0.3);
+}
+
+.btn-delete:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 6rpx rgba(255, 107, 107, 0.2);
 }
 </style>
