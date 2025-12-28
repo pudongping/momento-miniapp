@@ -306,21 +306,24 @@
             <view class="form-item">
               <text class="form-label">金额范围</text>
               <view class="amount-range">
-                <input 
-                  type="digit" 
-                  v-model="searchParams.minAmount" 
+                <input
+                  type="text"
+                  v-model="searchParams.minAmount"
                   class="amount-input"
                   placeholder="最小金额"
                   @input="validateAmountInput($event, 'minAmount')"
-                  min="0"
+                  @blur="validateAmountOnBlur('minAmount')"
+                  @keypress="preventNonNumericInput"
                 />
                 <text class="range-separator">-</text>
-                <input 
-                  type="digit" 
-                  v-model="searchParams.maxAmount" 
+                <input
+                  type="text"
+                  v-model="searchParams.maxAmount"
                   class="amount-input"
                   placeholder="最大金额"
                   @input="validateAmountInput($event, 'maxAmount')"
+                  @blur="validateAmountOnBlur('maxAmount')"
+                  @keypress="preventNonNumericInput"
                 />
               </view>
             </view>
@@ -328,15 +331,20 @@
             <!-- 时间范围 -->
             <view class="form-item">
               <text class="form-label">时间范围</text>
-              <view class="date-range">
-                <view class="date-picker-input" @click="showStartDatePicker">
-                  <text>{{ searchParams.startDate ? formatDate(new Date(searchParams.startDate * 1000)) : '开始日期' }}</text>
-                  <uni-icons type="calendar" size="16" color="#666666"></uni-icons>
+              <view class="datetime-range">
+                <view class="datetime-picker-item">
+                  <text class="datetime-label">开始时间</text>
+                  <view class="custom-datetime-input" @click="showCustomDateTimePicker('start')">
+                    <text class="datetime-display">{{ formatDisplayDateTime(searchParams.startDateTime) || '请选择开始时间' }}</text>
+                    <uni-icons type="calendar" size="16" color="#999999"></uni-icons>
+                  </view>
                 </view>
-                <text class="range-separator">-</text>
-                <view class="date-picker-input" @click="showEndDatePicker">
-                  <text>{{ searchParams.endDate ? formatDate(new Date(searchParams.endDate * 1000)) : '结束日期' }}</text>
-                  <uni-icons type="calendar" size="16" color="#666666"></uni-icons>
+                <view class="datetime-picker-item">
+                  <text class="datetime-label">结束时间</text>
+                  <view class="custom-datetime-input" @click="showCustomDateTimePicker('end')">
+                    <text class="datetime-display">{{ formatDisplayDateTime(searchParams.endDateTime) || '请选择结束时间' }}</text>
+                    <uni-icons type="calendar" size="16" color="#999999"></uni-icons>
+                  </view>
                 </view>
               </view>
             </view>
@@ -349,55 +357,81 @@
       </view>
     </view>
     
-    <!-- 日期选择器弹窗 -->
-    <view v-if="showDatePickerModal" class="modal-mask" @click="closeDatePicker">
-      <view class="modal-content" @click.stop>
+    <!-- 自定义日历时间选择器 -->
+    <view v-if="showCustomDateTimeModal" class="modal-mask" @click="closeCustomDateTimePicker">
+      <view class="modal-content custom-datetime-modal" @click.stop>
         <view class="modal-header">
-          <text class="modal-title">选择{{ datePickerType === 'start' ? '开始' : '结束' }}日期</text>
-          <view class="close-btn" @click="closeDatePicker">✕</view>
+          <text class="modal-title">选择{{ currentDateTimeType === 'start' ? '开始' : '结束' }}时间</text>
+          <view class="close-btn" @click="closeCustomDateTimePicker">✕</view>
         </view>
-        <view class="modal-body">
-          <picker-view
-            :indicator-style="'height: 50px;'"
-            :value="datePickerValue"
-            @change="onDatePickerChange"
-            class="date-picker-view"
-          >
-            <picker-view-column>
-              <view class="picker-item" v-for="(year, index) in years" :key="'year-'+index">
-                {{ year }}年
-              </view>
-            </picker-view-column>
-            <picker-view-column>
-              <view class="picker-item" v-for="(month, index) in months" :key="'month-'+index">
-                {{ month }}月
-              </view>
-            </picker-view-column>
-            <picker-view-column>
-              <view class="picker-item" v-for="(day, index) in days" :key="'day-'+index">
-                {{ day }}日
-              </view>
-            </picker-view-column>
-          </picker-view>
+        <view class="custom-datetime-body">
+          <!-- 日期选择 -->
+          <view class="date-section">
+            <view class="section-title">选择日期</view>
+            <picker-view
+              :indicator-style="'height: 50px;'"
+              :value="tempDatePickerValue"
+              @change="onCustomDateChange"
+              class="date-picker-view"
+            >
+              <picker-view-column>
+                <view class="picker-item" v-for="(year, index) in years" :key="'year-'+index">
+                  {{ year }}年
+                </view>
+              </picker-view-column>
+              <picker-view-column>
+                <view class="picker-item" v-for="(month, index) in months" :key="'month-'+index">
+                  {{ month }}月
+                </view>
+              </picker-view-column>
+              <picker-view-column>
+                <view class="picker-item" v-for="(day, index) in days" :key="'day-'+index">
+                  {{ day }}日
+                </view>
+              </picker-view-column>
+            </picker-view>
+          </view>
+          
+          <!-- 时间选择 -->
+          <view class="time-section">
+            <view class="section-title">选择时间</view>
+            <picker-view
+              :indicator-style="'height: 50px;'"
+              :value="tempTimePickerValue"
+              @change="onCustomTimeChange"
+              class="time-picker-view"
+            >
+              <picker-view-column>
+                <view class="picker-item" v-for="(hour, index) in hours" :key="'hour-'+index">
+                  {{ hour.toString().padStart(2, '0') }}时
+                </view>
+              </picker-view-column>
+              <picker-view-column>
+                <view class="picker-item" v-for="(minute, index) in minutes" :key="'minute-'+index">
+                  {{ minute.toString().padStart(2, '0') }}分
+                </view>
+              </picker-view-column>
+            </picker-view>
+          </view>
         </view>
         <view class="modal-footer">
-          <button class="btn-cancel" @click="closeDatePicker">取消</button>
-          <button class="btn-confirm" @click="confirmDatePicker">确认</button>
+          <button class="btn-cancel" @click="closeCustomDateTimePicker">取消</button>
+          <button class="btn-confirm" @click="confirmCustomDateTime">确认</button>
         </view>
       </view>
     </view>
     
     <!-- 删除确认弹窗 -->
-    <view v-if="showDeleteConfirmModal" class="modal-mask" @click="cancelDeleteTransaction">
-      <view class="modal-content delete-confirm-modal" @click.stop>
-        <view class="modal-body">
+    <view v-if="showDeleteConfirmModal" class="delete-modal-mask" @click="cancelDeleteTransaction">
+      <view class="delete-confirm-content" @click.stop>
+        <view class="delete-confirm-header">
           <view class="confirm-icon">
-            <uni-icons type="help" size="32" color="#FF6B6B"></uni-icons>
+            <text style="font-size: 60rpx; color: #FF6B6B;">?</text>
           </view>
           <text class="confirm-title">确认删除</text>
           <text class="confirm-message">您确定要删除这笔账单吗？删除后无法恢复。</text>
         </view>
-        <view class="modal-footer">
+        <view class="delete-confirm-footer">
           <button class="btn-cancel" @click="cancelDeleteTransaction">取消</button>
           <button class="btn-delete" @click="deleteTransaction">删除</button>
         </view>
@@ -467,18 +501,21 @@ export default {
         type: 'all',
         minAmount: '',
         maxAmount: '',
-        startDate: null,
-        endDate: null
+        startDateTime: '',
+        endDateTime: ''
       },
       
-      // 日期选择器
-      showDatePickerModal: false,
-      datePickerType: 'start', // 'start' or 'end'
+      // 自定义日历时间选择器
+      showCustomDateTimeModal: false,
+      currentDateTimeType: 'start', // 'start' or 'end'
       years: [],
       months: [],
       days: [],
-      datePickerValue: [0, 0, 0],
-      tempDatePickerValue: [0, 0, 0]
+      hours: [],
+      minutes: [],
+      tempDatePickerValue: [0, 0, 0],
+      tempTimePickerValue: [0, 0],
+      
     };
   },
   
@@ -547,8 +584,8 @@ export default {
   },
 
   onLoad() {
-    // 初始化日期选择器
-    this.initDatePicker();
+    // 初始化自定义日历选择器
+    this.initCustomDateTimePicker();
     
     // 加载自定义背景
     this.loadCustomBackground();
@@ -556,10 +593,7 @@ export default {
     // 加载节日和纪念日
     this.loadEvents();
     
-    // 加载预算
-    this.loadBudget();
-    
-    // 检查是否需要显示提示
+    // 检查是否需要显示账本切换提示
     this.checkSwitcherTooltip();
   },
   
@@ -1010,8 +1044,8 @@ export default {
         type: 'all',
         minAmount: '',
         maxAmount: '',
-        startDate: null,
-        endDate: null
+        startDateTime: '',
+        endDateTime: ''
       };
     },
     
@@ -1028,30 +1062,321 @@ export default {
       }
     },
     
+    // 阻止非数字字符输入（按键事件）
+    preventNonNumericInput(e) {
+      const char = String.fromCharCode(e.which);
+      const currentValue = e.target.value;
+      
+      // 允许数字
+      if (/[0-9]/.test(char)) {
+        return true;
+      }
+      
+      // 允许小数点，但只能有一个
+      if (char === '.' && currentValue.indexOf('.') === -1) {
+        return true;
+      }
+      
+      // 阻止其他所有字符
+      e.preventDefault();
+      return false;
+    },
+    
     // 验证金额输入
     validateAmountInput(e, field) {
-      const value = e.detail.value;
+      let value = e.detail.value;
       
-      // 只允许数字和小数点，且最多两位小数
-      if (value === '') {
-        // 允许空值
+      // 移除所有非数字和小数点的字符
+      const cleanValue = value.replace(/[^\d.]/g, '');
+      
+      // 如果清理后的值与原值不同，说明有非法字符
+      if (cleanValue !== value) {
+        value = cleanValue;
+        uni.showToast({
+          title: '只能输入数字和小数点',
+          icon: 'none',
+          duration: 1500
+        });
+      }
+      
+      // 确保只有一个小数点
+      const dotCount = (value.match(/\./g) || []).length;
+      if (dotCount > 1) {
+        const firstDotIndex = value.indexOf('.');
+        value = value.substring(0, firstDotIndex + 1) + value.substring(firstDotIndex + 1).replace(/\./g, '');
+      }
+      
+      // 限制小数点后最多两位
+      if (value.includes('.')) {
+        const parts = value.split('.');
+        if (parts[1] && parts[1].length > 2) {
+          value = parts[0] + '.' + parts[1].substring(0, 2);
+        }
+      }
+      
+      // 确保不以小数点开头
+      if (value.startsWith('.')) {
+        value = '0' + value;
+      }
+      
+      // 限制整数部分不超过10位
+      const parts = value.split('.');
+      if (parts[0].length > 10) {
+        value = parts[0].substring(0, 10) + (parts[1] ? '.' + parts[1] : '');
+        uni.showToast({
+          title: '金额过大',
+          icon: 'none'
+        });
+      }
+      
+      // 更新值
+      this.searchParams[field] = value;
+    },
+    
+    // 失焦时验证金额
+    validateAmountOnBlur(field) {
+      const value = this.searchParams[field];
+      if (value === '' || value === null || value === undefined) {
         return;
       }
       
-      // 严格验证只能输入数字和小数点
-      const regex = /^\d*\.?\d{0,2}$/;
-      if (!regex.test(value)) {
-        // 如果不符合格式，恢复为之前的值
-        this.searchParams[field] = value.substring(0, value.length - 1);
-      }
+      const numValue = parseFloat(value);
       
       // 确保最小金额不小于0
-      if (field === 'minAmount' && parseFloat(value) < 0) {
+      if (field === 'minAmount' && numValue < 0) {
         this.searchParams.minAmount = '0';
         uni.showToast({
           title: '最小金额不能小于0',
           icon: 'none'
         });
+        return;
+      }
+      
+      // 验证是否为有效数字
+      if (isNaN(numValue)) {
+        this.searchParams[field] = '';
+        uni.showToast({
+          title: '请输入有效的金额',
+          icon: 'none'
+        });
+        return;
+      }
+      
+      // 格式化为两位小数
+      this.searchParams[field] = numValue.toFixed(2);
+    },
+    
+    // 初始化自定义日历时间选择器
+    initCustomDateTimePicker() {
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth() + 1;
+      const currentDay = currentDate.getDate();
+      const currentHour = currentDate.getHours();
+      const currentMinute = currentDate.getMinutes();
+      
+      // 初始化年份列表（当前年往前5年，往后5年）
+      this.years = [];
+      for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+        this.years.push(i);
+      }
+      
+      // 初始化月份列表
+      this.months = [];
+      for (let i = 1; i <= 12; i++) {
+        this.months.push(i);
+      }
+      
+      // 初始化小时列表
+      this.hours = [];
+      for (let i = 0; i < 24; i++) {
+        this.hours.push(i);
+      }
+      
+      // 初始化分钟列表（每1分钟一个选项）
+      this.minutes = [];
+      for (let i = 0; i < 60; i++) {
+        this.minutes.push(i);
+      }
+      
+      // 初始化天数列表
+      this.updateCustomDays(currentYear, currentMonth);
+      
+      // 设置默认值
+      const yearIndex = this.years.findIndex(year => year === currentYear);
+      const monthIndex = currentMonth - 1;
+      const dayIndex = currentDay - 1;
+      const hourIndex = this.hours.findIndex(hour => hour === currentHour);
+      const minuteIndex = this.minutes.findIndex(minute => minute === currentMinute);
+      
+      this.tempDatePickerValue = [yearIndex, monthIndex, dayIndex];
+      this.tempTimePickerValue = [hourIndex >= 0 ? hourIndex : 0, minuteIndex >= 0 ? minuteIndex : 0];
+    },
+    
+    // 更新天数列表
+    updateCustomDays(year, month) {
+      const daysInMonth = new Date(year, month, 0).getDate();
+      this.days = [];
+      for (let i = 1; i <= daysInMonth; i++) {
+        this.days.push(i);
+      }
+    },
+    
+    // 显示自定义日历时间选择器
+    showCustomDateTimePicker(type) {
+      this.currentDateTimeType = type;
+      
+      // 获取要设置的时间（已选择的时间或当前时间）
+      const existingDateTime = type === 'start' ? this.searchParams.startDateTime : this.searchParams.endDateTime;
+      let targetDate;
+      
+      if (existingDateTime) {
+        // 如果已有选择的时间，使用选择的时间
+        targetDate = new Date(existingDateTime.replace(/-/g, '/'));
+      } else {
+        // 如果没有选择时间，使用当前时间
+        targetDate = new Date();
+      }
+      
+      const year = targetDate.getFullYear();
+      const month = targetDate.getMonth() + 1;
+      const day = targetDate.getDate();
+      const hour = targetDate.getHours();
+      const minute = targetDate.getMinutes();
+      
+      // 确保年份在可选范围内
+      const yearIndex = this.years.findIndex(y => y === year);
+      const monthIndex = month - 1;
+      const dayIndex = day - 1;
+      const hourIndex = this.hours.findIndex(h => h === hour);
+      const minuteIndex = this.minutes.findIndex(m => m === minute);
+      
+      // 更新天数列表
+      this.updateCustomDays(year, month);
+      
+      // 设置选择器的值
+      this.tempDatePickerValue = [
+        yearIndex >= 0 ? yearIndex : Math.floor(this.years.length / 2), // 如果年份不在范围内，选择中间的年份
+        monthIndex >= 0 ? monthIndex : 0,
+        dayIndex >= 0 && dayIndex < this.days.length ? dayIndex : 0
+      ];
+      this.tempTimePickerValue = [
+        hourIndex >= 0 ? hourIndex : hour,
+        minuteIndex >= 0 ? minuteIndex : minute
+      ];
+      
+      this.showCustomDateTimeModal = true;
+    },
+    
+    // 关闭自定义日历时间选择器
+    closeCustomDateTimePicker() {
+      this.showCustomDateTimeModal = false;
+    },
+    
+    // 日期变化处理
+    onCustomDateChange(e) {
+      const values = e.detail.value;
+      this.tempDatePickerValue = [...values];
+      
+      // 当年月变化时，更新天数
+      const year = this.years[values[0]];
+      const month = this.months[values[1]];
+      const currentDayIndex = values[2];
+      
+      // 更新天数列表
+      this.updateCustomDays(year, month);
+      
+      // 如果当前选中的天数超过了新月份的最大天数，则重置为最后一天
+      if (currentDayIndex >= this.days.length) {
+        this.tempDatePickerValue[2] = this.days.length - 1;
+      }
+      
+      // 强制更新视图
+      this.$forceUpdate();
+    },
+    
+    // 时间变化处理
+    onCustomTimeChange(e) {
+      const values = e.detail.value;
+      this.tempTimePickerValue = [...values];
+    },
+    
+    // 确认自定义日期时间选择
+    confirmCustomDateTime() {
+      const year = this.years[this.tempDatePickerValue[0]];
+      const month = this.months[this.tempDatePickerValue[1]];
+      const day = this.days[this.tempDatePickerValue[2]];
+      const hour = this.hours[this.tempTimePickerValue[0]];
+      const minute = this.minutes[this.tempTimePickerValue[1]];
+      
+      const selectedDate = new Date(year, month - 1, day, hour, minute);
+      const dateTimeString = this.formatDateTimeString(selectedDate);
+      
+      // 时间范围验证
+      if (this.currentDateTimeType === 'start') {
+        if (this.searchParams.endDateTime && selectedDate >= new Date(this.searchParams.endDateTime)) {
+          uni.showToast({
+            title: '开始时间不能晚于结束时间',
+            icon: 'none'
+          });
+          return;
+        }
+        this.searchParams.startDateTime = dateTimeString;
+      } else {
+        if (this.searchParams.startDateTime && selectedDate <= new Date(this.searchParams.startDateTime)) {
+          uni.showToast({
+            title: '结束时间不能早于开始时间',
+            icon: 'none'
+          });
+          return;
+        }
+        this.searchParams.endDateTime = dateTimeString;
+      }
+      
+      this.closeCustomDateTimePicker();
+    },
+    
+    // 格式化日期时间字符串
+    formatDateTimeString(date) {
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      const hour = date.getHours().toString().padStart(2, '0');
+      const minute = date.getMinutes().toString().padStart(2, '0');
+      return `${year}-${month}-${day} ${hour}:${minute}:00`;
+    },
+    
+    // 格式化显示的日期时间
+    formatDisplayDateTime(dateTimeString) {
+      if (!dateTimeString) return '';
+      try {
+        // 修复iOS兼容性问题：将 "YYYY-MM-DD HH:MM:SS" 格式转换为 "YYYY/MM/DD HH:MM:SS"
+        let formattedDateString = dateTimeString;
+        if (dateTimeString.includes('-') && dateTimeString.includes(' ')) {
+          // 将日期部分的 "-" 替换为 "/"
+          const parts = dateTimeString.split(' ');
+          if (parts.length >= 2) {
+            const datePart = parts[0].replace(/-/g, '/');
+            const timePart = parts[1];
+            formattedDateString = `${datePart} ${timePart}`;
+          }
+        }
+        
+        const date = new Date(formattedDateString);
+        if (isNaN(date.getTime())) {
+          console.warn('日期格式无效:', dateTimeString);
+          return '';
+        }
+        
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hour = date.getHours().toString().padStart(2, '0');
+        const minute = date.getMinutes().toString().padStart(2, '0');
+        return `${year}-${month}-${day} ${hour}:${minute}`;
+      } catch (error) {
+        console.error('格式化显示日期时间出错:', error, '原始值:', dateTimeString);
+        return '';
       }
     },
     
@@ -1089,12 +1414,16 @@ export default {
         }
         
         // 添加时间范围过滤
-        if (this.searchParams.startDate) {
-          params.start_date = this.searchParams.startDate;
+        if (this.searchParams.startDateTime) {
+          // 将datetime字符串转换为时间戳
+          const startTimestamp = Math.floor(new Date(this.searchParams.startDateTime).getTime() / 1000);
+          params.start_date = startTimestamp;
         }
         
-        if (this.searchParams.endDate) {
-          params.end_date = this.searchParams.endDate;
+        if (this.searchParams.endDateTime) {
+          // 将datetime字符串转换为时间戳
+          const endTimestamp = Math.floor(new Date(this.searchParams.endDateTime).getTime() / 1000);
+          params.end_date = endTimestamp;
         }
         
         const result = await getTransactionsApi(params);
@@ -1123,100 +1452,6 @@ export default {
       }
     },
     
-    // 日期选择器相关方法
-    initDatePicker() {
-      const currentDate = new Date();
-      const currentYear = currentDate.getFullYear();
-      const currentMonth = currentDate.getMonth() + 1;
-      const currentDay = currentDate.getDate();
-      
-      // 初始化年份列表（当前年往前5年）
-      this.years = [];
-      for (let i = currentYear - 5; i <= currentYear + 5; i++) {
-        this.years.push(i);
-      }
-      
-      // 初始化月份列表
-      this.months = [];
-      for (let i = 1; i <= 12; i++) {
-        this.months.push(i);
-      }
-      
-      // 初始化天数列表
-      this.updateDays(currentYear, currentMonth);
-      
-      // 设置默认值
-      const yearIndex = this.years.findIndex(year => year === currentYear);
-      const monthIndex = currentMonth - 1;
-      const dayIndex = currentDay - 1;
-      
-      this.datePickerValue = [yearIndex, monthIndex, dayIndex];
-      this.tempDatePickerValue = [...this.datePickerValue];
-    },
-    
-    // 更新天数列表
-    updateDays(year, month) {
-      const daysInMonth = new Date(year, month, 0).getDate();
-      this.days = [];
-      for (let i = 1; i <= daysInMonth; i++) {
-        this.days.push(i);
-      }
-    },
-    
-    showStartDatePicker() {
-      this.datePickerType = 'start';
-      this.showDatePickerModal = true;
-    },
-    
-    showEndDatePicker() {
-      this.datePickerType = 'end';
-      this.showDatePickerModal = true;
-    },
-    
-    closeDatePicker() {
-      this.showDatePickerModal = false;
-    },
-    
-    onDatePickerChange(e) {
-      const values = e.detail.value;
-      this.tempDatePickerValue = [...values]; // 创建副本避免引用问题
-      
-      // 当年月变化时，更新天数
-      const year = this.years[values[0]];
-      const month = this.months[values[1]];
-      
-      // 先保存当前选中的天数
-      const currentDayIndex = values[2];
-      
-      // 更新天数列表
-      this.updateDays(year, month);
-      
-      // 如果当前选中的天数超过了新月份的最大天数，则重置为最后一天
-      if (currentDayIndex >= this.days.length) {
-        this.tempDatePickerValue[2] = this.days.length - 1;
-      }
-      
-      // 强制更新视图
-      this.$forceUpdate();
-    },
-    
-    confirmDatePicker() {
-      this.datePickerValue = [...this.tempDatePickerValue];
-      const year = this.years[this.datePickerValue[0]];
-      const month = this.months[this.datePickerValue[1]];
-      const day = this.days[this.datePickerValue[2]];
-      
-      const selectedDate = new Date(year, month - 1, day);
-      const timestamp = Math.floor(selectedDate.getTime() / 1000);
-      
-      if (this.datePickerType === 'start') {
-        this.searchParams.startDate = timestamp;
-      } else {
-        this.searchParams.endDate = timestamp;
-      }
-      
-      this.closeDatePicker();
-    },
     
     // 跳转到记账页面
     navigateToRecord() {
@@ -1257,27 +1492,48 @@ export default {
     
     // 格式化时间（YYYY-MM-DD HH:MM:SS）
     formatTime(timestamp) {
-      const date = new Date(timestamp * 1000);
-      const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
-      const hours = date.getHours().toString().padStart(2, '0');
-      const minutes = date.getMinutes().toString().padStart(2, '0');
-      const seconds = date.getSeconds().toString().padStart(2, '0');
-      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      if (!timestamp) return '';
+      try {
+        const date = new Date(timestamp * 1000);
+        if (isNaN(date.getTime())) return '';
+        
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      } catch (error) {
+        console.error('格式化时间出错:', error);
+        return '';
+      }
     },
     
     // 格式化金额（保留两位小数）
     formatAmount(amount) {
-      return parseFloat(amount).toFixed(2);
+      if (amount === null || amount === undefined || amount === '') return '0.00';
+      try {
+        const num = parseFloat(amount);
+        return isNaN(num) ? '0.00' : num.toFixed(2);
+      } catch (error) {
+        console.error('格式化金额出错:', error);
+        return '0.00';
+      }
     },
     
     // 格式化昵称（超过4个字符用...代替）
     formatNickname(nickname) {
-      if (nickname.length > 4) {
-        return nickname.substring(0, 4) + '...';
+      if (!nickname || typeof nickname !== 'string') return '匿名';
+      try {
+        if (nickname.length > 4) {
+          return nickname.substring(0, 4) + '...';
+        }
+        return nickname;
+      } catch (error) {
+        console.error('格式化昵称出错:', error);
+        return '匿名';
       }
-      return nickname;
     },
     
     // 获取日汇总
@@ -2062,10 +2318,156 @@ export default {
   box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
 }
 
-.amount-range, .date-range {
+.amount-range {
   display: flex;
   align-items: center;
   gap: 16rpx;
+}
+
+.datetime-range {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.datetime-picker-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.datetime-label {
+  font-size: 24rpx;
+  color: #666666;
+  font-weight: 500;
+}
+
+.custom-datetime-input {
+  width: 100%;
+  height: 80rpx;
+  background: #F5F5F5;
+  border-radius: 12rpx;
+  border: 1rpx solid #E5E5E5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.custom-datetime-input:active {
+  background: rgba(255, 154, 90, 0.1);
+  border-color: #FF9A5A;
+}
+
+.datetime-display {
+  font-size: 28rpx;
+  color: #333333;
+  flex: 1;
+}
+
+.datetime-display:empty::before {
+  content: attr(placeholder);
+  color: #999999;
+}
+
+/* 自定义日历时间选择器弹窗样式 */
+.custom-datetime-modal {
+  max-height: 85vh;
+  border-radius: 24rpx 24rpx 0 0;
+}
+
+.custom-datetime-body {
+  padding: 0;
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
+.date-section, .time-section {
+  padding: 24rpx;
+  border-bottom: 1rpx solid #F0F0F0;
+}
+
+.time-section {
+  border-bottom: none;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 20rpx;
+  text-align: center;
+}
+
+.date-picker-view, .time-picker-view {
+  height: 300rpx;
+  background: #FFFFFF;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.picker-item {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  color: #333333;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+/* picker-view 指示器样式 */
+.date-picker-view ::v-deep .uni-picker-view-indicator,
+.time-picker-view ::v-deep .uni-picker-view-indicator {
+  background: linear-gradient(135deg, rgba(255, 154, 90, 0.1), rgba(255, 209, 102, 0.1));
+  border-top: 2rpx solid #FF9A5A;
+  border-bottom: 2rpx solid #FF9A5A;
+  border-radius: 8rpx;
+}
+
+/* picker-view 遮罩样式 */
+.date-picker-view ::v-deep .uni-picker-view-mask,
+.time-picker-view ::v-deep .uni-picker-view-mask {
+  background: linear-gradient(180deg, 
+    rgba(255, 255, 255, 0.9) 0%, 
+    rgba(255, 255, 255, 0.6) 40%, 
+    rgba(255, 255, 255, 0) 50%, 
+    rgba(255, 255, 255, 0.6) 60%, 
+    rgba(255, 255, 255, 0.9) 100%);
+}
+
+/* 确认和取消按钮样式 */
+.custom-datetime-modal .btn-cancel {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F5F5F5;
+  color: #666666;
+  border: none;
+  margin-right: 20rpx;
+}
+
+.custom-datetime-modal .btn-confirm {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #FF9A5A, #FFD166);
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.3);
 }
 
 .amount-input {
@@ -2082,19 +2484,6 @@ export default {
 .range-separator {
   font-size: 28rpx;
   color: #999999;
-}
-
-.date-picker-input {
-  flex: 1;
-  height: 80rpx;
-  background: #F5F5F5;
-  border-radius: 12rpx;
-  padding: 0 20rpx;
-  font-size: 28rpx;
-  color: #333333;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .btn-reset, .btn-search {
@@ -2121,52 +2510,133 @@ export default {
   box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
 }
 
-/* 删除确认弹窗 */
-.delete-confirm-modal {
-  width: 80%;
-  border-radius: 16rpx;
+/* 删除确认弹窗 - 从底部弹出样式 */
+.delete-modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.delete-confirm-content {
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: 24rpx 24rpx 0 0;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.delete-confirm-header {
+  padding: 60rpx 40rpx 40rpx;
+  text-align: center;
+  background: #FFFFFF;
 }
 
 .confirm-icon {
   width: 120rpx;
   height: 120rpx;
   border-radius: 60rpx;
-  background: #FFE8E8;
+  background: linear-gradient(135deg, #FFE8E8, #FFEBEB);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 30rpx;
+  margin: 0 auto 40rpx;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 107, 0.2);
 }
 
 .confirm-title {
   font-size: 36rpx;
-  font-weight: 600;
-  color: $text-primary;
+  font-weight: 700;
+  color: #333333;
   text-align: center;
-  margin-bottom: 20rpx;
+  margin-bottom: 24rpx;
   display: block;
 }
 
 .confirm-message {
   font-size: 28rpx;
-  color: $text-secondary;
+  color: #666666;
   text-align: center;
-  margin-bottom: 30rpx;
+  margin-bottom: 0;
   display: block;
-  line-height: 1.5;
+  line-height: 1.6;
+  padding: 0 20rpx;
 }
 
-.btn-delete {
+.delete-confirm-footer {
+  padding: 30rpx 40rpx;
+  padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+  background: #F8F9FA;
+  border-top: 1rpx solid #F0F0F0;
+  display: flex;
+  gap: 20rpx;
+}
+
+.delete-confirm-footer .btn-cancel {
   flex: 1;
   height: 88rpx;
-  border-radius: 40rpx;
-  font-size: 28rpx;
+  border-radius: 44rpx;
+  font-size: 30rpx;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #FF6B6B;
+  background: #F5F5F5;
+  color: #666666;
+  border: 2rpx solid #E5E5E5;
+  transition: all 0.3s ease;
+}
+
+.delete-confirm-footer .btn-cancel:active {
+  background: #EEEEEE;
+  transform: scale(0.98);
+}
+
+.delete-confirm-footer .btn-delete {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #FF6B6B, #FF5252);
   color: #FFFFFF;
+  border: none;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 107, 0.3);
+  transition: all 0.3s ease;
+}
+
+.delete-confirm-footer .btn-delete:active {
+  background: linear-gradient(135deg, #FF5252, #FF4444);
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(255, 107, 107, 0.4);
 }
 
 /* 模态框 */
@@ -2216,8 +2686,12 @@ export default {
 }
 
 .search-modal-footer {
-  padding: 30rpx 24rpx 40rpx;
+  padding: 30rpx 24rpx;
   margin-top: 20rpx;
+  padding-bottom: calc(160rpx + env(safe-area-inset-bottom));
+  background: #FFFFFF;
+  position: relative;
+  z-index: 1000;
 }
 
 .modal-title {
