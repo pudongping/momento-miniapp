@@ -350,7 +350,7 @@
             </view>
           </view>
         </view>
-        <view class="modal-footer search-modal-footer">
+        <view class="search-modal-footer">
           <button class="btn-reset" @click="resetSearch">重置</button>
           <button class="btn-search" @click="searchTransactions">搜索</button>
         </view>
@@ -1038,6 +1038,7 @@ export default {
       this.showSearchModalFlag = false;
     },
     
+    // 重置搜索
     resetSearch() {
       this.searchParams = {
         keyword: '',
@@ -1047,6 +1048,13 @@ export default {
         startDateTime: '',
         endDateTime: ''
       };
+      
+      // 显示重置成功提示
+      uni.showToast({
+        title: '已重置',
+        icon: 'success',
+        duration: 1500
+      });
     },
     
     // 验证关键词输入
@@ -1380,8 +1388,71 @@ export default {
       }
     },
     
+    // 验证搜索表单
+    validateSearchForm() {
+      // 验证金额范围
+      if (this.searchParams.minAmount && this.searchParams.minAmount !== '') {
+        const minAmount = parseFloat(this.searchParams.minAmount);
+        if (isNaN(minAmount) || minAmount < 0) {
+          uni.showToast({
+            title: '最小金额格式不正确',
+            icon: 'none',
+            duration: 2000
+          });
+          return false;
+        }
+      }
+      
+      if (this.searchParams.maxAmount && this.searchParams.maxAmount !== '') {
+        const maxAmount = parseFloat(this.searchParams.maxAmount);
+        if (isNaN(maxAmount) || maxAmount < 0) {
+          uni.showToast({
+            title: '最大金额格式不正确',
+            icon: 'none',
+            duration: 2000
+          });
+          return false;
+        }
+      }
+      
+      // 验证金额范围逻辑
+      if (this.searchParams.minAmount && this.searchParams.maxAmount) {
+        const minAmount = parseFloat(this.searchParams.minAmount);
+        const maxAmount = parseFloat(this.searchParams.maxAmount);
+        if (minAmount > maxAmount) {
+          uni.showToast({
+            title: '最小金额不能大于最大金额',
+            icon: 'none',
+            duration: 2000
+          });
+          return false;
+        }
+      }
+      
+      // 验证时间范围
+      if (this.searchParams.startDateTime && this.searchParams.endDateTime) {
+        const startTime = new Date(this.searchParams.startDateTime.replace(/-/g, '/'));
+        const endTime = new Date(this.searchParams.endDateTime.replace(/-/g, '/'));
+        if (startTime >= endTime) {
+          uni.showToast({
+            title: '开始时间不能晚于结束时间',
+            icon: 'none',
+            duration: 2000
+          });
+          return false;
+        }
+      }
+      
+      return true;
+    },
+
     async searchTransactions() {
       if (!this.currentBook) return;
+      
+      // 验证表单
+      if (!this.validateSearchForm()) {
+        return;
+      }
       
       try {
         this.isLoading = true;
@@ -2254,7 +2325,8 @@ export default {
 
 /* 搜索弹窗 */
 .search-modal {
-  max-height: 80vh;
+  max-height: 85vh;
+  overflow-y: auto;
 }
 
 .search-form {
@@ -2686,12 +2758,18 @@ export default {
 }
 
 .search-modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20rpx;
   padding: 30rpx 24rpx;
-  margin-top: 20rpx;
-  padding-bottom: calc(160rpx + env(safe-area-inset-bottom));
+  padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
   background: #FFFFFF;
   position: relative;
   z-index: 1000;
+  box-shadow: 0 -4rpx 12rpx rgba(0, 0, 0, 0.1);
+  border-top: 1rpx solid #F0F0F0;
+  margin-top: 20rpx;
 }
 
 .modal-title {
