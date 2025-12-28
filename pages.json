@@ -29,6 +29,16 @@
 			}
 		},
 		{
+			"path": "pages/edit-transaction/index",
+			"style": {
+				"navigationBarTitleText": "编辑账单",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black",
+				"backgroundColor": "#F8F9FA",
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/profile/index",
 			"style": {
 				"navigationBarTitleText": "我的",

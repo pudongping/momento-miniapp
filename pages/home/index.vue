@@ -934,23 +934,16 @@ export default {
     
     // 编辑交易
     editTransaction(transaction) {
-      // 由于record页面是tabbar页面，不能使用navigateTo传参
-      // 先将编辑数据存储到本地存储，然后切换到记账页面
+      // 跳转到专门的编辑页面
       try {
-        uni.setStorageSync('editTransactionData', {
-          transaction_id: transaction.transaction_id,
-          edit: true,
-          transactionData: transaction
-        });
-        
-        uni.switchTab({
-          url: '/pages/record/index',
+        const transactionData = encodeURIComponent(JSON.stringify(transaction));
+        uni.navigateTo({
+          url: `/pages/edit-transaction/index?data=${transactionData}`,
           success: () => {
-            // 切换成功后，记账页面会自动读取存储的编辑数据
-            console.log('切换到编辑页面成功');
+            console.log('跳转到编辑页面成功');
           },
           fail: (error) => {
-            console.error('切换到编辑页面失败', error);
+            console.error('跳转到编辑页面失败', error);
             uni.showToast({
               title: '打开编辑页面失败',
               icon: 'none'
@@ -958,7 +951,7 @@ export default {
           }
         });
       } catch (error) {
-        console.error('存储编辑数据失败', error);
+        console.error('编辑功能异常', error);
         uni.showToast({
           title: '编辑功能暂时不可用',
           icon: 'none'

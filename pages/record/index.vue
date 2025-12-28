@@ -100,28 +100,28 @@
       
       <!-- 标签选择 -->
       <view class="tags-section">
-        <text class="section-title">选择标签</text>
-        <scroll-view scroll-x class="tags-scroll" show-scrollbar="false">
-          <view class="tags-container">
-            <view 
-              v-for="tag in filteredTags" 
-              :key="tag.tag_id"
-              class="tag-item"
-              :class="{ active: selectedTagId === tag.tag_id }"
-              :style="{ backgroundColor: selectedTagId === tag.tag_id ? tag.color : '#F5F5F5' }"
-              @click="selectTag(tag)"
-            >
-              <uni-icons :type="tag.icon" size="20" :color="selectedTagId === tag.tag_id ? '#FFFFFF' : tag.color"></uni-icons>
-              <text :style="{ color: selectedTagId === tag.tag_id ? '#FFFFFF' : '#333333' }">
-                {{ tag.name }}
-              </text>
-            </view>
-            <view class="tag-item custom-tag" @click="showCustomTagModal">
-              <uni-icons type="plus" size="20" color="#666666"></uni-icons>
-              <text>自定义</text>
-            </view>
+        <view class="tags-header">
+          <text class="section-title">选择标签</text>
+        </view>
+        <view class="tags-grid">
+          <view 
+            v-for="tag in filteredTags" 
+            :key="tag.tag_id"
+            class="tag-item"
+            :class="{ active: selectedTagId === tag.tag_id }"
+            :style="{ backgroundColor: selectedTagId === tag.tag_id ? tag.color : '#F5F5F5' }"
+            @click="selectTag(tag)"
+          >
+            <uni-icons :type="tag.icon" size="18" :color="selectedTagId === tag.tag_id ? '#FFFFFF' : tag.color"></uni-icons>
+            <text :style="{ color: selectedTagId === tag.tag_id ? '#FFFFFF' : '#333333' }">
+              {{ tag.name }}
+            </text>
           </view>
-        </scroll-view>
+          <view class="tag-item custom-tag" @click="showCustomTagModal">
+            <uni-icons type="plus" size="18" color="#666666"></uni-icons>
+            <text>自定义</text>
+          </view>
+        </view>
       </view>
       
       <!-- 备注输入 -->
@@ -188,7 +188,7 @@
       
       <!-- 保存按钮 -->
       <view class="save-section">
-        <button class="btn-save" @click="saveTransaction">{{ isEditMode ? '更新' : '保存' }}</button>
+        <button class="btn-save" @click="saveTransaction">保存</button>
       </view>
     </view>
     
@@ -296,7 +296,6 @@ import {
   getTagsApi, 
   addTagApi, 
   addTransactionApi,
-  updateTransactionApi,
   addRecurringTransactionApi
 } from '@/api/index.js';
 
@@ -352,11 +351,7 @@ export default {
         monthly: '每月',
         quarterly: '每季度',
         yearly: '每年'
-      },
-      
-      // 编辑模式
-      isEditMode: false,
-      editTransactionId: null
+      }
     };
   },
 
@@ -370,57 +365,9 @@ export default {
     this.initBooks();
     await this.initTags();
     this.initDatePicker();
-    this.checkEditMode();
   },
 
   methods: {
-    // 检查编辑模式
-    checkEditMode() {
-      try {
-        const editData = uni.getStorageSync('editTransactionData');
-        if (editData && editData.edit && editData.transactionData) {
-          console.log('检测到编辑数据:', editData);
-          
-          // 设置编辑模式
-          this.isEditMode = true;
-          this.editTransactionId = editData.transaction_id;
-          
-          // 回显交易数据
-          const transaction = editData.transactionData;
-          this.transactionType = transaction.type;
-          this.amount = transaction.amount.toString();
-          this.remark = transaction.remark || '';
-          
-          // 使用 $nextTick 确保交易类型更新后再设置标签ID
-          this.$nextTick(() => {
-            this.selectedTagId = transaction.tag_id;
-            console.log('设置标签ID:', transaction.tag_id);
-            console.log('当前交易类型:', this.transactionType);
-            console.log('过滤后的标签:', this.filteredTags.map(t => ({id: t.tag_id, name: t.name})));
-            console.log('选中的标签ID匹配:', this.filteredTags.some(t => t.tag_id === transaction.tag_id));
-          });
-          
-          // 回显日期
-          if (transaction.timestamp) {
-            this.selectedDate = new Date(transaction.timestamp * 1000);
-          }
-          
-          // 清除存储的编辑数据
-          uni.removeStorageSync('editTransactionData');
-          
-          console.log('编辑数据回显完成');
-        } else {
-          // 重置为新增模式
-          this.isEditMode = false;
-          this.editTransactionId = null;
-        }
-      } catch (error) {
-        console.error('检查编辑模式失败:', error);
-        this.isEditMode = false;
-        this.editTransactionId = null;
-      }
-    },
-    
     // 账本相关方法
     async initBooks() {
       try {
@@ -686,8 +633,8 @@ export default {
         return;
       }
       
-      // 验证周期记账参数 (编辑模式下跳过周期记账验证)
-      if (!this.isEditMode && this.isRecurring && this.recurringType !== 'daily') {
+      // 验证周期记账参数
+      if (this.isRecurring && this.recurringType !== 'daily') {
         if (!this.recurringDay) {
           uni.showToast({
             title: '请输入周期日期',
@@ -734,50 +681,33 @@ export default {
           timestamp: Math.floor(this.selectedDate.getTime() / 1000)
         };
         
-        if (this.isEditMode) {
-          // 编辑模式 - 更新交易
-          const updateData = {
+        // 如果是周期记账
+        if (this.isRecurring) {
+          const recurringData = {
             ...transactionData,
-            transaction_id: this.editTransactionId
+            name: this.remark.trim() || `周期${this.transactionType === 'expense' ? '支出' : '收入'}`,
+            recurring_type: this.recurringType,
+            recurring_day: this.recurringType === 'daily' ? 0 : parseInt(this.recurringDay),
+            recurring_time: '09:00',
+            is_active: true
           };
           
-          await updateTransactionApi(updateData);
+          await addRecurringTransactionApi(recurringData);
           
           uni.hideLoading();
           uni.showToast({
-            title: '更新成功',
+            title: '周期记账设置成功',
             icon: 'success'
           });
         } else {
-          // 新增模式
-          if (this.isRecurring) {
-            // 周期记账
-            const recurringData = {
-              ...transactionData,
-              name: this.remark.trim() || `周期${this.transactionType === 'expense' ? '支出' : '收入'}`,
-              recurring_type: this.recurringType,
-              recurring_day: this.recurringType === 'daily' ? 0 : parseInt(this.recurringDay),
-              recurring_time: '09:00',
-              is_active: true
-            };
-            
-            await addRecurringTransactionApi(recurringData);
-            
-            uni.hideLoading();
-            uni.showToast({
-              title: '周期记账设置成功',
-              icon: 'success'
-            });
-          } else {
-            // 普通交易
-            await addTransactionApi(transactionData);
-            
-            uni.hideLoading();
-            uni.showToast({
-              title: '记账成功',
-              icon: 'success'
-            });
-          }
+          // 普通交易
+          await addTransactionApi(transactionData);
+          
+          uni.hideLoading();
+          uni.showToast({
+            title: '记账成功',
+            icon: 'success'
+          });
         }
         
         // 返回首页
@@ -956,27 +886,28 @@ export default {
   display: block;
 }
 
-.tags-scroll {
-  width: 100%;
-  white-space: nowrap;
+.tags-header {
+  margin-bottom: 20rpx;
 }
 
-.tags-container {
+.tags-grid {
   display: flex;
-  flex-wrap: nowrap;
-  padding: 10rpx 0;
+  flex-wrap: wrap;
+  gap: 16rpx;
 }
 
 .tag-item {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 8rpx;
-  padding: 16rpx 24rpx;
-  border-radius: 40rpx;
-  margin-right: 16rpx;
+  justify-content: center;
+  gap: 6rpx;
+  padding: 12rpx 16rpx;
+  border-radius: 24rpx;
   background: #F5F5F5;
   transition: all 0.3s ease;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  min-width: 80rpx;
+  flex: 0 0 auto;
 }
 
 .tag-item.active {
