@@ -209,7 +209,7 @@
                       <image :src="transaction.user_avatar || '/static/images/default-avatar.png'" class="user-avatar"></image>
                       <text class="user-nickname">{{ formatNickname(transaction.user_nickname || '匿名') }}</text>
                     </view>
-                    <text class="transaction-time">{{ formatTime(transaction.timestamp) }}</text>
+                    <text class="transaction-time">{{ formatTime(transaction.created_at) }}</text>
                   </view>
                 </view>
                 
@@ -532,7 +532,7 @@ export default {
       
       this.transactions.forEach(transaction => {
         // 使用日期作为分组键
-        const date = this.formatDate(new Date(transaction.timestamp * 1000));
+        const date = this.formatDate(new Date(transaction.created_at * 1000));
         
         if (!groups[date]) {
           groups[date] = [];
@@ -794,7 +794,7 @@ export default {
           
           // 默认展开最近一天的交易
           if (this.transactions.length > 0) {
-            const latestDate = this.formatDate(new Date(this.transactions[0].timestamp * 1000));
+            const latestDate = this.formatDate(new Date(this.transactions[0].created_at * 1000));
             this.$set(this.expandedDays, latestDate, true);
           }
         }

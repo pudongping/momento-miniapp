@@ -83,9 +83,9 @@
         />
       </view>
       
-      <!-- 日期选择 -->
+      <!-- 创建时间选择 -->
       <view class="date-section">
-        <text class="section-title">日期</text>
+        <text class="section-title">创建时间</text>
         <view class="date-picker" @click="showDatePicker">
           <text>{{ formatDate(selectedDate) }}</text>
           <uni-icons type="calendar" size="18" color="#666666"></uni-icons>
@@ -102,7 +102,7 @@
     <view v-if="showDatePickerModal" class="modal-mask" @click="closeDatePicker">
       <view class="modal-content" @click.stop>
         <view class="modal-header">
-          <text class="modal-title">选择日期时间</text>
+          <text class="modal-title">选择创建时间</text>
           <view class="close-btn" @click="closeDatePicker">✕</view>
         </view>
         <view class="modal-body">
@@ -231,8 +231,8 @@ export default {
       this.remark = transaction.remark || '';
       this.selectedTagId = transaction.tag_id;
       
-      if (transaction.timestamp) {
-        this.selectedDate = new Date(transaction.timestamp * 1000);
+      if (transaction.created_at) {
+        this.selectedDate = new Date(transaction.created_at * 1000);
       }
     },
 
@@ -384,7 +384,7 @@ export default {
           amount: parseFloat(this.amount),
           tag_id: this.selectedTagId,
           remark: this.remark.trim(),
-          timestamp: Math.floor(this.selectedDate.getTime() / 1000)
+          created_at: Math.floor(this.selectedDate.getTime() / 1000)
         };
         
         await updateTransactionApi(updateData);

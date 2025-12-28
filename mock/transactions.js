@@ -64,7 +64,6 @@ const generateTransactions = () => {
       tag_color: tag.color,
       tag_icon: tag.icon,
       remark: Math.random() > 0.3 ? remark : '', // 70%概率有备注
-      timestamp,
       created_at: timestamp,
       updated_at: timestamp,
       is_auto_generated: false
@@ -72,7 +71,7 @@ const generateTransactions = () => {
   }
   
   // 按时间戳降序排序（最新的在前）
-  return transactions.sort((a, b) => b.timestamp - a.timestamp);
+  return transactions.sort((a, b) => b.created_at - a.created_at);
 };
 
 // 初始交易记录

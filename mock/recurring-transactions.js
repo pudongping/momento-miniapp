@@ -22,9 +22,12 @@ let RECURRING_TRANSACTIONS = [
     tag_id: 2, // 房贷标签
     remark: '每月房贷还款',
     recurring_type: RECURRING_TYPES.MONTHLY,
+    recurring_hour: 9,
+    recurring_minute: 0,
+    recurring_month: null, // 每月执行，不限定月份
     recurring_day: 10, // 每月10号
-    recurring_time: '09:00',
-    is_active: true,
+    recurring_weekday: null,
+    is_recurring_enabled: true,
     created_at: Math.floor(Date.now() / 1000) - 86400 * 30,
     updated_at: Math.floor(Date.now() / 1000) - 86400 * 30
   },
@@ -37,9 +40,12 @@ let RECURRING_TRANSACTIONS = [
     tag_id: 6, // 其他标签
     remark: '季度物业费',
     recurring_type: RECURRING_TYPES.QUARTERLY,
+    recurring_hour: 10,
+    recurring_minute: 0,
+    recurring_month: null, // 每季度执行，不限定月份
     recurring_day: 15, // 每季度第15天
-    recurring_time: '10:00',
-    is_active: true,
+    recurring_weekday: null,
+    is_recurring_enabled: true,
     created_at: Math.floor(Date.now() / 1000) - 86400 * 20,
     updated_at: Math.floor(Date.now() / 1000) - 86400 * 20
   },
@@ -52,9 +58,12 @@ let RECURRING_TRANSACTIONS = [
     tag_id: 7, // 工资标签
     remark: '月薪',
     recurring_type: RECURRING_TYPES.MONTHLY,
+    recurring_hour: 12,
+    recurring_minute: 0,
+    recurring_month: null, // 每月执行，不限定月份
     recurring_day: 15, // 每月15号
-    recurring_time: '12:00',
-    is_active: true,
+    recurring_weekday: null,
+    is_recurring_enabled: true,
     created_at: Math.floor(Date.now() / 1000) - 86400 * 15,
     updated_at: Math.floor(Date.now() / 1000) - 86400 * 15
   }
@@ -75,8 +84,8 @@ export function getRecurringTransactions(params = {}) {
   }
   
   // 按状态筛选
-  if (params.is_active !== undefined) {
-    result = result.filter(t => t.is_active === params.is_active);
+  if (params.is_recurring_enabled !== undefined) {
+    result = result.filter(t => t.is_recurring_enabled === params.is_recurring_enabled);
   }
   
   return result;
@@ -100,10 +109,13 @@ export function addRecurringTransaction(data) {
     tag_id: data.tag_id,
     remark: data.remark || '',
     recurring_type: data.recurring_type,
+    recurring_hour: data.recurring_hour || 9,
+    recurring_minute: data.recurring_minute || 0,
+    recurring_weekday: data.recurring_weekday,
+    recurring_month: data.recurring_month,
     recurring_day: data.recurring_day,
-    recurring_time: data.recurring_time || '09:00',
-    is_active: data.is_active !== undefined ? data.is_active : true,
-    created_at: Math.floor(Date.now() / 1000),
+    is_recurring_enabled: data.is_recurring_enabled !== undefined ? data.is_recurring_enabled : true,
+    created_at: data.created_at || Math.floor(Date.now() / 1000),
     updated_at: Math.floor(Date.now() / 1000)
   };
   
@@ -129,9 +141,12 @@ export function updateRecurringTransaction(data) {
     tag_id: data.tag_id || updatedRecurringTransaction.tag_id,
     remark: data.remark !== undefined ? data.remark : updatedRecurringTransaction.remark,
     recurring_type: data.recurring_type || updatedRecurringTransaction.recurring_type,
+    recurring_hour: data.recurring_hour !== undefined ? data.recurring_hour : updatedRecurringTransaction.recurring_hour,
+    recurring_minute: data.recurring_minute !== undefined ? data.recurring_minute : updatedRecurringTransaction.recurring_minute,
+    recurring_weekday: data.recurring_weekday !== undefined ? data.recurring_weekday : updatedRecurringTransaction.recurring_weekday,
+    recurring_month: data.recurring_month !== undefined ? data.recurring_month : updatedRecurringTransaction.recurring_month,
     recurring_day: data.recurring_day !== undefined ? data.recurring_day : updatedRecurringTransaction.recurring_day,
-    recurring_time: data.recurring_time || updatedRecurringTransaction.recurring_time,
-    is_active: data.is_active !== undefined ? data.is_active : updatedRecurringTransaction.is_active,
+    is_recurring_enabled: data.is_recurring_enabled !== undefined ? data.is_recurring_enabled : updatedRecurringTransaction.is_recurring_enabled,
     updated_at: Math.floor(Date.now() / 1000)
   };
   
@@ -159,7 +174,7 @@ export function toggleRecurringTransaction(recurringId, status) {
     throw new Error('周期性交易记录不存在');
   }
   
-  RECURRING_TRANSACTIONS[index].is_active = status;
+  RECURRING_TRANSACTIONS[index].is_recurring_enabled = status;
   RECURRING_TRANSACTIONS[index].updated_at = Math.floor(Date.now() / 1000);
   
   return RECURRING_TRANSACTIONS[index];
@@ -175,7 +190,7 @@ export function processRecurringTransactions() {
   const currentTimestamp = Math.floor(now.getTime() / 1000);
   
   // 获取所有激活的周期性交易
-  const activeRecurring = RECURRING_TRANSACTIONS.filter(t => t.is_active);
+  const activeRecurring = RECURRING_TRANSACTIONS.filter(t => t.is_recurring_enabled);
   const processedTransactions = [];
   
   activeRecurring.forEach(recurring => {
@@ -220,7 +235,7 @@ export function processRecurringTransactions() {
         amount: recurring.amount,
         tag_id: recurring.tag_id,
         remark: `${recurring.name}（自动记入）`,
-        timestamp: currentTimestamp,
+        created_at: currentTimestamp,
         is_auto_generated: true
       });
       

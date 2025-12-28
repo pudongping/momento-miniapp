@@ -136,17 +136,17 @@
         />
       </view>
       
-      <!-- 日期选择 -->
+      <!-- 创建时间选择 -->
       <view class="date-section">
-        <text class="section-title">日期</text>
+        <text class="section-title">创建时间</text>
         <view class="date-picker" @click="showDatePicker">
           <text>{{ formatDate(selectedDate) }}</text>
           <uni-icons type="calendar" size="18" color="#666666"></uni-icons>
         </view>
       </view>
       
-      <!-- 周期记账开关 (编辑模式下隐藏) -->
-      <view v-if="!isEditMode" class="recurring-section">
+      <!-- 周期记账开关 -->
+      <view class="recurring-section">
         <view class="recurring-header">
           <text class="section-title">周期记账</text>
           <switch 
@@ -157,31 +157,133 @@
           />
         </view>
         <view v-if="isRecurring" class="recurring-options">
-          <view class="recurring-type-selector">
-            <view 
-              v-for="(label, type) in recurringTypes" 
-              :key="type"
-              class="recurring-type-option"
-              :class="{ active: recurringType === type }"
-              @click="recurringType = type"
-            >
-              <text>{{ label }}</text>
+          <!-- 周期类型选择 -->
+          <view class="recurring-type-section">
+            <text class="section-title">周期类型</text>
+            <view class="type-selector">
+              <view 
+                v-for="type in recurringTypes" 
+                :key="type.value"
+                class="type-option"
+                :class="{ active: recurringType === type.value }"
+                @click="selectRecurringType(type.value)"
+              >
+                <text>{{ type.label }}</text>
+              </view>
             </view>
           </view>
-          
-          <view class="recurring-day-selector">
-            <text class="recurring-label">每{{ getRecurringTypeText() }}</text>
-            <input 
-              v-if="recurringType !== 'daily'"
-              type="number" 
-              v-model="recurringDay" 
-              class="recurring-day-input"
-              :placeholder="getRecurringDayPlaceholder()"
-              maxlength="2"
-            />
-            <text v-if="recurringType !== 'daily'" class="recurring-day-unit">
-              {{ getRecurringDayUnit() }}
-            </text>
+
+          <!-- 详细配置 -->
+          <view class="recurring-config-section">
+            <text class="section-title">详细配置</text>
+            
+            <!-- 每天配置 -->
+            <view v-if="recurringType === 'daily'" class="config-container">
+              <view class="config-description">
+                <text>每天 {{ recurringTime }} 执行</text>
+              </view>
+              <view class="time-picker-container">
+                <view class="picker-labels">
+                  <text class="picker-label">小时</text>
+                  <text class="picker-label">分钟</text>
+                </view>
+                <picker-view 
+                  :indicator-style="'height: 50px; background-color: rgba(255, 154, 90, 0.1); border-top: 1px solid #FF9A5A; border-bottom: 1px solid #FF9A5A;'"
+                  :value="timePickerValue"
+                  @change="onTimePickerChange"
+                  class="time-picker-view"
+                >
+                  <picker-view-column>
+                    <view class="picker-item" v-for="hour in hours" :key="hour">
+                      <text>{{ hour.toString().padStart(2, '0') }}</text>
+                    </view>
+                  </picker-view-column>
+                  <picker-view-column>
+                    <view class="picker-item" v-for="minute in minutes" :key="minute">
+                      <text>{{ minute.toString().padStart(2, '0') }}</text>
+                    </view>
+                  </picker-view-column>
+                </picker-view>
+              </view>
+            </view>
+
+            <!-- 每周配置 -->
+            <view v-if="recurringType === 'weekly'" class="config-container">
+              <view class="config-description">
+                <text>每{{ weekdayNames[recurringWeekday] }} {{ recurringTime }} 执行</text>
+              </view>
+              <view class="weekly-picker-container">
+                <view class="picker-labels">
+                  <text class="picker-label">星期</text>
+                  <text class="picker-label">小时</text>
+                  <text class="picker-label">分钟</text>
+                </view>
+                <picker-view 
+                  :indicator-style="'height: 50px; background-color: rgba(255, 154, 90, 0.1); border-top: 1px solid #FF9A5A; border-bottom: 1px solid #FF9A5A;'"
+                  :value="weeklyPickerValue"
+                  @change="onWeeklyPickerChange"
+                  class="weekly-picker-view"
+                >
+                  <picker-view-column>
+                    <view class="picker-item" v-for="(dayName, index) in weekdayNames" :key="index">
+                      <text>{{ dayName }}</text>
+                    </view>
+                  </picker-view-column>
+                  <picker-view-column>
+                    <view class="picker-item" v-for="hour in hours" :key="hour">
+                      <text>{{ hour.toString().padStart(2, '0') }}</text>
+                    </view>
+                  </picker-view-column>
+                  <picker-view-column>
+                    <view class="picker-item" v-for="minute in minutes" :key="minute">
+                      <text>{{ minute.toString().padStart(2, '0') }}</text>
+                    </view>
+                  </picker-view-column>
+                </picker-view>
+              </view>
+            </view>
+
+            <!-- 每月配置 -->
+            <view v-if="recurringType === 'monthly'" class="config-container">
+              <view class="config-description">
+                <text>每年{{ recurringMonth }}月{{ recurringDay }}日 {{ recurringTime }} 执行</text>
+              </view>
+              <view class="monthly-picker-container">
+                <view class="picker-labels">
+                  <text class="picker-label">月份</text>
+                  <text class="picker-label">日期</text>
+                  <text class="picker-label">小时</text>
+                  <text class="picker-label">分钟</text>
+                </view>
+                <picker-view 
+                  :indicator-style="'height: 50px; background-color: rgba(255, 154, 90, 0.1); border-top: 1px solid #FF9A5A; border-bottom: 1px solid #FF9A5A;'"
+                  :value="monthlyPickerValue"
+                  @change="onMonthlyPickerChange"
+                  class="monthly-picker-view"
+                >
+                  <picker-view-column>
+                    <view class="picker-item" v-for="(monthName, index) in monthNames" :key="index + 1">
+                      <text>{{ monthName }}</text>
+                    </view>
+                  </picker-view-column>
+                  <picker-view-column>
+                    <view class="picker-item" v-for="day in availableDays" :key="day">
+                      <text>{{ day }}日</text>
+                    </view>
+                  </picker-view-column>
+                  <picker-view-column>
+                    <view class="picker-item" v-for="hour in hours" :key="hour">
+                      <text>{{ hour.toString().padStart(2, '0') }}</text>
+                    </view>
+                  </picker-view-column>
+                  <picker-view-column>
+                    <view class="picker-item" v-for="minute in minutes" :key="minute">
+                      <text>{{ minute.toString().padStart(2, '0') }}</text>
+                    </view>
+                  </picker-view-column>
+                </picker-view>
+              </view>
+            </view>
           </view>
         </view>
       </view>
@@ -196,7 +298,7 @@
     <view v-if="showDatePickerModal" class="modal-mask" @click="closeDatePicker">
       <view class="modal-content" @click.stop>
         <view class="modal-header">
-          <text class="modal-title">选择日期时间</text>
+          <text class="modal-title">选择创建时间</text>
           <view class="close-btn" @click="closeDatePicker">✕</view>
         </view>
         <view class="modal-body">
@@ -242,7 +344,7 @@
     
     <!-- 自定义标签弹窗 -->
     <view v-if="showCustomTagModal" class="modal-mask" @click="closeCustomTagModal">
-      <view class="modal-content" @click.stop>
+      <view class="modal-content custom-tag-modal" @click.stop>
         <view class="modal-header">
           <text class="modal-title">自定义标签</text>
           <view class="close-btn" @click="closeCustomTagModal">✕</view>
@@ -355,15 +457,30 @@ export default {
       
       // 周期记账
       isRecurring: false,
-      recurringType: 'monthly',
-      recurringDay: '',
-      recurringTypes: {
-        daily: '每天',
-        weekly: '每周',
-        monthly: '每月',
-        quarterly: '每季度',
-        yearly: '每年'
-      }
+      recurringType: 'daily', // daily, weekly, monthly
+      recurringTime: '23:59',
+      recurringWeekday: 0, // 0=周日, 1=周一, ..., 6=周六
+      recurringMonth: 1, // 1-12月
+      recurringDay: 1, // 1-31日
+      
+      // 周期类型选项
+      recurringTypes: [
+        { value: 'daily', label: '每天' },
+        { value: 'weekly', label: '每周' },
+        { value: 'monthly', label: '每月' }
+      ],
+      
+      // 时间选择器数据
+      timePickerValue: [23, 59], // [小时, 分钟]
+      weeklyPickerValue: [0, 23, 59], // [星期, 小时, 分钟]
+      monthlyPickerValue: [0, 0, 23, 59], // [月份, 日期, 小时, 分钟]
+      
+      // 选项数据
+      hours: [],
+      minutes: [],
+      weekdayNames: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+      monthNames: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+      availableDays: []
     };
   },
 
@@ -377,6 +494,7 @@ export default {
     this.initBooks();
     await this.initTags();
     this.initDatePicker();
+    this.initRecurringOptions();
   },
 
   methods: {
@@ -593,13 +711,102 @@ export default {
     },
     
     // 周期记账相关方法
+    initRecurringOptions() {
+      // 初始化小时选项（0-23）
+      this.hours = [];
+      for (let i = 0; i <= 23; i++) {
+        this.hours.push(i);
+      }
+      
+      // 初始化分钟选项（0-59）
+      this.minutes = [];
+      for (let i = 0; i <= 59; i++) {
+        this.minutes.push(i);
+      }
+      
+      // 初始化可用日期（根据当前选择的月份）
+      this.updateAvailableDays();
+    },
+
     toggleRecurring(e) {
       this.isRecurring = e.detail.value;
+    },
+
+    // 选择周期类型
+    selectRecurringType(type) {
+      this.recurringType = type;
+      // 重置选择器值
+      if (type === 'daily') {
+        this.timePickerValue = [23, 59];
+      } else if (type === 'weekly') {
+        this.weeklyPickerValue = [0, 23, 59];
+      } else if (type === 'monthly') {
+        this.monthlyPickerValue = [0, 0, 23, 59];
+        this.updateAvailableDays();
+      }
+      this.updateRecurringTime();
+    },
+
+    // 每天时间选择器变化
+    onTimePickerChange(e) {
+      const values = e.detail.value;
+      this.timePickerValue = values;
+      this.updateRecurringTime();
+    },
+
+    // 每周选择器变化
+    onWeeklyPickerChange(e) {
+      const values = e.detail.value;
+      this.weeklyPickerValue = values;
+      this.recurringWeekday = values[0];
+      this.updateRecurringTime();
+    },
+
+    // 每月选择器变化
+    onMonthlyPickerChange(e) {
+      const values = e.detail.value;
+      this.monthlyPickerValue = values;
+      this.recurringMonth = values[0] + 1; // 月份从1开始
+      this.recurringDay = this.availableDays[values[1]];
+      this.updateAvailableDays(); // 月份变化时更新可用日期
+      this.updateRecurringTime();
+    },
+
+    // 更新周期记账时间
+    updateRecurringTime() {
+      let hour, minute;
       
-      // 如果开启周期记账，默认设置当前日期对应的周期日
-      if (this.isRecurring && !this.recurringDay) {
-        const currentDate = new Date();
-        this.recurringDay = currentDate.getDate().toString();
+      if (this.recurringType === 'daily') {
+        hour = this.timePickerValue[0];
+        minute = this.timePickerValue[1];
+      } else if (this.recurringType === 'weekly') {
+        hour = this.weeklyPickerValue[1];
+        minute = this.weeklyPickerValue[2];
+      } else if (this.recurringType === 'monthly') {
+        hour = this.monthlyPickerValue[2];
+        minute = this.monthlyPickerValue[3];
+      }
+      
+      this.recurringTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+    },
+
+    // 更新可用日期（处理闰年和不同月份的天数）
+    updateAvailableDays() {
+      const year = new Date().getFullYear();
+      const month = this.recurringMonth;
+      
+      // 获取该月的天数
+      const daysInMonth = new Date(year, month, 0).getDate();
+      
+      this.availableDays = [];
+      for (let i = 1; i <= daysInMonth; i++) {
+        this.availableDays.push(i);
+      }
+      
+      // 如果当前选择的日期超过了该月的最大天数，重置为1号
+      if (this.recurringDay > daysInMonth) {
+        this.recurringDay = 1;
+        this.monthlyPickerValue[1] = 0;
       }
     },
     
@@ -665,35 +872,11 @@ export default {
         return;
       }
       
-      // 验证周期记账参数
-      if (this.isRecurring && this.recurringType !== 'daily') {
-        if (!this.recurringDay) {
+      // 验证周期记账参数（新的简化验证）
+      if (this.isRecurring) {
+        if (!this.recurringTime) {
           uni.showToast({
-            title: '请输入周期日期',
-            icon: 'none'
-          });
-          return;
-        }
-        
-        const recurringDayNum = parseInt(this.recurringDay);
-        let isValid = false;
-        
-        switch (this.recurringType) {
-          case 'weekly':
-            isValid = recurringDayNum >= 1 && recurringDayNum <= 7;
-            break;
-          case 'monthly':
-          case 'quarterly':
-            isValid = recurringDayNum >= 1 && recurringDayNum <= 31;
-            break;
-          case 'yearly':
-            isValid = recurringDayNum >= 1 && recurringDayNum <= 366;
-            break;
-        }
-        
-        if (!isValid) {
-          uni.showToast({
-            title: '请输入有效的周期日期',
+            title: '请设置执行时间',
             icon: 'none'
           });
           return;
@@ -710,19 +893,35 @@ export default {
           amount: parseFloat(this.amount),
           tag_id: this.selectedTagId,
           remark: this.remark.trim(),
-          timestamp: Math.floor(this.selectedDate.getTime() / 1000)
+          created_at: Math.floor(this.selectedDate.getTime() / 1000)
         };
         
         // 如果是周期记账
         if (this.isRecurring) {
+          // 解析时间为小时和分钟
+          const [hour, minute] = this.recurringTime.split(':').map(Number);
+          
           const recurringData = {
-            ...transactionData,
+            book_id: this.currentBook.book_id,
+            type: this.transactionType,
+            amount: parseFloat(this.amount),
+            tag_id: this.selectedTagId,
             name: this.remark.trim() || `周期${this.transactionType === 'expense' ? '支出' : '收入'}`,
-            recurring_type: this.recurringType,
-            recurring_day: this.recurringType === 'daily' ? 0 : parseInt(this.recurringDay),
-            recurring_time: '09:00',
-            is_active: true
+            remark: this.remark.trim(),
+            recurring_type: this.recurringType, // daily, weekly, monthly
+            recurring_hour: hour, // 小时数字，如 23
+            recurring_minute: minute, // 分钟数字，如 5
+            is_recurring_enabled: true, // 更明确的字段名
+            created_at: Math.floor(this.selectedDate.getTime() / 1000)
           };
+
+          // 根据类型添加特定字段
+          if (this.recurringType === 'weekly') {
+            recurringData.recurring_weekday = this.recurringWeekday; // 0-6 (0=周日)
+          } else if (this.recurringType === 'monthly') {
+            recurringData.recurring_month = this.recurringMonth; // 1-12
+            recurringData.recurring_day = this.recurringDay; // 1-31
+          }
           
           await addRecurringTransactionApi(recurringData);
           
@@ -1054,6 +1253,228 @@ export default {
 .recurring-day-unit {
   font-size: 26rpx;
   color: #333333;
+}
+
+/* 周期记账样式 */
+.recurring-section {
+  margin: 32rpx 0;
+  padding: 32rpx;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+}
+
+.recurring-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.recurring-options {
+  margin-top: 24rpx;
+}
+
+.recurring-type-selector {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+  flex-wrap: wrap;
+}
+
+.recurring-type-option {
+  padding: 16rpx 24rpx;
+  background: #F5F5F5;
+  border-radius: 24rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.3s ease;
+}
+
+.recurring-type-option.active {
+  background: #FFF3E0;
+  border-color: #FF9A5A;
+  color: #FF9A5A;
+}
+
+/* 周期类型选择 */
+.recurring-type-section {
+  margin-bottom: 32rpx;
+}
+
+.type-selector {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 16rpx;
+}
+
+.type-option {
+  flex: 1;
+  padding: 16rpx 24rpx;
+  background: #F8F9FA;
+  border: 2rpx solid #E0E0E0;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #333333;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.type-option.active {
+  background: #FF9A5A;
+  border-color: #FF9A5A;
+  color: #FFFFFF;
+}
+
+/* 周期配置 */
+.recurring-config-section {
+  margin-bottom: 32rpx;
+}
+
+.config-container {
+  padding: 24rpx;
+  background: #FFFFFF;
+  border-radius: 12rpx;
+  border: 1rpx solid #F0F0F0;
+}
+
+.config-description {
+  margin-bottom: 20rpx;
+  padding: 16rpx;
+  background: #F8F9FA;
+  border-radius: 8rpx;
+  text-align: center;
+}
+
+.config-description text {
+  font-size: 30rpx;
+  color: #FF9A5A;
+  font-weight: bold;
+}
+
+/* 时间选择器容器 */
+.time-picker-container,
+.weekly-picker-container,
+.monthly-picker-container {
+  margin-top: 20rpx;
+}
+
+.picker-labels {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 16rpx;
+  padding: 0 20rpx;
+}
+
+.picker-label {
+  font-size: 26rpx;
+  color: #666666;
+  font-weight: bold;
+  text-align: center;
+  flex: 1;
+}
+
+/* 选择器视图 */
+.time-picker-view,
+.weekly-picker-view,
+.monthly-picker-view {
+  height: 250rpx;
+  margin: 16rpx 0;
+}
+
+.picker-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  font-size: 28rpx;
+  color: #333333;
+}
+
+/* 执行预览 */
+.execution-preview {
+  padding: 24rpx;
+  background: #F8F9FA;
+  border-radius: 12rpx;
+  border: 2rpx solid #E8F4FD;
+}
+
+.preview-content {
+  margin-top: 16rpx;
+}
+
+.cron-expression {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+  padding: 12rpx 16rpx;
+  background: #FFFFFF;
+  border-radius: 8rpx;
+  border: 1rpx solid #E0E0E0;
+}
+
+.expression-label {
+  font-size: 26rpx;
+  color: #666666;
+  margin-right: 12rpx;
+  min-width: 120rpx;
+}
+
+.expression-value {
+  font-size: 28rpx;
+  color: #2196F3;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+}
+
+.execution-description {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+  padding: 12rpx 16rpx;
+  background: #FFFFFF;
+  border-radius: 8rpx;
+  border: 1rpx solid #E0E0E0;
+}
+
+.description-label {
+  font-size: 26rpx;
+  color: #666666;
+  margin-right: 12rpx;
+  min-width: 120rpx;
+}
+
+.description-value {
+  font-size: 28rpx;
+  color: #FF9A5A;
+  font-weight: bold;
+}
+
+.next-executions {
+  padding: 12rpx 16rpx;
+  background: #FFFFFF;
+  border-radius: 8rpx;
+  border: 1rpx solid #E0E0E0;
+}
+
+.next-label {
+  font-size: 26rpx;
+  color: #666666;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.next-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.next-time {
+  font-size: 24rpx;
+  color: #333333;
+  padding: 8rpx 12rpx;
+  background: #F8F9FA;
+  border-radius: 6rpx;
+  font-family: 'Courier New', monospace;
 }
 
 /* 保存按钮 */

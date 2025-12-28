@@ -310,8 +310,8 @@ export const mockApis = {
     return success(getRecurringTransactions(options.data || {}));
   },
   '/recurring/add': (options) => {
-    const { book_id, name, amount, tag_id, recurring_type, recurring_day } = options.data;
-    if (!book_id || !name || !amount || !tag_id || !recurring_type || recurring_day === undefined) {
+    const { book_id, name, amount, tag_id, recurring_type, recurring_hour, recurring_minute } = options.data;
+    if (!book_id || !name || !amount || !tag_id || !recurring_type || recurring_hour === undefined || recurring_minute === undefined) {
       return error('添加失败：参数不完整');
     }
     try {
