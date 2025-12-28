@@ -1030,7 +1030,15 @@ export default {
     
     // 搜索相关方法
     showSearchModal() {
-      this.resetSearch();
+      // 静默重置搜索参数，不显示提示
+      this.searchParams = {
+        keyword: '',
+        type: 'all',
+        minAmount: '',
+        maxAmount: '',
+        startDateTime: '',
+        endDateTime: ''
+      };
       this.showSearchModalFlag = true;
     },
     
@@ -1040,14 +1048,16 @@ export default {
     
     // 重置搜索
     resetSearch() {
-      this.searchParams = {
-        keyword: '',
-        type: 'all',
-        minAmount: '',
-        maxAmount: '',
-        startDateTime: '',
-        endDateTime: ''
-      };
+      // 逐个重置字段，确保响应式更新
+      this.searchParams.keyword = '';
+      this.searchParams.type = 'all';
+      this.searchParams.minAmount = '';
+      this.searchParams.maxAmount = '';
+      this.searchParams.startDateTime = '';
+      this.searchParams.endDateTime = '';
+      
+      // 强制更新视图
+      this.$forceUpdate();
       
       // 显示重置成功提示
       uni.showToast({
@@ -1390,12 +1400,22 @@ export default {
     
     // 验证搜索表单
     validateSearchForm() {
+      // 验证关键词长度
+      if (this.searchParams.keyword && this.searchParams.keyword.length > 80) {
+        uni.showToast({
+          title: '关键词不能超过80个字符',
+          icon: 'none',
+          duration: 2000
+        });
+        return false;
+      }
+      
       // 验证金额范围
       if (this.searchParams.minAmount && this.searchParams.minAmount !== '') {
         const minAmount = parseFloat(this.searchParams.minAmount);
         if (isNaN(minAmount) || minAmount < 0) {
           uni.showToast({
-            title: '最小金额格式不正确',
+            title: '最小金额格式不正确，请输入有效数字',
             icon: 'none',
             duration: 2000
           });
@@ -1407,7 +1427,7 @@ export default {
         const maxAmount = parseFloat(this.searchParams.maxAmount);
         if (isNaN(maxAmount) || maxAmount < 0) {
           uni.showToast({
-            title: '最大金额格式不正确',
+            title: '最大金额格式不正确，请输入有效数字',
             icon: 'none',
             duration: 2000
           });
@@ -1433,9 +1453,42 @@ export default {
       if (this.searchParams.startDateTime && this.searchParams.endDateTime) {
         const startTime = new Date(this.searchParams.startDateTime.replace(/-/g, '/'));
         const endTime = new Date(this.searchParams.endDateTime.replace(/-/g, '/'));
+        if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
+          uni.showToast({
+            title: '时间格式不正确',
+            icon: 'none',
+            duration: 2000
+          });
+          return false;
+        }
         if (startTime >= endTime) {
           uni.showToast({
             title: '开始时间不能晚于结束时间',
+            icon: 'none',
+            duration: 2000
+          });
+          return false;
+        }
+      }
+      
+      // 验证单独的开始时间或结束时间格式
+      if (this.searchParams.startDateTime) {
+        const startTime = new Date(this.searchParams.startDateTime.replace(/-/g, '/'));
+        if (isNaN(startTime.getTime())) {
+          uni.showToast({
+            title: '开始时间格式不正确',
+            icon: 'none',
+            duration: 2000
+          });
+          return false;
+        }
+      }
+      
+      if (this.searchParams.endDateTime) {
+        const endTime = new Date(this.searchParams.endDateTime.replace(/-/g, '/'));
+        if (isNaN(endTime.getTime())) {
+          uni.showToast({
+            title: '结束时间格式不正确',
             icon: 'none',
             duration: 2000
           });
@@ -1505,12 +1558,6 @@ export default {
           
           // 关闭搜索弹窗
           this.closeSearchModal();
-          
-          // 显示搜索结果提示
-          uni.showToast({
-            title: `找到 ${result.list.length} 条记录`,
-            icon: 'none'
-          });
         }
       } catch (error) {
         console.error('搜索交易失败', error);
