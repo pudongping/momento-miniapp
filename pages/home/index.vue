@@ -306,6 +306,8 @@
                   v-model="searchParams.minAmount" 
                   class="amount-input"
                   placeholder="最小金额"
+                  @input="validateAmountInput($event, 'minAmount')"
+                  min="0"
                 />
                 <text class="range-separator">-</text>
                 <input 
@@ -313,6 +315,7 @@
                   v-model="searchParams.maxAmount" 
                   class="amount-input"
                   placeholder="最大金额"
+                  @input="validateAmountInput($event, 'maxAmount')"
                 />
               </view>
             </view>
@@ -1007,6 +1010,22 @@ export default {
       };
     },
     
+    // 验证金额输入
+    validateAmountInput(e, field) {
+      const value = e.detail.value;
+      // 只允许数字和小数点，且最多两位小数
+      const regex = /^\d*\.?\d{0,2}$/;
+      if (!regex.test(value)) {
+        // 如果不符合格式，恢复为之前的值
+        this.searchParams[field] = value.substring(0, value.length - 1);
+      }
+      
+      // 确保最小金额不小于0
+      if (field === 'minAmount' && parseFloat(value) < 0) {
+        this.searchParams.minAmount = '0';
+      }
+    },
+    
     async searchTransactions() {
       if (!this.currentBook) return;
       
@@ -1016,7 +1035,7 @@ export default {
         // 构建搜索参数
         const params = {
           book_id: this.currentBook.book_id,
-          keyword: this.searchParams.keyword || undefined,
+          keyword: this.searchParams.keyword || '',  // 确保关键词为空字符串而不是undefined
           limit: 50
         };
         
@@ -1027,11 +1046,17 @@ export default {
         
         // 添加金额范围过滤
         if (this.searchParams.minAmount) {
-          params.min_amount = parseFloat(this.searchParams.minAmount);
+          const minAmount = parseFloat(this.searchParams.minAmount);
+          if (!isNaN(minAmount) && minAmount >= 0) {
+            params.min_amount = minAmount;
+          }
         }
         
         if (this.searchParams.maxAmount) {
-          params.max_amount = parseFloat(this.searchParams.maxAmount);
+          const maxAmount = parseFloat(this.searchParams.maxAmount);
+          if (!isNaN(maxAmount)) {
+            params.max_amount = maxAmount;
+          }
         }
         
         // 添加时间范围过滤
@@ -1192,12 +1217,16 @@ export default {
       return weekdays[date.getDay()];
     },
     
-    // 格式化时间（HH:MM）
+    // 格式化时间（YYYY-MM-DD HH:MM:SS）
     formatTime(timestamp) {
       const date = new Date(timestamp * 1000);
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
       const hours = date.getHours().toString().padStart(2, '0');
       const minutes = date.getMinutes().toString().padStart(2, '0');
-      return `${hours}:${minutes}`;
+      const seconds = date.getSeconds().toString().padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     },
     
     // 格式化金额（保留两位小数）
@@ -1499,16 +1528,16 @@ export default {
 }
 
 .budget-progress-bg {
-  height: 30rpx;
+  height: 20rpx;
   background: #F5F5F5;
-  border-radius: 15rpx;
+  border-radius: 10rpx;
   overflow: hidden;
   position: relative;
 }
 
 .budget-progress-bar {
   height: 100%;
-  border-radius: 15rpx;
+  border-radius: 10rpx;
   position: absolute;
   left: 0;
   top: 0;
@@ -2023,16 +2052,18 @@ export default {
   flex: 1;
   height: 88rpx;
   border-radius: 40rpx;
-  font-size: 28rpx;
-  font-weight: 600;
+  font-size: 30rpx;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 15rpx;
 }
 
 .btn-reset {
-  background: #F5F5F5;
+  background: #FFFFFF;
   color: #666666;
+  border: 1rpx solid #DDDDDD;
 }
 
 .btn-search {
