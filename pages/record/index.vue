@@ -196,7 +196,7 @@
     <view v-if="showDatePickerModal" class="modal-mask" @click="closeDatePicker">
       <view class="modal-content" @click.stop>
         <view class="modal-header">
-          <text class="modal-title">选择日期</text>
+          <text class="modal-title">选择日期时间</text>
           <view class="close-btn" @click="closeDatePicker">✕</view>
         </view>
         <view class="modal-body">
@@ -219,6 +219,16 @@
             <picker-view-column>
               <view class="picker-item" v-for="(day, index) in days" :key="'day-'+index">
                 {{ day }}日
+              </view>
+            </picker-view-column>
+            <picker-view-column>
+              <view class="picker-item" v-for="(hour, index) in hours" :key="'hour-'+index">
+                {{ hour }}时
+              </view>
+            </picker-view-column>
+            <picker-view-column>
+              <view class="picker-item" v-for="(minute, index) in minutes" :key="'minute-'+index">
+                {{ minute }}分
               </view>
             </picker-view-column>
           </picker-view>
@@ -338,8 +348,10 @@ export default {
       years: [],
       months: [],
       days: [],
-      datePickerValue: [0, 0, 0],
-      tempDatePickerValue: [0, 0, 0],
+      hours: [],
+      minutes: [],
+      datePickerValue: [0, 0, 0, 0, 0],
+      tempDatePickerValue: [0, 0, 0, 0, 0],
       
       // 周期记账
       isRecurring: false,
@@ -486,6 +498,8 @@ export default {
       const currentYear = currentDate.getFullYear();
       const currentMonth = currentDate.getMonth() + 1;
       const currentDay = currentDate.getDate();
+      const currentHour = currentDate.getHours();
+      const currentMinute = currentDate.getMinutes();
       
       // 初始化年份列表（当前年往前5年）
       this.years = [];
@@ -502,12 +516,26 @@ export default {
       // 初始化天数列表
       this.updateDays(currentYear, currentMonth);
       
+      // 初始化小时列表（0-23）
+      this.hours = [];
+      for (let i = 0; i <= 23; i++) {
+        this.hours.push(i.toString().padStart(2, '0'));
+      }
+      
+      // 初始化分钟列表（0-59）
+      this.minutes = [];
+      for (let i = 0; i <= 59; i++) {
+        this.minutes.push(i.toString().padStart(2, '0'));
+      }
+      
       // 设置默认值
       const yearIndex = this.years.findIndex(year => year === currentYear);
       const monthIndex = currentMonth - 1;
       const dayIndex = currentDay - 1;
+      const hourIndex = currentHour;
+      const minuteIndex = currentMinute;
       
-      this.datePickerValue = [yearIndex, monthIndex, dayIndex];
+      this.datePickerValue = [yearIndex, monthIndex, dayIndex, hourIndex, minuteIndex];
       this.tempDatePickerValue = [...this.datePickerValue];
     },
     
@@ -548,8 +576,10 @@ export default {
       const year = this.years[this.datePickerValue[0]];
       const month = this.months[this.datePickerValue[1]];
       const day = this.days[this.datePickerValue[2]];
+      const hour = parseInt(this.hours[this.datePickerValue[3]]);
+      const minute = parseInt(this.minutes[this.datePickerValue[4]]);
       
-      this.selectedDate = new Date(year, month - 1, day);
+      this.selectedDate = new Date(year, month - 1, day, hour, minute);
       this.closeDatePicker();
     },
     
@@ -557,7 +587,9 @@ export default {
       const year = date.getFullYear();
       const month = date.getMonth() + 1;
       const day = date.getDate();
-      return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+      const hour = date.getHours();
+      const minute = date.getMinutes();
+      return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')} ${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
     },
     
     // 周期记账相关方法

@@ -102,7 +102,7 @@
     <view v-if="showDatePickerModal" class="modal-mask" @click="closeDatePicker">
       <view class="modal-content" @click.stop>
         <view class="modal-header">
-          <text class="modal-title">选择日期</text>
+          <text class="modal-title">选择日期时间</text>
           <view class="close-btn" @click="closeDatePicker">✕</view>
         </view>
         <view class="modal-body">
@@ -119,6 +119,12 @@
             </picker-view-column>
             <picker-view-column>
               <view v-for="day in days" :key="day" class="picker-item">{{ day }}日</view>
+            </picker-view-column>
+            <picker-view-column>
+              <view v-for="hour in hours" :key="hour" class="picker-item">{{ hour }}时</view>
+            </picker-view-column>
+            <picker-view-column>
+              <view v-for="minute in minutes" :key="minute" class="picker-item">{{ minute }}分</view>
             </picker-view-column>
           </picker-view>
         </view>
@@ -156,8 +162,10 @@ export default {
       years: [],
       months: [],
       days: [],
-      datePickerValue: [0, 0, 0],
-      tempDatePickerValue: [0, 0, 0],
+      hours: [],
+      minutes: [],
+      datePickerValue: [0, 0, 0, 0, 0],
+      tempDatePickerValue: [0, 0, 0, 0, 0],
       
       // 状态栏高度
       statusBarHeight: 44
@@ -251,6 +259,8 @@ export default {
       const currentYear = currentDate.getFullYear();
       const currentMonth = currentDate.getMonth() + 1;
       const currentDay = currentDate.getDate();
+      const currentHour = currentDate.getHours();
+      const currentMinute = currentDate.getMinutes();
       
       // 生成年份选项（当前年份前后5年）
       this.years = [];
@@ -264,14 +274,28 @@ export default {
         this.months.push(i);
       }
       
+      // 初始化小时列表（0-23）
+      this.hours = [];
+      for (let i = 0; i <= 23; i++) {
+        this.hours.push(i.toString().padStart(2, '0'));
+      }
+      
+      // 初始化分钟列表（0-59）
+      this.minutes = [];
+      for (let i = 0; i <= 59; i++) {
+        this.minutes.push(i.toString().padStart(2, '0'));
+      }
+      
       // 设置当前日期对应的索引
       const yearIndex = this.years.indexOf(this.selectedDate.getFullYear());
       const monthIndex = this.months.indexOf(this.selectedDate.getMonth() + 1);
       
       this.updateDays(this.selectedDate.getFullYear(), this.selectedDate.getMonth() + 1);
       const dayIndex = this.days.indexOf(this.selectedDate.getDate());
+      const hourIndex = this.selectedDate.getHours();
+      const minuteIndex = this.selectedDate.getMinutes();
       
-      this.datePickerValue = [yearIndex, monthIndex, dayIndex];
+      this.datePickerValue = [yearIndex, monthIndex, dayIndex, hourIndex, minuteIndex];
       this.tempDatePickerValue = [...this.datePickerValue];
     },
 
@@ -313,8 +337,10 @@ export default {
       const year = this.years[this.tempDatePickerValue[0]];
       const month = this.months[this.tempDatePickerValue[1]];
       const day = this.days[this.tempDatePickerValue[2]];
+      const hour = parseInt(this.hours[this.tempDatePickerValue[3]]);
+      const minute = parseInt(this.minutes[this.tempDatePickerValue[4]]);
       
-      this.selectedDate = new Date(year, month - 1, day);
+      this.selectedDate = new Date(year, month - 1, day, hour, minute);
       this.datePickerValue = [...this.tempDatePickerValue];
       this.closeDatePicker();
     },
@@ -324,7 +350,9 @@ export default {
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0');
       const day = date.getDate().toString().padStart(2, '0');
-      return `${year}-${month}-${day}`;
+      const hour = date.getHours().toString().padStart(2, '0');
+      const minute = date.getMinutes().toString().padStart(2, '0');
+      return `${year}-${month}-${day} ${hour}:${minute}`;
     },
 
     // 更新交易
