@@ -407,8 +407,7 @@ import {
   getAccountBooksApi, 
   getTagsApi, 
   addTagApi, 
-  addTransactionApi,
-  addRecurringTransactionApi
+  addTransactionApi
 } from '@/api/index.js';
 
 export default {
@@ -923,7 +922,7 @@ export default {
             recurringData.recurring_day = this.recurringDay; // 1-31
           }
           
-          await addRecurringTransactionApi(recurringData);
+          await addTransactionApi(recurringData);
           
           uni.hideLoading();
           uni.showToast({

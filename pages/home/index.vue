@@ -141,54 +141,38 @@
       </view>
     </view>
     
-    <!-- 周期记账 -->
-    <view v-if="recurringTransactions.length > 0" class="recurring-section">
-      <view class="recurring-header">
-        <text class="recurring-title">周期记账</text>
-        <text class="recurring-count">{{ recurringTransactions.length }}条规则</text>
-      </view>
-      
-      <view class="recurring-list">
-        <view 
-          v-for="recurring in recurringTransactions" 
-          :key="recurring.recurring_id" 
-          class="recurring-item"
-        >
-          <view class="recurring-tag" :style="{ backgroundColor: recurring.tag_color || '#FF9A5A' }">
-            <uni-icons :type="recurring.tag_icon || 'shop'" size="20" color="#FFFFFF"></uni-icons>
+    <!-- Tab切换区域 -->
+    <view class="tab-section">
+      <view class="tab-header">
+        <view class="tab-nav">
+          <view 
+            class="tab-item" 
+            :class="{ 'active': currentTab === 'transactions' }"
+            @click="switchTab('transactions')"
+          >
+            <text class="tab-text">账单记录</text>
+            <view v-if="currentTab === 'transactions'" class="tab-indicator"></view>
           </view>
-          
-          <view class="recurring-content">
-            <view class="recurring-main">
-              <view class="recurring-info">
-                <text class="recurring-name">{{ recurring.name }}</text>
-                <text class="recurring-schedule">{{ formatRecurringSchedule(recurring) }}</text>
-              </view>
-              <text :class="['recurring-amount', recurring.type === 'income' ? 'income-amount' : '']">
-                {{ recurring.type === 'income' ? '+' : '-' }}{{ formatAmount(recurring.amount) }}
-              </text>
-            </view>
-          </view>
-          
-          <view class="recurring-actions">
-            <view class="delete-btn" @click.stop="confirmDeleteRecurring(recurring)">
-              <uni-icons type="trash" size="16" color="#FF6B6B"></uni-icons>
-            </view>
+          <view 
+            class="tab-item" 
+            :class="{ 'active': currentTab === 'recurring' }"
+            @click="switchTab('recurring')"
+          >
+            <text class="tab-text">周期记账</text>
+            <text v-if="recurringTransactions.length > 0" class="tab-badge">{{ recurringTransactions.length }}</text>
+            <view v-if="currentTab === 'recurring'" class="tab-indicator"></view>
           </view>
         </view>
-      </view>
-    </view>
-
-    <!-- 交易记录 -->
-    <view class="transactions-section">
-      <view class="section-header">
-        <text class="section-title">账单记录</text>
-        <view class="header-actions">
+        
+        <view class="header-actions" v-if="currentTab === 'transactions'">
           <view class="search-btn" @click="showSearchModal">
             <uni-icons type="search" size="18" color="#666666"></uni-icons>
           </view>
         </view>
       </view>
+      
+      <!-- 账单记录内容 -->
+      <view v-if="currentTab === 'transactions'" class="tab-content transactions-content">
       
       <!-- 下拉刷新、上拉加载更多 -->
       <scroll-view 
@@ -285,6 +269,48 @@
           <button class="btn-add-record" @click="navigateToRecord">立即记账</button>
         </view>
       </scroll-view>
+      </view>
+      
+      <!-- 周期记账内容 -->
+      <view v-if="currentTab === 'recurring'" class="tab-content recurring-content">
+        <view v-if="recurringTransactions.length > 0" class="recurring-list">
+          <view 
+            v-for="recurring in recurringTransactions" 
+            :key="recurring.recurring_id" 
+            class="recurring-item"
+          >
+            <view class="recurring-tag" :style="{ backgroundColor: recurring.tag_color || '#FF9A5A' }">
+              <uni-icons :type="recurring.tag_icon || 'shop'" size="20" color="#FFFFFF"></uni-icons>
+            </view>
+            
+            <view class="recurring-content">
+              <view class="recurring-main">
+                <view class="recurring-info">
+                  <text class="recurring-name">{{ recurring.name }}</text>
+                  <text class="recurring-schedule">{{ formatRecurringSchedule(recurring) }}</text>
+                </view>
+                <text :class="['recurring-amount', recurring.type === 'income' ? 'income-amount' : '']">
+                  {{ recurring.type === 'income' ? '+' : '-' }}{{ formatAmount(recurring.amount) }}
+                </text>
+              </view>
+            </view>
+            
+            <view class="recurring-actions">
+              <view class="action-buttons">
+                <view class="delete-btn" @click.stop="confirmDeleteRecurring(recurring)">
+                  <uni-icons type="trash" size="18" color="#FF6B6B"></uni-icons>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        
+        <view v-else class="empty-recurring">
+          <image src="/static/images/empty-state.png" mode="aspectFit" class="empty-image"></image>
+          <text class="empty-text">暂无周期记账规则</text>
+          <button class="btn-add-recurring" @click="navigateToRecord">添加周期记账</button>
+        </view>
+      </view>
     </view>
     
     <!-- 搜索弹窗 -->
@@ -395,23 +421,6 @@
       </view>
     </view>
     
-    <!-- 删除周期记账确认弹窗 -->
-    <view v-if="showDeleteRecurringModal" class="modal-mask" @click="closeDeleteRecurringModal">
-      <view class="modal-content delete-modal" @click.stop>
-        <view class="modal-header">
-          <text class="modal-title">确认删除</text>
-          <view class="close-btn" @click="closeDeleteRecurringModal">✕</view>
-        </view>
-        <view class="modal-body">
-          <text class="delete-message">确定要删除周期记账"{{ recurringToDelete?.name }}"吗？</text>
-          <text class="delete-warning">删除后将无法恢复，该规则将不再自动执行。</text>
-        </view>
-        <view class="modal-footer">
-          <button class="btn-cancel" @click="closeDeleteRecurringModal">取消</button>
-          <button class="btn-delete" @click="deleteRecurring">删除</button>
-        </view>
-      </view>
-    </view>
 
     <!-- 自定义日历时间选择器 -->
     <view v-if="showCustomDateTimeModal" class="modal-mask" @click="closeCustomDateTimePicker">
@@ -485,7 +494,7 @@
             <text style="font-size: 60rpx; color: #FF6B6B;">?</text>
           </view>
           <text class="confirm-title">确认删除</text>
-          <text class="confirm-message">您确定要删除这笔账单吗？删除后无法恢复。</text>
+          <text class="confirm-message">{{ getDeleteMessage() }}</text>
         </view>
         <view class="delete-confirm-footer">
           <button class="btn-cancel" @click="cancelDeleteTransaction">取消</button>
@@ -544,8 +553,10 @@ export default {
       
       // 周期记账相关
       recurringTransactions: [],
-      showDeleteRecurringModal: false,
       recurringToDelete: null,
+      
+      // Tab切换相关
+      currentTab: 'transactions', // 默认显示账单记录
       isLoading: false,
       isRefreshing: false,
       isLoadingMore: false,
@@ -1033,38 +1044,62 @@ export default {
     cancelDeleteTransaction() {
       this.showDeleteConfirmModal = false;
       this.transactionToDelete = null;
+      this.recurringToDelete = null;
     },
     
     // 删除交易
     async deleteTransaction() {
-      if (!this.transactionToDelete) return;
-      
-      try {
-        await deleteTransactionApi(this.transactionToDelete.transaction_id);
-        
-        // 从列表中移除该交易
-        this.transactions = this.transactions.filter(
-          t => t.transaction_id !== this.transactionToDelete.transaction_id
-        );
-        
-        // 关闭弹窗
-        this.showDeleteConfirmModal = false;
-        this.transactionToDelete = null;
-        
-        // 重新加载统计数据
-        this.loadMonthStats();
-        
-        uni.showToast({
-          title: '删除成功',
-          icon: 'success'
-        });
-      } catch (error) {
-        console.error('删除交易失败', error);
-        uni.showToast({
-          title: '删除失败',
-          icon: 'error'
-        });
+      // 判断是删除账单记录还是周期记账
+      if (this.transactionToDelete) {
+        // 删除账单记录
+        try {
+          await deleteTransactionApi(this.transactionToDelete.transaction_id);
+          
+          // 从列表中移除该交易
+          this.transactions = this.transactions.filter(
+            t => t.transaction_id !== this.transactionToDelete.transaction_id
+          );
+          
+          // 重新加载统计数据
+          this.loadMonthStats();
+          
+          uni.showToast({
+            title: '删除成功',
+            icon: 'success'
+          });
+        } catch (error) {
+          console.error('删除交易失败', error);
+          uni.showToast({
+            title: '删除失败',
+            icon: 'error'
+          });
+        }
+      } else if (this.recurringToDelete) {
+        // 删除周期记账
+        try {
+          await deleteRecurringTransactionApi(this.recurringToDelete.recurring_id);
+          
+          // 从本地列表中移除
+          const index = this.recurringTransactions.findIndex(r => r.recurring_id === this.recurringToDelete.recurring_id);
+          if (index !== -1) {
+            this.recurringTransactions.splice(index, 1);
+          }
+          
+          uni.showToast({
+            title: '删除成功',
+            icon: 'success'
+          });
+        } catch (error) {
+          console.error('删除周期记账失败', error);
+          uni.showToast({
+            title: '删除失败',
+            icon: 'none'
+          });
+        }
       }
+      
+      // 关闭弹窗
+      this.cancelDeleteTransaction();
     },
 
     showBookPicker() {
@@ -1802,41 +1837,23 @@ export default {
     // 确认删除周期记账
     confirmDeleteRecurring(recurring) {
       this.recurringToDelete = recurring;
-      this.showDeleteRecurringModal = true;
+      this.showDeleteConfirmModal = true;
     },
 
-    // 关闭删除确认弹窗
-    closeDeleteRecurringModal() {
-      this.showDeleteRecurringModal = false;
-      this.recurringToDelete = null;
+
+    // Tab切换方法
+    switchTab(tab) {
+      this.currentTab = tab;
     },
 
-    // 删除周期记账
-    async deleteRecurring() {
-      if (!this.recurringToDelete) return;
-      
-      try {
-        await deleteRecurringTransactionApi(this.recurringToDelete.recurring_id);
-        
-        // 从本地列表中移除
-        const index = this.recurringTransactions.findIndex(r => r.recurring_id === this.recurringToDelete.recurring_id);
-        if (index !== -1) {
-          this.recurringTransactions.splice(index, 1);
-        }
-        
-        uni.showToast({
-          title: '删除成功',
-          icon: 'success'
-        });
-        
-        this.closeDeleteRecurringModal();
-      } catch (error) {
-        console.error('删除周期记账失败', error);
-        uni.showToast({
-          title: '删除失败',
-          icon: 'none'
-        });
+    // 获取删除确认消息
+    getDeleteMessage() {
+      if (this.recurringToDelete) {
+        return `您确定要删除周期记账"${this.recurringToDelete.name}"吗？删除后无法恢复，该规则将不再自动执行。`;
+      } else if (this.transactionToDelete) {
+        return '您确定要删除这笔账单吗？删除后无法恢复。';
       }
+      return '您确定要删除吗？删除后无法恢复。';
     }
   }
 };
@@ -2166,13 +2183,82 @@ export default {
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.03);
 }
 
-/* 周期记账样式 */
-.recurring-section {
-  padding: 30rpx 20rpx;
+/* Tab切换样式 */
+.tab-section {
   background: #FFFFFF;
   margin-bottom: 20rpx;
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.03);
 }
+
+.tab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20rpx;
+  border-bottom: 1rpx solid #F0F0F0;
+}
+
+.tab-nav {
+  display: flex;
+  align-items: center;
+}
+
+.tab-item {
+  position: relative;
+  padding: 24rpx 0;
+  margin-right: 40rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.tab-text {
+  font-size: 28rpx;
+  color: $text-secondary;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.tab-item.active .tab-text {
+  color: $text-primary;
+  font-weight: 600;
+}
+
+.tab-badge {
+  background: #FF6B6B;
+  color: #FFFFFF;
+  font-size: 20rpx;
+  padding: 2rpx 8rpx;
+  border-radius: 10rpx;
+  min-width: 32rpx;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.tab-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40rpx;
+  height: 4rpx;
+  background: #4CAF50;
+  border-radius: 2rpx;
+}
+
+.tab-content {
+  min-height: 400rpx;
+}
+
+.transactions-content {
+  padding: 0;
+}
+
+.recurring-content {
+  padding: 20rpx;
+}
+
+/* 周期记账样式 */
 
 .recurring-header {
   display: flex;
@@ -2340,6 +2426,39 @@ export default {
 
 .btn-delete:active {
   background: #FF5252;
+}
+
+/* 空状态样式 */
+.empty-recurring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 40rpx;
+  text-align: center;
+}
+
+.empty-recurring .empty-image {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 32rpx;
+  opacity: 0.6;
+}
+
+.empty-recurring .empty-text {
+  font-size: 28rpx;
+  color: $text-secondary;
+  margin-bottom: 40rpx;
+}
+
+.btn-add-recurring {
+  background: #4CAF50;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 50rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+  font-weight: 500;
 }
 
 .summary-header {

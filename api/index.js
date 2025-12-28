@@ -33,10 +33,8 @@ export const deleteTagApi = (tag_id) => del('/tags/delete', { tag_id });
 
 // 周期性记账相关接口
 export const getRecurringTransactionsApi = (params) => get('/recurring/list', params);
-export const addRecurringTransactionApi = (data) => post('/recurring/add', data);
-export const updateRecurringTransactionApi = (data) => put('/recurring/update', data);
 export const deleteRecurringTransactionApi = (recurring_id) => del('/recurring/delete', { recurring_id });
-export const toggleRecurringTransactionApi = (recurring_id, status) => put('/recurring/toggle', { recurring_id, status });
+// 注意：周期记账的添加使用普通记账的 addTransactionApi 接口
 
 // 账本相关接口
 export const getAccountBooksApi = () => get('/accountBooks/list');
