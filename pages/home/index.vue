@@ -1048,13 +1048,15 @@ export default {
     
     // 重置搜索
     resetSearch() {
-      // 逐个重置字段，确保响应式更新
-      this.searchParams.keyword = '';
-      this.searchParams.type = 'all';
-      this.searchParams.minAmount = '';
-      this.searchParams.maxAmount = '';
-      this.searchParams.startDateTime = '';
-      this.searchParams.endDateTime = '';
+      // 完全重新创建searchParams对象，确保所有字段都被重置
+      this.$set(this, 'searchParams', {
+        keyword: '',
+        type: 'all',
+        minAmount: '',
+        maxAmount: '',
+        startDateTime: '',
+        endDateTime: ''
+      });
       
       // 强制更新视图
       this.$forceUpdate();
@@ -1104,18 +1106,22 @@ export default {
     validateAmountInput(e, field) {
       let value = e.detail.value;
       
-      // 移除所有非数字和小数点的字符
-      const cleanValue = value.replace(/[^\d.]/g, '');
+      // 检查是否包含非数字和小数点的字符
+      const hasInvalidChars = /[^\d.]/.test(value);
       
-      // 如果清理后的值与原值不同，说明有非法字符
-      if (cleanValue !== value) {
-        value = cleanValue;
+      // 如果包含非法字符，显示错误提示并阻止输入
+      if (hasInvalidChars) {
         uni.showToast({
-          title: '只能输入数字和小数点',
+          title: '金额格式不正确，只能输入数字和小数点',
           icon: 'none',
-          duration: 1500
+          duration: 2000
         });
+        // 不更新值，保持原有内容让用户看到错误
+        return;
       }
+      
+      // 移除所有非数字和小数点的字符（这里应该不会有了）
+      const cleanValue = value.replace(/[^\d.]/g, '');
       
       // 确保只有一个小数点
       const dotCount = (value.match(/\./g) || []).length;
