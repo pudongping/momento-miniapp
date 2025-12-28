@@ -9,8 +9,10 @@
         </view>
         <view class="book-switcher" @click="showBookPicker">
           <view class="switcher-inner">
-            <text class="current-book-name">{{ currentBook?.name || '未选择' }}</text>
-            <uni-icons type="arrowdown" size="14" color="#FF9A5A"></uni-icons>
+            <text class="current-book-name">{{ currentBook?.name || '请选择账本' }}</text>
+            <view class="arrow-icon">
+              <uni-icons type="down" size="16" color="#FF9A5A"></uni-icons>
+            </view>
           </view>
         </view>
       </view>
@@ -758,24 +760,30 @@ export default {
 }
 
 .book-switcher {
+  padding: 8rpx 20rpx;
+  display: flex;
+  align-items: center;
   position: relative;
+  background-color: rgba(255, 154, 90, 0.1);
+  border-radius: 30rpx;
+  border: 1rpx solid rgba(255, 154, 90, 0.2);
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.book-switcher:active {
+  background-color: rgba(255, 154, 90, 0.2);
+  transform: translateY(1rpx);
 }
 
 .switcher-inner {
   display: flex;
   align-items: center;
-  gap: 8rpx;
-  padding: 12rpx 20rpx;
-  background: #FFFFFF;
-  border-radius: 30rpx;
-  border: 1px solid #F0F0F0;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  justify-content: space-between;
+  width: 100%;
+  gap: 10rpx;
+  padding: 6rpx 0;
   transition: all 0.3s ease;
-}
-
-.book-switcher:active .switcher-inner {
-  transform: translateY(2rpx);
-  box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.02);
 }
 
 .current-book-name {
@@ -786,6 +794,25 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.arrow-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5rpx);
+  }
+  60% {
+    transform: translateY(-3rpx);
+  }
 }
 
 /* 记账内容样式 */

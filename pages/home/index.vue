@@ -524,12 +524,12 @@ export default {
     
     // 预算状态颜色
     budgetStatusColor() {
-      if (this.budgetPercentage < 50) {
-        return 'linear-gradient(90deg, #4CAF50, #8BC34A)'; // 绿色
-      } else if (this.budgetPercentage < 80) {
-        return 'linear-gradient(90deg, #FFC107, #FFD54F)'; // 黄色
+      if (this.budgetPercentage < 70) {
+        return '#52C41A'; // 绿色 - 预算充足
+      } else if (this.budgetPercentage < 90) {
+        return '#FAAD14'; // 黄色 - 预算注意
       } else {
-        return 'linear-gradient(90deg, #FF5252, #FF8A80)'; // 红色
+        return '#FF4D4F'; // 红色 - 预算告急
       }
     }
   },
@@ -701,8 +701,9 @@ export default {
       try {
         // 获取预算数据
         const budgetData = await getBudgetApi();
-        if (budgetData && budgetData.amount) {
-          this.budget = budgetData.amount;
+        if (budgetData && budgetData.budget !== undefined) {
+          // 使用预算设置中的“每月家庭预算总限额”
+          this.budget = budgetData.budget;
         }
         
         // 计算预算使用情况
