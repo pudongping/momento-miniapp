@@ -141,7 +141,45 @@
       </view>
     </view>
     
-    <!-- 交易时间轴 -->
+    <!-- 周期记账 -->
+    <view v-if="recurringTransactions.length > 0" class="recurring-section">
+      <view class="recurring-header">
+        <text class="recurring-title">周期记账</text>
+        <text class="recurring-count">{{ recurringTransactions.length }}条规则</text>
+      </view>
+      
+      <view class="recurring-list">
+        <view 
+          v-for="recurring in recurringTransactions" 
+          :key="recurring.recurring_id" 
+          class="recurring-item"
+        >
+          <view class="recurring-tag" :style="{ backgroundColor: recurring.tag_color || '#FF9A5A' }">
+            <uni-icons :type="recurring.tag_icon || 'shop'" size="20" color="#FFFFFF"></uni-icons>
+          </view>
+          
+          <view class="recurring-content">
+            <view class="recurring-main">
+              <view class="recurring-info">
+                <text class="recurring-name">{{ recurring.name }}</text>
+                <text class="recurring-schedule">{{ formatRecurringSchedule(recurring) }}</text>
+              </view>
+              <text :class="['recurring-amount', recurring.type === 'income' ? 'income-amount' : '']">
+                {{ recurring.type === 'income' ? '+' : '-' }}{{ formatAmount(recurring.amount) }}
+              </text>
+            </view>
+          </view>
+          
+          <view class="recurring-actions">
+            <view class="delete-btn" @click.stop="confirmDeleteRecurring(recurring)">
+              <uni-icons type="trash" size="16" color="#FF6B6B"></uni-icons>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 交易记录 -->
     <view class="transactions-section">
       <view class="section-header">
         <text class="section-title">账单记录</text>
@@ -357,6 +395,24 @@
       </view>
     </view>
     
+    <!-- 删除周期记账确认弹窗 -->
+    <view v-if="showDeleteRecurringModal" class="modal-mask" @click="closeDeleteRecurringModal">
+      <view class="modal-content delete-modal" @click.stop>
+        <view class="modal-header">
+          <text class="modal-title">确认删除</text>
+          <view class="close-btn" @click="closeDeleteRecurringModal">✕</view>
+        </view>
+        <view class="modal-body">
+          <text class="delete-message">确定要删除周期记账"{{ recurringToDelete?.name }}"吗？</text>
+          <text class="delete-warning">删除后将无法恢复，该规则将不再自动执行。</text>
+        </view>
+        <view class="modal-footer">
+          <button class="btn-cancel" @click="closeDeleteRecurringModal">取消</button>
+          <button class="btn-delete" @click="deleteRecurring">删除</button>
+        </view>
+      </view>
+    </view>
+
     <!-- 自定义日历时间选择器 -->
     <view v-if="showCustomDateTimeModal" class="modal-mask" @click="closeCustomDateTimePicker">
       <view class="modal-content custom-datetime-modal" @click.stop>
@@ -448,7 +504,9 @@ import {
   getTransactionStats,
   deleteTransactionApi,
   getFestivalsApi,
-  getBudgetApi
+  getBudgetApi,
+  getRecurringTransactionsApi,
+  deleteRecurringTransactionApi
 } from '@/api/index.js';
 
 export default {
@@ -483,6 +541,11 @@ export default {
         total_income: 0,
         balance: 0
       },
+      
+      // 周期记账相关
+      recurringTransactions: [],
+      showDeleteRecurringModal: false,
+      recurringToDelete: null,
       isLoading: false,
       isRefreshing: false,
       isLoadingMore: false,
@@ -635,6 +698,7 @@ export default {
             // 加载交易数据
             this.loadTransactions();
             this.loadMonthStats();
+            this.loadRecurringTransactions();
           }
         }
       } catch (error) {
@@ -1694,6 +1758,85 @@ export default {
       });
       
       return { expense, income };
+    },
+
+    // 周期记账相关方法
+    async loadRecurringTransactions() {
+      if (!this.currentBook) return;
+      
+      try {
+        const result = await getRecurringTransactionsApi({
+          book_id: this.currentBook.book_id
+        });
+        
+        if (result && Array.isArray(result)) {
+          this.recurringTransactions = result;
+        }
+      } catch (error) {
+        console.error('加载周期记账数据失败', error);
+      }
+    },
+
+    // 格式化周期记账执行计划
+    formatRecurringSchedule(recurring) {
+      const { recurring_type, recurring_hour, recurring_minute, recurring_weekday, recurring_month, recurring_day } = recurring;
+      const timeStr = `${String(recurring_hour).padStart(2, '0')}:${String(recurring_minute).padStart(2, '0')}`;
+      
+      switch (recurring_type) {
+        case 'daily':
+          return `每天 ${timeStr}`;
+        case 'weekly':
+          const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+          return `每${weekdays[recurring_weekday]} ${timeStr}`;
+        case 'monthly':
+          if (recurring_month) {
+            return `每年${recurring_month}月${recurring_day}日 ${timeStr}`;
+          } else {
+            return `每月${recurring_day}日 ${timeStr}`;
+          }
+        default:
+          return '未知计划';
+      }
+    },
+
+    // 确认删除周期记账
+    confirmDeleteRecurring(recurring) {
+      this.recurringToDelete = recurring;
+      this.showDeleteRecurringModal = true;
+    },
+
+    // 关闭删除确认弹窗
+    closeDeleteRecurringModal() {
+      this.showDeleteRecurringModal = false;
+      this.recurringToDelete = null;
+    },
+
+    // 删除周期记账
+    async deleteRecurring() {
+      if (!this.recurringToDelete) return;
+      
+      try {
+        await deleteRecurringTransactionApi(this.recurringToDelete.recurring_id);
+        
+        // 从本地列表中移除
+        const index = this.recurringTransactions.findIndex(r => r.recurring_id === this.recurringToDelete.recurring_id);
+        if (index !== -1) {
+          this.recurringTransactions.splice(index, 1);
+        }
+        
+        uni.showToast({
+          title: '删除成功',
+          icon: 'success'
+        });
+        
+        this.closeDeleteRecurringModal();
+      } catch (error) {
+        console.error('删除周期记账失败', error);
+        uni.showToast({
+          title: '删除失败',
+          icon: 'none'
+        });
+      }
     }
   }
 };
@@ -2015,12 +2158,188 @@ export default {
   color: $text-secondary;
 }
 
-/* 概览部分 */
+/* 概览信息 */
 .summary-section {
   padding: 30rpx 20rpx;
   background: #FFFFFF;
   margin-bottom: 20rpx;
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.03);
+}
+
+/* 周期记账样式 */
+.recurring-section {
+  padding: 30rpx 20rpx;
+  background: #FFFFFF;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.03);
+}
+
+.recurring-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.recurring-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.recurring-count {
+  font-size: 24rpx;
+  color: $text-secondary;
+  background: #F0F0F0;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+}
+
+.recurring-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.recurring-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background: #FAFAFA;
+  border-radius: 16rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.3s ease;
+}
+
+.recurring-item:active {
+  background: #F0F0F0;
+  transform: scale(0.98);
+}
+
+.recurring-tag {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.recurring-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.recurring-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.recurring-info {
+  flex: 1;
+}
+
+.recurring-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: $text-primary;
+  margin-bottom: 4rpx;
+}
+
+.recurring-schedule {
+  font-size: 24rpx;
+  color: $text-secondary;
+}
+
+.recurring-amount {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #FF6B6B;
+  margin-left: 16rpx;
+}
+
+.recurring-amount.income-amount {
+  color: #52C41A;
+}
+
+.recurring-actions {
+  margin-left: 16rpx;
+  flex-shrink: 0;
+}
+
+.delete-btn {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F0F0F0;
+  transition: all 0.3s ease;
+}
+
+.delete-btn:active {
+  background: #FFE6E6;
+  transform: scale(0.95);
+}
+
+/* 删除确认弹窗样式 */
+.delete-modal {
+  max-width: 600rpx;
+}
+
+.delete-message {
+  font-size: 28rpx;
+  color: $text-primary;
+  margin-bottom: 16rpx;
+  line-height: 1.5;
+}
+
+.delete-warning {
+  font-size: 24rpx;
+  color: #FF6B6B;
+  line-height: 1.4;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 20rpx;
+  padding: 24rpx;
+  border-top: 1rpx solid #F0F0F0;
+}
+
+.btn-cancel,
+.btn-delete {
+  flex: 1;
+  height: 80rpx;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel {
+  background: #F5F5F5;
+  color: $text-primary;
+}
+
+.btn-cancel:active {
+  background: #E8E8E8;
+}
+
+.btn-delete {
+  background: #FF6B6B;
+  color: #FFFFFF;
+}
+
+.btn-delete:active {
+  background: #FF5252;
 }
 
 .summary-header {

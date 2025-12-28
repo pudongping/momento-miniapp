@@ -32,7 +32,7 @@ export const updateTagApi = (data) => put('/tags/update', data);
 export const deleteTagApi = (tag_id) => del('/tags/delete', { tag_id });
 
 // 周期性记账相关接口
-export const getRecurringTransactionsApi = () => get('/recurring/list');
+export const getRecurringTransactionsApi = (params) => get('/recurring/list', params);
 export const addRecurringTransactionApi = (data) => post('/recurring/add', data);
 export const updateRecurringTransactionApi = (data) => put('/recurring/update', data);
 export const deleteRecurringTransactionApi = (recurring_id) => del('/recurring/delete', { recurring_id });
