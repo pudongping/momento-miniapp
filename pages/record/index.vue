@@ -112,13 +112,20 @@
             :style="{ backgroundColor: selectedTagId === tag.tag_id ? tag.color : '#F5F5F5' }"
             @click="selectTag(tag)"
           >
-            <!-- 自定义标签删除按钮 -->
-            <view 
-              v-if="!tag.is_system" 
-              class="delete-tag-btn" 
-              @click.stop="confirmDeleteTag(tag)"
-            >
-              <text class="delete-icon">−</text>
+            <!-- 自定义标签操作按钮 -->
+            <view v-if="!tag.is_system" class="tag-actions">
+              <view 
+                class="edit-tag-btn" 
+                @click.stop="openEditTagModal(tag)"
+              >
+                <text class="edit-icon">✎</text>
+              </view>
+              <view 
+                class="delete-tag-btn" 
+                @click.stop="confirmDeleteTag(tag)"
+              >
+                <text class="delete-icon">−</text>
+              </view>
             </view>
             
             <!-- FA图标或uni-icons -->
@@ -361,6 +368,64 @@
       </view>
     </view>
     
+    <!-- 修改标签弹窗 -->
+    <view v-if="showEditTagModal" class="modal-mask" @click="closeEditTagModal">
+      <view class="modal-content custom-tag-modal" @click.stop>
+        <view class="modal-header">
+          <text class="modal-title">修改标签</text>
+          <view class="close-btn" @click="closeEditTagModal">✕</view>
+        </view>
+        <view class="modal-body">
+          <view class="custom-tag-form">
+            <view class="form-item">
+              <text class="form-label">标签名称</text>
+              <input 
+                type="text" 
+                v-model="editTagName" 
+                class="form-input"
+                placeholder="请输入标签名称"
+                maxlength="6"
+              />
+            </view>
+            
+            <view class="form-item">
+              <text class="form-label">选择颜色</text>
+              <view class="color-options">
+                <view 
+                  v-for="(color, index) in tagColors" 
+                  :key="index"
+                  class="color-option"
+                  :style="{ backgroundColor: color }"
+                  :class="{ active: editTagColor === color }"
+                  @click="editTagColor = color"
+                ></view>
+              </view>
+            </view>
+            
+            <view class="form-item">
+              <text class="form-label">选择图标</text>
+              <view class="icon-options">
+                <view 
+                  v-for="(icon, index) in tagIcons" 
+                  :key="index"
+                  class="icon-option"
+                  :class="{ active: editTagIcon === icon }"
+                  @click="editTagIcon = icon"
+                >
+                  <uni-icons :type="icon" size="24" color="#666666"></uni-icons>
+                </view>
+              </view>
+            </view>
+            
+          </view>
+        </view>
+        <view class="modal-footer">
+          <button class="btn-cancel" @click="closeEditTagModal">取消</button>
+          <button class="btn-confirm" @click="saveEditTag">保存</button>
+        </view>
+      </view>
+    </view>
+    
     <!-- 自定义标签弹窗 -->
     <view v-if="showCustomTagModal" class="modal-mask" @click="closeCustomTagModal">
       <view class="modal-content custom-tag-modal" @click.stop>
@@ -420,19 +485,19 @@
     </view>
     
     <!-- 删除标签确认弹窗 -->
-    <view v-if="showDeleteTagModal" class="modal-mask" @click="closeDeleteTagModal">
-      <view class="modal-content delete-tag-modal" @click.stop>
-        <view class="modal-header">
-          <text class="modal-title">确认删除</text>
-          <view class="close-btn" @click="closeDeleteTagModal">✕</view>
+    <view v-if="showDeleteTagModal" class="delete-tag-modal-mask" @click="closeDeleteTagModal">
+      <view class="delete-tag-confirm-content" @click.stop>
+        <view class="delete-tag-confirm-header">
+          <view class="delete-tag-confirm-icon">
+            <text style="font-size: 60rpx; color: #FF6B6B;">?</text>
+          </view>
+          <text class="delete-tag-confirm-title">确认删除</text>
+          <text class="delete-tag-confirm-message">确定要删除标签"{{ tagToDelete?.name }}"吗？</text>
+          <text class="delete-tag-confirm-warning">删除后无法恢复，使用该标签的记录不会受到影响。</text>
         </view>
-        <view class="modal-body">
-          <text class="delete-message">确定要删除标签"{{ tagToDelete?.name }}"吗？</text>
-          <text class="delete-warning">删除后无法恢复，使用该标签的记录不会受到影响。</text>
-        </view>
-        <view class="modal-footer">
-          <button class="btn-cancel" @click="closeDeleteTagModal">取消</button>
-          <button class="btn-delete" @click="deleteTag">删除</button>
+        <view class="delete-tag-confirm-footer">
+          <button class="delete-tag-btn-cancel" @click="closeDeleteTagModal">取消</button>
+          <button class="delete-tag-btn-delete" @click="deleteTag">删除</button>
         </view>
       </view>
     </view>
@@ -445,6 +510,7 @@ import {
   getAccountBooksApi, 
   getTagsApi, 
   addTagApi, 
+  updateTagApi,
   deleteTagApi,
   addTransactionApi
 } from '@/api/index.js';
@@ -474,6 +540,11 @@ export default {
       customTagIcon: 'home',
       showDeleteTagModal: false,
       tagToDelete: null,
+      showEditTagModal: false,
+      editTagId: null,
+      editTagName: '',
+      editTagColor: '#FF9A5A',
+      editTagIcon: 'home',
       tagColors: [
         '#FF9A5A', '#F44336', '#E91E63', '#9C27B0', '#673AB7',
         '#3F51B5', '#2196F3', '#03A9F4', '#00BCD4', '#009688',
@@ -708,6 +779,74 @@ export default {
         console.error('删除标签失败', error);
         uni.showToast({
           title: '删除失败',
+          icon: 'none'
+        });
+      }
+    },
+
+    // 打开修改标签弹窗
+    openEditTagModal(tag) {
+      this.editTagId = tag.tag_id;
+      this.editTagName = tag.name;
+      this.editTagColor = tag.color;
+      this.editTagIcon = tag.icon || 'home';
+      this.showEditTagModal = true;
+    },
+
+    // 关闭修改标签弹窗
+    closeEditTagModal() {
+      this.showEditTagModal = false;
+      this.editTagId = null;
+      this.editTagName = '';
+      this.editTagColor = '#FF9A5A';
+      this.editTagIcon = 'home';
+    },
+
+    // 保存修改的标签
+    async saveEditTag() {
+      if (!this.editTagName.trim()) {
+        uni.showToast({
+          title: '请输入标签名称',
+          icon: 'none'
+        });
+        return;
+      }
+      
+      if (this.editTagName.trim().length > 6) {
+        uni.showToast({
+          title: '标签名称不能超过6个字符',
+          icon: 'none'
+        });
+        return;
+      }
+      
+      try {
+        const updatedTag = await updateTagApi({
+          tag_id: this.editTagId,
+          name: this.editTagName.trim(),
+          color: this.editTagColor,
+          icon: this.editTagIcon,
+          type: this.transactionType
+        });
+        
+        if (updatedTag) {
+          // 更新本地列表
+          const index = this.tags.findIndex(t => t.tag_id === this.editTagId);
+          if (index !== -1) {
+            this.tags[index] = updatedTag;
+          }
+          
+          this.closeEditTagModal();
+          
+          uni.showToast({
+            title: '标签修改成功',
+            icon: 'success'
+          });
+        }
+      } catch (error) {
+        console.error('修改标签失败', error);
+        uni.showToast({
+          title: '修改标签失败',
           icon: 'none'
         });
       }
@@ -1265,27 +1404,63 @@ export default {
   position: relative;
 }
 
+/* 标签操作按钮容器 */
+.tag-actions {
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  display: flex;
+  gap: 6rpx;
+  z-index: 11;
+}
+
+/* 修改标签按钮 */
+.edit-tag-btn {
+  position: relative;
+  width: 36rpx;
+  height: 36rpx;
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  box-shadow: 0 6rpx 16rpx rgba(76, 175, 80, 0.4);
+  transition: all 0.3s ease;
+  border: 3rpx solid #FFFFFF;
+}
+
+.edit-tag-btn:active {
+  transform: scale(0.85);
+  box-shadow: 0 4rpx 10rpx rgba(76, 175, 80, 0.3);
+}
+
+.edit-icon {
+  color: #FFFFFF;
+  font-size: 18rpx;
+  font-weight: bold;
+  line-height: 1;
+}
+
 /* 删除标签按钮 */
 .delete-tag-btn {
-  position: absolute;
-  top: -6rpx;
-  right: -6rpx;
-  width: 28rpx;
-  height: 28rpx;
+  position: relative;
+  width: 36rpx;
+  height: 36rpx;
   background: linear-gradient(135deg, #FF6B6B, #FF5252);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
-  box-shadow: 0 4rpx 12rpx rgba(255, 107, 107, 0.4);
+  box-shadow: 0 6rpx 16rpx rgba(255, 107, 107, 0.4);
   transition: all 0.3s ease;
-  border: 2rpx solid #FFFFFF;
+  border: 3rpx solid #FFFFFF;
 }
 
 .delete-tag-btn:active {
-  transform: scale(0.9);
-  box-shadow: 0 2rpx 6rpx rgba(255, 107, 107, 0.3);
+  transform: scale(0.85);
+  box-shadow: 0 4rpx 10rpx rgba(255, 107, 107, 0.3);
 }
 
 .delete-icon {
@@ -1293,7 +1468,7 @@ export default {
   font-size: 18rpx;
   font-weight: bold;
   line-height: 1;
-  transform: translateY(-1rpx);
+  transform: translateY(-0.5rpx);
 }
 
 /* FA图标样式 */
@@ -1911,64 +2086,141 @@ export default {
   margin-left: 12rpx;
 }
 
-/* 删除标签弹窗样式 */
-.delete-tag-modal .modal-mask {
-  align-items: center;
-  justify-content: center;
-}
-
-.delete-tag-modal .modal-content {
-  width: 600rpx;
-  border-radius: 24rpx;
-  animation: scaleIn 0.3s ease-out;
-  padding: 0;
-}
-
-.delete-tag-modal .modal-body {
-  padding: 40rpx 32rpx 32rpx;
-}
-
-.delete-tag-modal .modal-footer {
-  padding: 0 32rpx 32rpx;
+/* 删除标签弹窗样式 - 与删除账单弹窗风格一致 */
+.delete-tag-modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  gap: 20rpx;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-out;
 }
 
-@keyframes scaleIn {
+.delete-tag-confirm-content {
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: 24rpx 24rpx 0 0;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes fadeIn {
   from {
-    transform: scale(0.8);
     opacity: 0;
   }
   to {
-    transform: scale(1);
     opacity: 1;
   }
 }
 
-.delete-message {
-  font-size: 30rpx;
-  color: #333333;
-  margin-bottom: 16rpx;
-  text-align: center;
-  font-weight: 600;
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
-.delete-warning {
+.delete-tag-confirm-header {
+  padding: 60rpx 40rpx 40rpx;
+  text-align: center;
+  background: #FFFFFF;
+}
+
+.delete-tag-confirm-icon {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
+  background: linear-gradient(135deg, #FFE8E8, #FFEBEB);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 40rpx;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 107, 0.2);
+}
+
+.delete-tag-confirm-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333333;
+  text-align: center;
+  margin-bottom: 24rpx;
+  display: block;
+}
+
+.delete-tag-confirm-message {
+  font-size: 28rpx;
+  color: #666666;
+  text-align: center;
+  margin-bottom: 16rpx;
+  display: block;
+  line-height: 1.6;
+  padding: 0 20rpx;
+}
+
+.delete-tag-confirm-warning {
   font-size: 24rpx;
   color: #999999;
   text-align: center;
+  display: block;
   line-height: 1.6;
+  padding: 0 20rpx;
 }
 
-.btn-delete {
+.delete-tag-confirm-footer {
+  padding: 30rpx 40rpx;
+  padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+  background: #F8F9FA;
+  border-top: 1rpx solid #F0F0F0;
+  display: flex;
+  gap: 20rpx;
+}
+
+.delete-tag-btn-cancel {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F5F5F5;
+  color: #666666;
+  border: 2rpx solid #E5E5E5;
+  transition: all 0.3s ease;
+}
+
+.delete-tag-btn-cancel:active {
+  background: #EEEEEE;
+  transform: scale(0.98);
+}
+
+.delete-tag-btn-delete {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(135deg, #FF6B6B, #FF5252);
   color: #FFFFFF;
   border: none;
-  box-shadow: 0 4rpx 12rpx rgba(255, 107, 107, 0.3);
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 107, 0.3);
+  transition: all 0.3s ease;
 }
 
-.btn-delete:active {
-  transform: translateY(2rpx);
-  box-shadow: 0 2rpx 6rpx rgba(255, 107, 107, 0.2);
+.delete-tag-btn-delete:active {
+  background: linear-gradient(135deg, #FF5252, #FF4444);
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(255, 107, 107, 0.4);
 }
 </style>
