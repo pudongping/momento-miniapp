@@ -260,12 +260,17 @@
           <view class="search-form">
             <!-- 关键词搜索 -->
             <view class="form-item">
-              <text class="form-label">关键词</text>
+              <view class="form-label-row">
+                <text class="form-label">关键词</text>
+                <text class="char-count">{{ searchParams.keyword.length }}/80</text>
+              </view>
               <input 
                 type="text" 
                 v-model="searchParams.keyword" 
                 class="form-input"
-                placeholder="标签或备注关键词"
+                placeholder="标签名、备注"
+                @input="validateKeywordInput"
+                maxlength="80"
               />
             </view>
             
@@ -337,7 +342,7 @@
             </view>
           </view>
         </view>
-        <view class="modal-footer">
+        <view class="modal-footer search-modal-footer">
           <button class="btn-reset" @click="resetSearch">重置</button>
           <button class="btn-search" @click="searchTransactions">搜索</button>
         </view>
@@ -844,7 +849,7 @@ export default {
         console.error('刷新交易数据失败', error);
         uni.showToast({
           title: '刷新失败',
-          icon: 'none'
+          icon: 'error'
         });
       } finally {
         this.isRefreshing = false;
@@ -939,7 +944,7 @@ export default {
         console.error('删除交易失败', error);
         uni.showToast({
           title: '删除失败',
-          icon: 'none'
+          icon: 'error'
         });
       }
     },
@@ -1010,10 +1015,30 @@ export default {
       };
     },
     
+    // 验证关键词输入
+    validateKeywordInput(e) {
+      const value = e.detail.value;
+      if (value.length > 80) {
+        // 如果超过80个字符，截取前80个字符
+        this.searchParams.keyword = value.substring(0, 80);
+        uni.showToast({
+          title: '关键词最多80个字符',
+          icon: 'none'
+        });
+      }
+    },
+    
     // 验证金额输入
     validateAmountInput(e, field) {
       const value = e.detail.value;
+      
       // 只允许数字和小数点，且最多两位小数
+      if (value === '') {
+        // 允许空值
+        return;
+      }
+      
+      // 严格验证只能输入数字和小数点
       const regex = /^\d*\.?\d{0,2}$/;
       if (!regex.test(value)) {
         // 如果不符合格式，恢复为之前的值
@@ -1023,6 +1048,10 @@ export default {
       // 确保最小金额不小于0
       if (field === 'minAmount' && parseFloat(value) < 0) {
         this.searchParams.minAmount = '0';
+        uni.showToast({
+          title: '最小金额不能小于0',
+          icon: 'none'
+        });
       }
     },
     
@@ -1087,7 +1116,7 @@ export default {
         console.error('搜索交易失败', error);
         uni.showToast({
           title: '搜索失败',
-          icon: 'none'
+          icon: 'error'
         });
       } finally {
         this.isLoading = false;
@@ -1103,7 +1132,7 @@ export default {
       
       // 初始化年份列表（当前年往前5年）
       this.years = [];
-      for (let i = currentYear - 5; i <= currentYear; i++) {
+      for (let i = currentYear - 5; i <= currentYear + 5; i++) {
         this.years.push(i);
       }
       
@@ -1125,6 +1154,7 @@ export default {
       this.tempDatePickerValue = [...this.datePickerValue];
     },
     
+    // 更新天数列表
     updateDays(year, month) {
       const daysInMonth = new Date(year, month, 0).getDate();
       this.days = [];
@@ -1149,17 +1179,25 @@ export default {
     
     onDatePickerChange(e) {
       const values = e.detail.value;
-      this.tempDatePickerValue = values;
+      this.tempDatePickerValue = [...values]; // 创建副本避免引用问题
       
       // 当年月变化时，更新天数
       const year = this.years[values[0]];
       const month = this.months[values[1]];
+      
+      // 先保存当前选中的天数
+      const currentDayIndex = values[2];
+      
+      // 更新天数列表
       this.updateDays(year, month);
       
       // 如果当前选中的天数超过了新月份的最大天数，则重置为最后一天
-      if (values[2] >= this.days.length) {
+      if (currentDayIndex >= this.days.length) {
         this.tempDatePickerValue[2] = this.days.length - 1;
       }
+      
+      // 强制更新视图
+      this.$forceUpdate();
     },
     
     confirmDatePicker() {
@@ -1964,19 +2002,30 @@ export default {
 }
 
 .search-form {
-  padding: 10rpx 0;
+  padding: 20rpx 0;
 }
 
 .form-item {
   margin-bottom: 24rpx;
 }
 
+.form-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
 .form-label {
   font-size: 26rpx;
   color: #333333;
   font-weight: 600;
-  margin-bottom: 12rpx;
   display: block;
+}
+
+.char-count {
+  font-size: 24rpx;
+  color: #999999;
 }
 
 .form-input {
@@ -2156,6 +2205,19 @@ export default {
   align-items: center;
   padding: 24rpx;
   border-bottom: 1px solid #F5F5F5;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx;
+  border-top: 1px solid #F5F5F5;
+}
+
+.search-modal-footer {
+  padding: 30rpx 24rpx 40rpx;
+  margin-top: 20rpx;
 }
 
 .modal-title {
