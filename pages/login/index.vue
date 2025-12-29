@@ -8,16 +8,20 @@
     
     <view class="content-wrapper">
       <view class="logo-section">
-        <view class="logo-wrapper">
-          <image src="/static/images/app-logo.png" mode="aspectFit" class="app-logo"></image>
+        <view class="brand-row">
+          <view class="logo-wrapper">
+            <image src="/static/images/app-logo.png" mode="aspectFit" class="app-logo"></image>
+          </view>
+          <view class="brand-text-group">
+            <text class="app-name">时光小账本</text>
+            <text class="app-slogan">每一笔账单，都是生活的旁白</text>
+          </view>
         </view>
-        <text class="app-name">时光小账本</text>
-        <text class="app-slogan">每一笔账单，都是生活的旁白</text>
       </view>
       
       <view class="welcome-section">
         <view class="welcome-header">
-          <text class="welcome-title">欢迎回来</text>
+          <text class="welcome-title">欢迎回来！</text>
           <view class="welcome-line"></view>
         </view>
         <text class="welcome-desc">微信授权登录后，即可使用全部功能</text>
@@ -32,6 +36,15 @@
           <view class="btn-inner">
             <image src="/static/images/wechat-icon.png" mode="aspectFit" class="wechat-icon"></image>
             <text>微信一键登录</text>
+          </view>
+        </button>
+        
+        <button 
+          class="demo-mode-btn" 
+          @tap="handleDemoMode"
+        >
+          <view class="btn-inner">
+            <text>体验模式</text>
           </view>
         </button>
         
@@ -181,12 +194,40 @@ export default {
           url: '/pages/home/index'
         });
       }
+    },
+    
+    // 体验模式
+    handleDemoMode() {
+      // TODO: 实现体验模式逻辑
+      // 1. 设置 localStorage 标记为 demo 模式
+      // 2. 加载 mock 数据
+      // 3. 跳转到首页
+      uni.showToast({
+        title: '进入体验模式',
+        icon: 'success',
+        duration: 1500
+      });
+      // 延迟跳转
+      setTimeout(() => {
+        uni.switchTab({
+          url: '/pages/home/index'
+        });
+      }, 1500);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -226,7 +267,7 @@ export default {
 }
 
 .login-container {
-  min-height: 100vh;
+  height: 100vh;
   background: linear-gradient(135deg, #F5F7FA 0%, #E9F0F8 100%);
   display: flex;
   flex-direction: column;
@@ -283,55 +324,81 @@ export default {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  padding: 60rpx 40rpx;
+  height: 100%;
+  padding: calc(120rpx + env(safe-area-inset-top)) 40rpx calc(20rpx + env(safe-area-inset-bottom));
 }
 
 .logo-section {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-top: 120rpx;
+  align-items: flex-start;
+  margin-top: 60rpx;
+  margin-bottom: 40rpx;
   animation: fadeIn 0.8s ease-out both;
 }
 
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  width: 100%;
+}
+
+.brand-text-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  flex: 1;
+  min-width: 0;
+}
+
 .logo-wrapper {
-  width: 180rpx;
-  height: 180rpx;
+  width: 120rpx;
+  height: 120rpx;
   background: linear-gradient(135deg, #FF9A5A, #FFD166);
-  border-radius: 90rpx;
+  border-radius: 60rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 30rpx;
+  margin-bottom: 0;
   box-shadow: 0 12rpx 32rpx rgba(255, 154, 90, 0.25);
   animation: float 3s ease-in-out infinite;
+  flex-shrink: 0;
 }
 
 .app-logo {
-  width: 140rpx;
-  height: 140rpx;
+  width: 96rpx;
+  height: 96rpx;
 }
 
 .app-name {
-  font-size: 48rpx;
+  font-size: 52rpx;
   font-weight: 700;
   color: #2C3E50;
-  margin-top: 32rpx;
-  margin-bottom: 16rpx;
+  margin-top: 0;
+  margin-bottom: 8rpx;
   letter-spacing: 1rpx;
+  line-height: 1.2;
 }
 
 .app-slogan {
-  font-size: 28rpx;
+  font-size: 24rpx;
   color: #7F8C8D;
   font-weight: 400;
   letter-spacing: 0.5rpx;
+  line-height: 1.4;
 }
 
 .welcome-section {
   text-align: center;
-  margin: 100rpx 0 60rpx;
+  flex: 0.8;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 100rpx;
+  margin: 0;
   animation: slideUp 0.8s ease-out 0.2s both;
 }
 
@@ -339,14 +406,14 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 24rpx;
+  margin-bottom: 16rpx;
 }
 
 .welcome-title {
-  font-size: 52rpx;
-  font-weight: 700;
+  font-size: 48rpx;
+  font-weight: 600;
   color: #2C3E50;
-  margin-bottom: 16rpx;
+  margin-bottom: 12rpx;
   letter-spacing: 1rpx;
 }
 
@@ -366,8 +433,8 @@ export default {
 }
 
 .login-action {
-  margin-top: auto;
-  padding: 40rpx 0 60rpx;
+  margin-top: 0;
+  padding: 80rpx 0 0 0;
   animation: slideUp 0.8s ease-out 0.4s both;
 }
 
@@ -392,6 +459,27 @@ export default {
   box-shadow: 0 6rpx 16rpx rgba(255, 154, 90, 0.25);
 }
 
+.demo-mode-btn {
+  background: transparent;
+  color: #FF9A5A;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid #FF9A5A;
+  margin-top: 20rpx;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5rpx;
+}
+
+.demo-mode-btn:active {
+  background: rgba(255, 154, 90, 0.1);
+  transform: translateY(2rpx);
+}
+
 .btn-inner {
   display: flex;
   align-items: center;
@@ -406,7 +494,7 @@ export default {
 .features-list {
   display: flex;
   justify-content: space-around;
-  margin-top: 40rpx;
+  margin-top: 32rpx;
   padding: 30rpx 20rpx;
   background: rgba(255, 255, 255, 0.6);
   border-radius: 20rpx;
@@ -442,7 +530,7 @@ export default {
 .privacy-container {
   display: flex;
   justify-content: center;
-  margin-top: 32rpx;
+  margin-top: 20rpx;
 }
 
 .privacy-tip {
