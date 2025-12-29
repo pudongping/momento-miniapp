@@ -73,6 +73,26 @@
 				"navigationBarTextStyle": "black",
 				"backgroundColor": "#FAFAFA"
 			}
+		},
+		{
+			"path": "pages/user-agreement/index",
+			"style": {
+				"navigationBarTitleText": "用户协议",
+				"navigationBarBackgroundColor": "#FAFAFA",
+				"navigationBarTextStyle": "black",
+				"backgroundColor": "#FAFAFA",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/privacy-policy/index",
+			"style": {
+				"navigationBarTitleText": "隐私政策",
+				"navigationBarBackgroundColor": "#FAFAFA",
+				"navigationBarTextStyle": "black",
+				"backgroundColor": "#FAFAFA",
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {

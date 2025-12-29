@@ -64,7 +64,12 @@
         </view>
         
         <view class="privacy-container">
-          <text class="privacy-tip">登录即表示同意《用户协议》和《隐私政策》</text>
+          <text class="privacy-tip">
+            登录即表示同意
+            <text class="privacy-link" @tap="goToUserAgreement">《用户协议》</text>
+            和
+            <text class="privacy-link" @tap="goToPrivacyPolicy">《隐私政策》</text>
+          </text>
         </view>
       </view>
     </view>
@@ -213,6 +218,20 @@ export default {
           url: '/pages/home/index'
         });
       }, 1500);
+    },
+    
+    // 跳转到用户协议
+    goToUserAgreement() {
+      uni.navigateTo({
+        url: '/pages/user-agreement/index'
+      });
+    },
+    
+    // 跳转到隐私政策
+    goToPrivacyPolicy() {
+      uni.navigateTo({
+        url: '/pages/privacy-policy/index'
+      });
     }
   }
 };
@@ -539,5 +558,11 @@ export default {
   text-align: center;
   line-height: 1.5;
   font-weight: 400;
+}
+
+.privacy-link {
+  color: #FF9A5A;
+  font-weight: 600;
+  padding: 0 4rpx;
 }
 </style>
