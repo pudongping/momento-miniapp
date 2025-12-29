@@ -1,0 +1,280 @@
+/**
+ * 按钮样式库 - 统一所有按钮的外观和交互
+ * 注意：设计令牌变量已通过 uni.scss 全局导入，无需再次导入
+ */
+
+/* ==================== 主按钮 ==================== */
+.btn-primary {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-inverse;
+  border: none;
+  border-radius: $border-radius-full;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  height: 100rpx;
+  line-height: 100rpx;
+  padding: 0 40rpx;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
+  
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+  
+  &:disabled {
+    background: $color-text-disabled;
+    color: $color-text-placeholder;
+    opacity: 0.6;
+    box-shadow: none;
+  }
+}
+
+/* ==================== 次按钮 ==================== */
+.btn-secondary {
+  background: $color-bg-tertiary;
+  color: $color-text-primary;
+  border: 2rpx solid $color-border-normal;
+  border-radius: $border-radius-full;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  height: 100rpx;
+  line-height: 100rpx;
+  padding: 0 40rpx;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  
+  &:active {
+    background: $color-border-light;
+    transform: scale(0.98);
+  }
+  
+  &:disabled {
+    background: $color-bg-disabled;
+    color: $color-text-disabled;
+    border-color: $color-border-light;
+  }
+}
+
+/* ==================== 危险按钮 ==================== */
+.btn-danger {
+  background: $color-error;
+  color: $color-text-inverse;
+  border: none;
+  border-radius: $border-radius-full;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  height: 100rpx;
+  line-height: 100rpx;
+  padding: 0 40rpx;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+  
+  &:disabled {
+    background: $color-text-disabled;
+    opacity: 0.6;
+  }
+}
+
+/* ==================== 成功按钮 ==================== */
+.btn-success {
+  background: $color-success;
+  color: $color-text-inverse;
+  border: none;
+  border-radius: $border-radius-full;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  height: 100rpx;
+  line-height: 100rpx;
+  padding: 0 40rpx;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+  
+  &:disabled {
+    background: $color-text-disabled;
+    opacity: 0.6;
+  }
+}
+
+/* ==================== 小按钮 ==================== */
+.btn-small {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-inverse;
+  border: none;
+  border-radius: 30rpx;
+  font-size: $font-size-h4;
+  font-weight: $font-weight-medium;
+  height: 64rpx;
+  line-height: 64rpx;
+  padding: 0 24rpx;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  box-shadow: 0 2rpx 8rpx rgba(255, 154, 90, 0.15);
+  
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+  }
+  
+  &:disabled {
+    background: $color-text-disabled;
+    opacity: 0.6;
+    box-shadow: none;
+  }
+}
+
+/* ==================== 小次按钮 ==================== */
+.btn-small-secondary {
+  background: $color-bg-tertiary;
+  color: $color-text-primary;
+  border: 1rpx solid $color-border-normal;
+  border-radius: 30rpx;
+  font-size: $font-size-h4;
+  font-weight: $font-weight-medium;
+  height: 64rpx;
+  line-height: 64rpx;
+  padding: 0 24rpx;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  
+  &:active {
+    background: $color-border-light;
+    transform: scale(0.96);
+  }
+  
+  &:disabled {
+    background: $color-bg-disabled;
+    color: $color-text-disabled;
+  }
+}
+
+/* ==================== 小危险按钮 ==================== */
+.btn-small-danger {
+  background: $color-error;
+  color: $color-text-inverse;
+  border: none;
+  border-radius: 30rpx;
+  font-size: $font-size-h4;
+  font-weight: $font-weight-medium;
+  height: 64rpx;
+  line-height: 64rpx;
+  padding: 0 24rpx;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.96);
+  }
+  
+  &:disabled {
+    background: $color-text-disabled;
+    opacity: 0.6;
+  }
+}
+
+/* ==================== 文字按钮 ==================== */
+.btn-text {
+  background: transparent;
+  color: $color-primary;
+  border: none;
+  font-size: $font-size-h4;
+  font-weight: $font-weight-medium;
+  padding: 8rpx 16rpx;
+  transition: all 0.3s ease;
+  
+  &:active {
+    color: $color-primary-dark;
+    background: $color-primary-bg;
+    border-radius: $border-radius-sm;
+  }
+  
+  &:disabled {
+    color: $color-text-disabled;
+  }
+}
+
+/* ==================== 图标按钮 ==================== */
+.btn-icon {
+  background: $color-bg-tertiary;
+  color: $color-text-primary;
+  border: none;
+  border-radius: $border-radius-md;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  
+  &:active {
+    background: $color-border-light;
+    transform: scale(0.95);
+  }
+  
+  &:disabled {
+    background: $color-bg-disabled;
+    color: $color-text-disabled;
+  }
+}
+
+/* ==================== 按钮组 ==================== */
+.btn-group {
+  display: flex;
+  gap: 16rpx;
+  
+  &.vertical {
+    flex-direction: column;
+  }
+  
+  &.horizontal {
+    flex-direction: row;
+  }
+}
+
+/* ==================== 按钮容器 ==================== */
+.btn-container {
+  padding: 24rpx;
+  display: flex;
+  gap: 16rpx;
+  
+  &.center {
+    justify-content: center;
+  }
+  
+  &.space-between {
+    justify-content: space-between;
+  }
+}

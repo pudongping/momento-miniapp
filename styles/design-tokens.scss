@@ -1,0 +1,353 @@
+/**
+ * 时光小账本 - 设计规范文件
+ * 统一定义字体、颜色、按钮样式、间距等设计令牌
+ */
+
+/* ==================== 字体系统 ==================== */
+
+/* 字体家族 */
+$font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+$font-family-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+
+/* 字体大小 - 按用途分类 */
+$font-size-display: 48rpx;      /* 大标题（如登录页欢迎语） */
+$font-size-h1: 40rpx;           /* 一级标题 */
+$font-size-h2: 36rpx;           /* 二级标题（如页面标题） */
+$font-size-h3: 32rpx;           /* 三级标题（如区块标题） */
+$font-size-h4: 28rpx;           /* 四级标题（如小标题） */
+$font-size-body: 28rpx;         /* 正文文本 */
+$font-size-small: 24rpx;        /* 小文本（如辅助信息） */
+$font-size-xs: 22rpx;           /* 超小文本（如提示文字） */
+$font-size-caption: 20rpx;      /* 标签文本 */
+
+/* 字体权重 */
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+/* 行高 */
+$line-height-tight: 1.2;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.8;
+
+/* ==================== 颜色系统 ==================== */
+
+/* 主色系 */
+$color-primary: #FF9A5A;        /* 主色 - 暖橘色 */
+$color-primary-light: #FFD166;  /* 主色浅色 - 浅金色 */
+$color-primary-dark: #E67E3C;   /* 主色深色 */
+$color-primary-bg: #FFF5F0;     /* 主色背景 */
+
+/* 功能色 */
+$color-success: #52C41A;        /* 成功/收入 - 绿色 */
+$color-success-light: #F6FFED;  /* 成功背景 */
+$color-warning: #FAAD14;        /* 警告 - 黄色 */
+$color-warning-light: #FFFBE6;  /* 警告背景 */
+$color-error: #FF4D4F;          /* 错误/支出 - 红色 */
+$color-error-light: #FFF1F0;    /* 错误背景 */
+$color-info: #1890FF;           /* 信息 - 蓝色 */
+$color-info-light: #E6F7FF;     /* 信息背景 */
+
+/* 中性色 */
+$color-text-primary: #333333;   /* 主要文字 */
+$color-text-secondary: #666666; /* 次要文字 */
+$color-text-tertiary: #999999;  /* 三级文字 */
+$color-text-placeholder: #CCCCCC; /* 占位符文字 */
+$color-text-disabled: #D9D9D9;  /* 禁用文字 */
+$color-text-inverse: #FFFFFF;   /* 反色文字 */
+
+/* 背景色 */
+$color-bg-primary: #FFFFFF;     /* 主背景 - 白色 */
+$color-bg-secondary: #F8F9FA;   /* 次背景 - 浅灰 */
+$color-bg-tertiary: #F5F5F5;    /* 三级背景 */
+$color-bg-disabled: #FAFAFA;    /* 禁用背景 */
+
+/* 边框色 */
+$color-border-light: #F0F0F0;   /* 浅边框 */
+$color-border-normal: #E5E5E5;  /* 普通边框 */
+$color-border-dark: #D9D9D9;    /* 深边框 */
+
+/* ==================== 按钮样式 ==================== */
+
+/* 主按钮 */
+.btn-primary {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-inverse;
+  border: none;
+  border-radius: 50rpx;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  height: 100rpx;
+  line-height: 100rpx;
+  padding: 0 40rpx;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+  
+  &:disabled {
+    background: $color-text-disabled;
+    color: $color-text-placeholder;
+    opacity: 0.6;
+  }
+}
+
+/* 次按钮 */
+.btn-secondary {
+  background: $color-bg-tertiary;
+  color: $color-text-primary;
+  border: 2rpx solid $color-border-normal;
+  border-radius: 50rpx;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  height: 100rpx;
+  line-height: 100rpx;
+  padding: 0 40rpx;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  
+  &:active {
+    background: $color-border-light;
+    transform: scale(0.98);
+  }
+  
+  &:disabled {
+    background: $color-bg-disabled;
+    color: $color-text-disabled;
+    border-color: $color-border-light;
+  }
+}
+
+/* 危险按钮 */
+.btn-danger {
+  background: $color-error;
+  color: $color-text-inverse;
+  border: none;
+  border-radius: 50rpx;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  height: 100rpx;
+  line-height: 100rpx;
+  padding: 0 40rpx;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  
+  &:active {
+    background: $color-primary-dark;
+    transform: scale(0.98);
+  }
+  
+  &:disabled {
+    background: $color-text-disabled;
+    opacity: 0.6;
+  }
+}
+
+/* 成功按钮 */
+.btn-success {
+  background: $color-success;
+  color: $color-text-inverse;
+  border: none;
+  border-radius: 50rpx;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  height: 100rpx;
+  line-height: 100rpx;
+  padding: 0 40rpx;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+  
+  &:disabled {
+    background: $color-text-disabled;
+    opacity: 0.6;
+  }
+}
+
+/* 小按钮 */
+.btn-small {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-inverse;
+  border: none;
+  border-radius: 30rpx;
+  font-size: $font-size-h4;
+  font-weight: $font-weight-medium;
+  height: 64rpx;
+  line-height: 64rpx;
+  padding: 0 24rpx;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+  }
+  
+  &:disabled {
+    background: $color-text-disabled;
+    opacity: 0.6;
+  }
+}
+
+/* 小次按钮 */
+.btn-small-secondary {
+  background: $color-bg-tertiary;
+  color: $color-text-primary;
+  border: 1rpx solid $color-border-normal;
+  border-radius: 30rpx;
+  font-size: $font-size-h4;
+  font-weight: $font-weight-medium;
+  height: 64rpx;
+  line-height: 64rpx;
+  padding: 0 24rpx;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  
+  &:active {
+    background: $color-border-light;
+    transform: scale(0.96);
+  }
+  
+  &:disabled {
+    background: $color-bg-disabled;
+    color: $color-text-disabled;
+  }
+}
+
+/* 文字按钮 */
+.btn-text {
+  background: transparent;
+  color: $color-primary;
+  border: none;
+  font-size: $font-size-h4;
+  font-weight: $font-weight-medium;
+  padding: 8rpx 16rpx;
+  transition: all 0.3s ease;
+  
+  &:active {
+    color: $color-primary-dark;
+    background: $color-primary-bg;
+    border-radius: 8rpx;
+  }
+  
+  &:disabled {
+    color: $color-text-disabled;
+  }
+}
+
+/* ==================== 文本样式 ==================== */
+
+/* 标题样式 */
+.text-display {
+  font-size: $font-size-display;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  color: $color-text-primary;
+}
+
+.text-h1 {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  color: $color-text-primary;
+}
+
+.text-h2 {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-tight;
+  color: $color-text-primary;
+}
+
+.text-h3 {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-normal;
+  color: $color-text-primary;
+}
+
+.text-h4 {
+  font-size: $font-size-h4;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-normal;
+  color: $color-text-primary;
+}
+
+/* 正文样式 */
+.text-body {
+  font-size: $font-size-body;
+  font-weight: $font-weight-normal;
+  line-height: $line-height-normal;
+  color: $color-text-primary;
+}
+
+.text-body-secondary {
+  font-size: $font-size-body;
+  font-weight: $font-weight-normal;
+  line-height: $line-height-normal;
+  color: $color-text-secondary;
+}
+
+/* 小文本样式 */
+.text-small {
+  font-size: $font-size-small;
+  font-weight: $font-weight-normal;
+  line-height: $line-height-normal;
+  color: $color-text-secondary;
+}
+
+.text-xs {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-normal;
+  line-height: $line-height-normal;
+  color: $color-text-tertiary;
+}
+
+/* ==================== 间距系统 ==================== */
+
+$spacing-xs: 8rpx;
+$spacing-sm: 16rpx;
+$spacing-md: 24rpx;
+$spacing-lg: 32rpx;
+$spacing-xl: 48rpx;
+
+/* ==================== 圆角系统 ==================== */
+
+$border-radius-sm: 8rpx;
+$border-radius-md: 16rpx;
+$border-radius-lg: 24rpx;
+$border-radius-full: 50rpx;
+
+/* ==================== 阴影系统 ==================== */
+
+$shadow-light: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+$shadow-normal: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+$shadow-medium: 0 8rpx 24rpx rgba(0, 0, 0, 0.12);
+$shadow-heavy: 0 12rpx 32rpx rgba(0, 0, 0, 0.16);

@@ -392,9 +392,9 @@ export default {
 }
 
 .app-name {
-  font-size: 52rpx;
-  font-weight: 700;
-  color: #2C3E50;
+  font-size: $font-size-display;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
   margin-top: 0;
   margin-bottom: 8rpx;
   letter-spacing: 1rpx;
@@ -402,9 +402,9 @@ export default {
 }
 
 .app-slogan {
-  font-size: 24rpx;
-  color: #7F8C8D;
-  font-weight: 400;
+  font-size: $font-size-small;
+  color: $color-text-secondary;
+  font-weight: $font-weight-normal;
   letter-spacing: 0.5rpx;
   line-height: 1.4;
 }
@@ -429,9 +429,9 @@ export default {
 }
 
 .welcome-title {
-  font-size: 48rpx;
-  font-weight: 600;
-  color: #2C3E50;
+  font-size: $font-size-h1;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
   margin-bottom: 12rpx;
   letter-spacing: 1rpx;
 }
@@ -445,9 +445,9 @@ export default {
 }
 
 .welcome-desc {
-  font-size: 28rpx;
-  color: #95A5A6;
-  font-weight: 400;
+  font-size: $font-size-body;
+  color: $color-text-secondary;
+  font-weight: $font-weight-normal;
   line-height: 1.6;
 }
 
@@ -458,18 +458,8 @@ export default {
 }
 
 .wx-login-btn {
-  background: linear-gradient(135deg, #FF9A5A 0%, #FFD166 100%);
-  color: #FFFFFF;
-  height: 100rpx;
-  border-radius: 50rpx;
-  font-size: 32rpx;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
+  @extend .btn-primary;
   box-shadow: 0 12rpx 28rpx rgba(255, 154, 90, 0.35);
-  transition: all 0.3s ease;
   letter-spacing: 0.5rpx;
 }
 
@@ -480,22 +470,22 @@ export default {
 
 .demo-mode-btn {
   background: transparent;
-  color: #FF9A5A;
+  color: $color-primary;
   height: 88rpx;
   border-radius: 44rpx;
-  font-size: 32rpx;
-  font-weight: 600;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2rpx solid #FF9A5A;
+  border: 2rpx solid $color-primary;
   margin-top: 20rpx;
   transition: all 0.3s ease;
   letter-spacing: 0.5rpx;
 }
 
 .demo-mode-btn:active {
-  background: rgba(255, 154, 90, 0.1);
+  background: $color-primary-bg;
   transform: translateY(2rpx);
 }
 
@@ -530,20 +520,20 @@ export default {
 .feature-icon {
   width: 44rpx;
   height: 44rpx;
-  background: linear-gradient(135deg, #FF9A5A, #FFD166);
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
   border-radius: 22rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFFFFF;
-  font-weight: 700;
-  font-size: 28rpx;
+  color: $color-text-inverse;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-h4;
 }
 
 .feature-text {
-  font-size: 24rpx;
-  color: #2C3E50;
-  font-weight: 500;
+  font-size: $font-size-small;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
 }
 
 .privacy-container {

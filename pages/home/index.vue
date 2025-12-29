@@ -1919,9 +1919,9 @@ export default {
 }
 
 .current-book-name {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #333333;
+  font-size: $font-size-body;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
   max-width: 300rpx;
   white-space: nowrap;
   overflow: hidden;
@@ -1954,9 +1954,9 @@ export default {
 }
 
 .tap-hint {
-  font-size: 22rpx;
-  color: #FF9A5A;
-  font-weight: 500;
+  font-size: $font-size-xs;
+  color: $text-secondary;
+  font-weight: $font-weight-semibold;
 }
 
 .switcher-tooltip {
@@ -1967,8 +1967,8 @@ export default {
   color: #FFFFFF;
   padding: 16rpx 24rpx;
   border-radius: 12rpx;
-  font-size: 26rpx;
-  font-weight: 500;
+  font-size: $font-size-body;
+  font-weight: $font-weight-semibold;
   z-index: 10;
   max-width: 400rpx;
   animation: fadeIn 0.3s;
@@ -1995,9 +1995,9 @@ export default {
   position: absolute;
   top: 6rpx;
   right: 10rpx;
-  font-size: 28rpx;
+  font-size: $font-size-xs;
   color: #FFFFFF;
-  font-weight: bold;
+  font-weight: $font-weight-semibold;
 }
 
 /* 背景墙 */
@@ -2054,9 +2054,9 @@ export default {
 }
 
 .countdown-text {
+  font-size: $font-size-h4;
+  font-weight: $font-weight-semibold;
   color: #FFFFFF;
-  font-size: 26rpx;
-  font-weight: 500;
   text-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.3);
 }
 
@@ -2068,9 +2068,9 @@ export default {
 }
 
 .event-text {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
   color: #FFFFFF;
-  font-size: 40rpx;
-  font-weight: 700;
   text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.5);
   letter-spacing: 2rpx;
 }
@@ -2089,8 +2089,8 @@ export default {
 }
 
 .background-tip text {
+  font-size: $font-size-xs;
   color: #FFFFFF;
-  font-size: 22rpx;
 }
 
 /* 预算进度条 */
@@ -2110,13 +2110,13 @@ export default {
 }
 
 .budget-title {
-  font-size: 32rpx;
-  font-weight: 600;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
   color: $text-primary;
 }
 
 .budget-amount {
-  font-size: 28rpx;
+  font-size: $font-size-body;
   color: $text-secondary;
   background: #F5F5F5;
   padding: 6rpx 16rpx;
@@ -2167,13 +2167,13 @@ export default {
 }
 
 .budget-percentage {
-  font-size: 24rpx;
-  font-weight: 600;
+  font-size: $font-size-body;
+  font-weight: $font-weight-semibold;
   color: $text-primary;
 }
 
 .budget-remaining {
-  font-size: 24rpx;
+  font-size: $font-size-body;
   color: $text-secondary;
 }
 
@@ -2218,21 +2218,21 @@ export default {
 }
 
 .tab-text {
-  font-size: 32rpx;
+  font-size: $font-size-h4;
   color: $text-secondary;
-  font-weight: 500;
+  font-weight: $font-weight-semibold;
   transition: color 0.3s ease;
 }
 
 .tab-item.active .tab-text {
   color: $text-primary;
-  font-weight: 600;
+  font-weight: $font-weight-bold;
 }
 
 .tab-badge {
   background: #FF6B6B;
   color: #FFFFFF;
-  font-size: 20rpx;
+  font-size: $font-size-xs;
   padding: 2rpx 8rpx;
   border-radius: 10rpx;
   min-width: 32rpx;
@@ -2273,13 +2273,13 @@ export default {
 }
 
 .recurring-title {
-  font-size: 32rpx;
-  font-weight: 600;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
   color: $text-primary;
 }
 
 .recurring-count {
-  font-size: 24rpx;
+  font-size: $font-size-body;
   color: $text-secondary;
   background: #F0F0F0;
   padding: 4rpx 12rpx;
@@ -2336,26 +2336,26 @@ export default {
 }
 
 .recurring-name {
-  font-size: 30rpx;
-  font-weight: 600;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
   color: $text-primary;
   margin-bottom: 4rpx;
 }
 
 .recurring-schedule {
-  font-size: 24rpx;
+  font-size: $font-size-body;
   color: $text-secondary;
 }
 
 .recurring-amount {
-  font-size: 32rpx;
-  font-weight: 700;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
   color: #FF6B6B;
   margin-left: 16rpx;
 }
 
 .recurring-amount.income-amount {
-  color: #52C41A;
+  color: #4CAF50;
 }
 
 .recurring-actions {
@@ -2385,14 +2385,14 @@ export default {
 }
 
 .delete-message {
-  font-size: 28rpx;
+  font-size: $font-size-body;
   color: $text-primary;
   margin-bottom: 16rpx;
   line-height: 1.5;
 }
 
 .delete-warning {
-  font-size: 24rpx;
+  font-size: $font-size-xs;
   color: #FF6B6B;
   line-height: 1.4;
 }
@@ -2404,20 +2404,9 @@ export default {
   border-top: 1rpx solid #F0F0F0;
 }
 
-.btn-cancel,
-.btn-delete {
-  flex: 1;
-  height: 80rpx;
-  border-radius: 12rpx;
-  font-size: 28rpx;
-  font-weight: 500;
-  border: none;
-  transition: all 0.3s ease;
-}
-
 .btn-cancel {
-  background: #F5F5F5;
-  color: $text-primary;
+  @extend .btn-small-secondary;
+  flex: 1;
 }
 
 .btn-cancel:active {
@@ -2425,8 +2414,8 @@ export default {
 }
 
 .btn-delete {
-  background: #FF6B6B;
-  color: #FFFFFF;
+  @extend .btn-small-danger;
+  flex: 1;
 }
 
 .btn-delete:active {
@@ -2451,9 +2440,10 @@ export default {
 }
 
 .empty-recurring .empty-text {
-  font-size: 28rpx;
+  font-size: $font-size-body;
   color: $text-secondary;
   margin-bottom: 40rpx;
+  display: block;
 }
 
 .btn-add-recurring {
@@ -2461,9 +2451,9 @@ export default {
   color: #FFFFFF;
   border: none;
   border-radius: 50rpx;
+  font-size: $font-size-h4;
+  font-weight: $font-weight-bold;
   padding: 20rpx 48rpx;
-  font-size: 30rpx;
-  font-weight: 600;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2486,13 +2476,13 @@ export default {
 }
 
 .summary-title {
-  font-size: 32rpx;
-  font-weight: 600;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
   color: $text-primary;
 }
 
 .summary-date {
-  font-size: 24rpx;
+  font-size: $font-size-body;
   color: $text-secondary;
   background: #F5F5F5;
   padding: 6rpx 16rpx;
@@ -2525,14 +2515,14 @@ export default {
 }
 
 .card-title {
-  font-size: 24rpx;
+  font-size: $font-size-body;
   color: $text-secondary;
   margin-bottom: 8rpx;
 }
 
 .card-amount {
-  font-size: 32rpx;
-  font-weight: 600;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
   color: $text-primary;
 }
 
@@ -2552,8 +2542,8 @@ export default {
 }
 
 .section-title {
-  font-size: 32rpx;
-  font-weight: 600;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
   color: $text-primary;
 }
 
@@ -2582,8 +2572,8 @@ export default {
   color: #FFFFFF;
   padding: 8rpx 20rpx;
   border-radius: 30rpx;
-  font-size: 26rpx;
-  font-weight: 500;
+  font-size: $font-size-body;
+  font-weight: $font-weight-semibold;
   box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
 }
 
@@ -2622,13 +2612,13 @@ export default {
 }
 
 .date-text {
-  font-size: 28rpx;
-  font-weight: 600;
+  font-size: $font-size-h4;
+  font-weight: $font-weight-semibold;
   color: $text-primary;
 }
 
 .date-weekday {
-  font-size: 22rpx;
+  font-size: $font-size-xs;
   color: $text-secondary;
   margin-top: 4rpx;
 }
@@ -2646,12 +2636,12 @@ export default {
 }
 
 .expense-text {
-  font-size: 24rpx;
+  font-size: $font-size-body;
   color: #FF6B6B;
 }
 
 .income-text {
-  font-size: 24rpx;
+  font-size: $font-size-body;
   color: #4CAF50;
 }
 
@@ -2709,20 +2699,20 @@ export default {
 }
 
 .transaction-name {
-  font-size: 30rpx;
-  font-weight: 600;
+  font-size: $font-size-h4;
+  font-weight: $font-weight-semibold;
   color: $text-primary;
   margin-bottom: 4rpx;
 }
 
 .transaction-remark {
-  font-size: 24rpx;
+  font-size: $font-size-body;
   color: $text-secondary;
 }
 
 .transaction-amount {
-  font-size: 32rpx;
-  font-weight: 600;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
   color: #FF6B6B;
   margin-right: 10rpx;
   white-space: nowrap;
@@ -2751,12 +2741,12 @@ export default {
 }
 
 .user-nickname {
-  font-size: 22rpx;
+  font-size: $font-size-xs;
   color: $text-secondary;
 }
 
 .transaction-time {
-  font-size: 22rpx;
+  font-size: $font-size-xs;
   color: $text-tertiary;
 }
 

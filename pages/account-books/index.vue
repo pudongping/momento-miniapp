@@ -549,8 +549,8 @@ export default {
 }
 
 .section-title {
-  font-size: 28rpx;
-  font-weight: 600;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
   color: $text-primary;
 }
 
@@ -607,26 +607,14 @@ export default {
   justify-content: flex-end;
 }
 
-.btn-reject, .btn-accept {
-  padding: 8rpx 24rpx;
-  border-radius: 30rpx;
-  font-size: 26rpx;
-  border: none;
-  min-width: 120rpx;
-  height: 64rpx;
-  line-height: 64rpx;
-  font-weight: 500;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
-}
-
 .btn-reject {
-  background: #F5F5F5;
-  color: $text-secondary;
+  @extend .btn-small-secondary;
+  min-width: 120rpx;
 }
 
 .btn-accept {
-  background: linear-gradient(135deg, #FF9A5A, #FFD166);
-  color: #FFFFFF;
+  @extend .btn-small;
+  min-width: 120rpx;
 }
 
 .books-section {
@@ -648,19 +636,7 @@ export default {
 }
 
 .btn-add {
-  background: linear-gradient(135deg, #FF9A5A, #FFD166);
-  color: #FFFFFF;
-  border: none;
-  border-radius: 30rpx;
-  padding: 4rpx 20rpx;
-  font-size: 26rpx;
-  height: 64rpx;
-  line-height: 64rpx;
-  display: flex;
-  align-items: center;
-  gap: 6rpx;
-  box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
-  font-weight: 500;
+  @extend .btn-small;
 }
 
 .books-group {
@@ -668,7 +644,7 @@ export default {
 }
 
 .group-label {
-  font-size: 24rpx;
+  font-size: $font-size-small;
   color: $text-secondary;
   margin-bottom: 12rpx;
   display: block;
@@ -736,8 +712,8 @@ export default {
 }
 
 .book-name {
-  font-size: 32rpx;
-  font-weight: 600;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
   color: $text-primary;
 }
 
@@ -755,12 +731,12 @@ export default {
   display: flex;
   align-items: center;
   gap: 8rpx;
-  font-size: 24rpx;
+  font-size: $font-size-small;
   color: $text-secondary;
 }
 
 .info-item {
-  font-size: 24rpx;
+  font-size: $font-size-small;
 }
 
 .info-separator {
