@@ -1812,11 +1812,11 @@ export default {
 .btn-save {
   width: 100%;
   height: 88rpx;
-  background: linear-gradient(135deg, #FF9A5A, #FFD166);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  color: $color-text-inverse;
   border-radius: 44rpx;
-  font-size: 32rpx;
-  font-weight: 600;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
   box-shadow: 0 6rpx 16rpx rgba(255, 154, 90, 0.25);
   border: none;
   transition: all 0.3s ease;

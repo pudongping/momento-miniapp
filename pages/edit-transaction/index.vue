@@ -627,19 +627,19 @@ export default {
 .btn-save {
   width: 100%;
   height: 88rpx;
-  background: linear-gradient(135deg, #FF9A5A 0%, #FF7B3A 100%);
-  border-radius: 12rpx;
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  border-radius: 44rpx;
   border: none;
-  color: #FFFFFF;
-  font-size: 32rpx;
-  font-weight: 600;
-  box-shadow: 0 4rpx 16rpx rgba(255, 154, 90, 0.4);
+  color: $color-text-inverse;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  box-shadow: 0 6rpx 16rpx rgba(255, 154, 90, 0.25);
   transition: all 0.3s ease;
 }
 
 .btn-save:active {
   transform: translateY(2rpx);
-  box-shadow: 0 2rpx 8rpx rgba(255, 154, 90, 0.4);
+  box-shadow: 0 2rpx 8rpx rgba(255, 154, 90, 0.15);
 }
 
 /* 模态框样式 */

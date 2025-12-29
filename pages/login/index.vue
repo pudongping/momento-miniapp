@@ -429,8 +429,8 @@ export default {
 }
 
 .welcome-title {
-  font-size: $font-size-h1;
-  font-weight: $font-weight-semibold;
+  font-size: $font-size-display;
+  font-weight: $font-weight-bold;
   color: $color-text-primary;
   margin-bottom: 12rpx;
   letter-spacing: 1rpx;

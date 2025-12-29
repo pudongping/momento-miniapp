@@ -2029,10 +2029,16 @@ export default {
 }
 
 .countdown-container {
-  position: relative;
+  position: absolute;
+  top: 40rpx;
+  left: 0;
+  right: 0;
   z-index: 2;
   height: 80rpx;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .countdown-swiper {
@@ -2128,21 +2134,23 @@ export default {
 }
 
 .budget-progress-bg {
-  height: 20rpx;
-  background: #F5F5F5;
-  border-radius: 10rpx;
+  height: 18rpx;
+  background: $color-bg-tertiary;
+  border-radius: 12rpx;
   overflow: hidden;
   position: relative;
+  box-shadow: inset 0 2rpx 4rpx rgba(0, 0, 0, 0.05);
 }
 
 .budget-progress-bar {
   height: 100%;
-  border-radius: 10rpx;
+  border-radius: 12rpx;
   position: absolute;
   left: 0;
   top: 0;
+  min-width: 4rpx;
   transition: width 0.5s ease, background-color 0.5s ease;
-  box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
   animation: pulse 2s infinite;
   background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
   background-size: 40rpx 40rpx;
