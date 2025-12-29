@@ -1862,7 +1862,7 @@ export default {
 <style lang="scss" scoped>
 .page-container {
   min-height: 100vh;
-  background: $background-color;
+  background: #F8F9FA;
   padding-bottom: 40rpx;
 }
 
@@ -2005,15 +2005,16 @@ export default {
   position: relative;
   height: 400rpx;
   width: 100%;
-  overflow: hidden;
-  background-image: url('/static/images/default-background.jpg');
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 30rpx;
+  justify-content: center;
+  align-items: center;
+  color: #FFFFFF;
   box-sizing: border-box;
+  margin-bottom: 24rpx;
 }
 
 .background-wall::after {
@@ -2096,8 +2097,9 @@ export default {
 .budget-section {
   padding: 30rpx 20rpx;
   background: #FFFFFF;
-  margin-bottom: 20rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.03);
+  margin: 0 20rpx 24rpx 20rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
 }
 
 .budget-header {
@@ -2179,15 +2181,18 @@ export default {
 .summary-section {
   padding: 30rpx 20rpx;
   background: #FFFFFF;
-  margin-bottom: 20rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.03);
+  margin: 0 20rpx 24rpx 20rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
 }
 
 /* Tab切换样式 */
 .tab-section {
   background: #FFFFFF;
-  margin-bottom: 20rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.03);
+  margin: 0 20rpx 24rpx 20rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
+  overflow: hidden;
 }
 
 .tab-header {
@@ -2213,7 +2218,7 @@ export default {
 }
 
 .tab-text {
-  font-size: 28rpx;
+  font-size: 32rpx;
   color: $text-secondary;
   font-weight: 500;
   transition: color 0.3s ease;
