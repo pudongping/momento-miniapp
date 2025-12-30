@@ -552,12 +552,12 @@ export default {
         '#4CAF50', '#8BC34A', '#CDDC39', '#FFC107', '#FF9800'
       ],
       tagIcons: [
-        'home', 'shop', 'cart', 'car', 'food',
-        'gift', 'wallet', 'heart', 'star', 'phone',
-        'email', 'sound', 'videocam', 'trash', 'fire',
-        'flag', 'cloud', 'plane', 'bus', 'book',
-        'laptop', 'mobile-alt', 'tv', 'headphones', 'mic',
-        'medal', 'staff', 'bicycle', 'coffee', 'more'
+        'home', 'shop', 'cart', 'calendar', 'camera', 'chat',
+        'gift', 'wallet', 'heart', 'star', 'phone', 'paperclip',
+        'email', 'sound', 'videocam', 'fire', 'medal', 'navigate',
+        'flag', 'chatboxes', 'chatbubble', 'circle', 'spinner-cycle', 
+		'color', 'email', 'eye', 'folder-add', 'headphones', 'mic',
+        'medal', 'staff', 'gear', 'hand-up', 'paperplane', 'vip', 'more'
       ],
       
       // 日期选择器
