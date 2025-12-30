@@ -738,6 +738,7 @@ export default {
   display: flex;
   gap: 12rpx;
   padding: 24rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
   border-top: 1px solid #F5F5F5;
 }
 

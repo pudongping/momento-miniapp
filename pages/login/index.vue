@@ -34,7 +34,7 @@
           @getuserinfo="handleUserInfo"
         >
           <view class="btn-inner">
-            <image src="/static/images/wechat-icon.png" mode="aspectFit" class="wechat-icon"></image>
+            <uni-icons type="weixin" size="22" color="#FFFFFF"></uni-icons>
             <text>微信一键登录</text>
           </view>
         </button>
@@ -387,8 +387,10 @@ export default {
 }
 
 .app-logo {
-  width: 96rpx;
-  height: 96rpx;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .app-name {
@@ -495,10 +497,6 @@ export default {
   gap: 12rpx;
 }
 
-.wechat-icon {
-  width: 40rpx;
-  height: 40rpx;
-}
 
 .features-list {
   display: flex;
