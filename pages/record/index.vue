@@ -190,7 +190,7 @@
               <view 
                 v-for="type in recurringTypes" 
                 :key="type.value"
-                class="type-option"
+                class="recurring-type-btn"
                 :class="{ active: recurringType === type.value }"
                 @click="selectRecurringType(type.value)"
               >
@@ -1633,7 +1633,7 @@ export default {
   margin-top: 16rpx;
 }
 
-.type-option {
+.recurring-type-btn {
   flex: 1;
   padding: 16rpx 24rpx;
   background: #F8F9FA;
@@ -1645,7 +1645,7 @@ export default {
   transition: all 0.3s ease;
 }
 
-.type-option.active {
+.recurring-type-btn.active {
   background: #FF9A5A;
   border-color: #FF9A5A;
   color: #FFFFFF;
