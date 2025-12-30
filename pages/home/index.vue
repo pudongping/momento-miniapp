@@ -2226,7 +2226,7 @@ export default {
 }
 
 .tab-text {
-  font-size: $font-size-h4;
+  font-size: $font-size-h3;
   color: $text-secondary;
   font-weight: $font-weight-semibold;
   transition: color 0.3s ease;
