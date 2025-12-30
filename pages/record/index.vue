@@ -187,10 +187,11 @@
           <view class="recurring-type-section">
             <text class="section-title">周期类型</text>
             <view class="type-selector">
+			<!-- 这里可以将 class type-option 设置成 recurring-type-btn 就更换成了另外一种样式 -->
               <view 
                 v-for="type in recurringTypes" 
                 :key="type.value"
-                class="recurring-type-btn"
+                class="type-option"
                 :class="{ active: recurringType === type.value }"
                 @click="selectRecurringType(type.value)"
               >
