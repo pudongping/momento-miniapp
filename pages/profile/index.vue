@@ -298,18 +298,18 @@ export default {
 <style lang="scss" scoped>
 .page-container {
   min-height: 100vh;
-  background: $background-color;
-  padding-bottom: 40rpx;
+  background: $color-bg-secondary;
+  padding-bottom: $spacing-lg;
 }
 
 .user-card {
-  background: linear-gradient(to right, #FF9A5A, #FFD166);
-  padding: 40rpx 30rpx;
+  background: linear-gradient(to right, $color-primary, $color-primary-light);
+  padding: $spacing-lg 30rpx;
   display: flex;
   align-items: center;
-  color: #FFFFFF;
+  color: $color-text-inverse;
   position: relative;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  box-shadow: $shadow-normal;
 }
 
 .avatar-section {
@@ -321,7 +321,7 @@ export default {
   width: 120rpx;
   height: 120rpx;
   border-radius: 60rpx;
-  border: 4rpx solid #FFFFFF;
+  border: 4rpx solid $color-text-inverse;
 }
 
 .edit-icon {
@@ -348,8 +348,8 @@ export default {
 }
 
 .nickname {
-  font-size: 36rpx;
-  font-weight: 600;
+  font-size: $font-size-h2;
+  font-weight: $font-weight-semibold;
   margin-right: 10rpx;
 }
 
@@ -366,7 +366,7 @@ export default {
 .uid-row {
   display: flex;
   align-items: center;
-  font-size: 24rpx;
+  font-size: $font-size-small;
 }
 
 .uid-label {
@@ -388,14 +388,14 @@ export default {
 }
 
 .copy-text {
-  font-size: 22rpx;
+  font-size: $font-size-xs;
   margin-left: 4rpx;
 }
 
 .menu-section {
   margin-top: 20rpx;
-  background: #FFFFFF;
-  border-radius: 12rpx;
+  background: $color-bg-primary;
+  border-radius: $border-radius-md;
   overflow: hidden;
   margin: 20rpx;
 }
@@ -404,7 +404,7 @@ export default {
   display: flex;
   padding: 30rpx 20rpx;
   align-items: center;
-  border-bottom: 1px solid #F5F5F5;
+  border-bottom: 1px solid $color-bg-tertiary;
 }
 
 .menu-item:last-child {
@@ -421,13 +421,13 @@ export default {
 
 .menu-title {
   font-size: 30rpx;
-  color: $text-primary;
+  color: $color-text-primary;
   margin-bottom: 4rpx;
 }
 
 .menu-desc {
-  font-size: 22rpx;
-  color: $text-secondary;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
 }
 
 .logout-section {
@@ -437,13 +437,13 @@ export default {
 }
 
 .logout-button {
-  background: linear-gradient(135deg, #FF6B6B, #FF9A5A);
-  color: #FFFFFF;
-  border-radius: 40rpx;
+  background: linear-gradient(135deg, $color-error, $color-primary);
+  color: $color-text-inverse;
+  border-radius: $border-radius-full;
   height: 88rpx;
   line-height: 88rpx;
   font-size: 30rpx;
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   width: 80%;
   display: flex;
   align-items: center;
@@ -476,21 +476,21 @@ export default {
 
 .modal-content {
   width: 80%;
-  background: #FFFFFF;
-  border-radius: 12rpx;
+  background: $color-bg-primary;
+  border-radius: $border-radius-md;
   overflow: hidden;
 }
 
 .modal-header {
   padding: 30rpx;
   text-align: center;
-  border-bottom: 1px solid #F5F5F5;
+  border-bottom: 1px solid $color-bg-tertiary;
 }
 
 .modal-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: $text-primary;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
 }
 
 .modal-body {
@@ -498,16 +498,16 @@ export default {
 }
 
 .nickname-input {
-  border: 1px solid #EEEEEE;
+  border: 1px solid $color-border-normal;
   height: 80rpx;
-  border-radius: 8rpx;
+  border-radius: $border-radius-sm;
   padding: 0 20rpx;
-  font-size: 28rpx;
+  font-size: $font-size-body;
 }
 
 .modal-footer {
   display: flex;
-  border-top: 1px solid #F5F5F5;
+  border-top: 1px solid $color-bg-tertiary;
 }
 
 .cancel-btn, .confirm-btn {
@@ -520,12 +520,12 @@ export default {
 }
 
 .cancel-btn {
-  background: #F5F5F5;
-  color: $text-secondary;
+  background: $color-bg-tertiary;
+  color: $color-text-secondary;
 }
 
 .confirm-btn {
-  background: linear-gradient(to right, #FF9A5A, #FFD166);
-  color: #FFFFFF;
+  background: linear-gradient(to right, $color-primary, $color-primary-light);
+  color: $color-text-inverse;
 }
 </style>

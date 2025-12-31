@@ -1862,15 +1862,15 @@ export default {
 <style lang="scss" scoped>
 .page-container {
   min-height: 100vh;
-  background: #F8F9FA;
-  padding-bottom: 40rpx;
+  background: $color-bg-secondary;
+  padding-bottom: $spacing-lg;
 }
 
 .book-selector {
-  background: linear-gradient(135deg, #FFFFFF, #F9FAFB);
-  padding: 24rpx 30rpx;
-  border-bottom: 1px solid #F0F0F0;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.03);
+  background: linear-gradient(135deg, $color-bg-primary, $color-bg-secondary);
+  padding: $spacing-md 30rpx;
+  border-bottom: 1px solid $color-border-light;
+  box-shadow: $shadow-light;
 }
 
 .book-selector-header {
@@ -1886,20 +1886,20 @@ export default {
 }
 
 .selector-label {
-  font-size: 26rpx;
-  color: #666666;
-  font-weight: 500;
+  font-size: $font-size-small;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
 }
 
 .book-switcher {
-  padding: 8rpx 20rpx;
+  padding: $spacing-xs 20rpx;
   display: flex;
   align-items: center;
   position: relative;
   background-color: rgba(255, 154, 90, 0.1);
   border-radius: 30rpx;
   border: 1rpx solid rgba(255, 154, 90, 0.2);
-  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+  box-shadow: $shadow-light;
   transition: all 0.3s ease;
 }
 
@@ -1921,7 +1921,7 @@ export default {
 .current-book-name {
   font-size: $font-size-body;
   font-weight: $font-weight-semibold;
-  color: $text-primary;
+  color: $color-text-primary;
   max-width: 300rpx;
   white-space: nowrap;
   overflow: hidden;
@@ -1955,7 +1955,7 @@ export default {
 
 .tap-hint {
   font-size: $font-size-xs;
-  color: $text-secondary;
+  color: $color-text-secondary;
   font-weight: $font-weight-semibold;
 }
 
@@ -1964,9 +1964,9 @@ export default {
   top: 80rpx;
   right: 10rpx;
   background: rgba(255, 154, 90, 0.9);
-  color: #FFFFFF;
-  padding: 16rpx 24rpx;
-  border-radius: 12rpx;
+  color: $color-text-inverse;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-md;
   font-size: $font-size-body;
   font-weight: $font-weight-semibold;
   z-index: 10;
@@ -1996,7 +1996,7 @@ export default {
   top: 6rpx;
   right: 10rpx;
   font-size: $font-size-xs;
-  color: #FFFFFF;
+  color: $color-text-inverse;
   font-weight: $font-weight-semibold;
 }
 
@@ -2012,9 +2012,9 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #FFFFFF;
+  color: $color-text-inverse;
   box-sizing: border-box;
-  margin-bottom: 24rpx;
+  margin-bottom: $spacing-md;
 }
 
 .background-wall::after {
@@ -2062,7 +2062,7 @@ export default {
 .countdown-text {
   font-size: $font-size-h4;
   font-weight: $font-weight-semibold;
-  color: #FFFFFF;
+  color: $color-text-inverse;
   text-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.3);
 }
 
@@ -2076,7 +2076,7 @@ export default {
 .event-text {
   font-size: $font-size-h2;
   font-weight: $font-weight-bold;
-  color: #FFFFFF;
+  color: $color-text-inverse;
   text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.5);
   letter-spacing: 2rpx;
 }
@@ -2096,16 +2096,16 @@ export default {
 
 .background-tip text {
   font-size: $font-size-xs;
-  color: #FFFFFF;
+  color: $color-text-inverse;
 }
 
 /* 预算进度条 */
 .budget-section {
   padding: 30rpx 20rpx;
-  background: #FFFFFF;
-  margin: 0 20rpx 24rpx 20rpx;
-  border-radius: 16rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
+  background: $color-bg-primary;
+  margin: 0 20rpx $spacing-md 20rpx;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-normal;
 }
 
 .budget-header {
@@ -2118,14 +2118,14 @@ export default {
 .budget-title {
   font-size: $font-size-h3;
   font-weight: $font-weight-semibold;
-  color: $text-primary;
+  color: $color-text-primary;
 }
 
 .budget-amount {
   font-size: $font-size-body;
-  color: $text-secondary;
-  background: #F5F5F5;
-  padding: 6rpx 16rpx;
+  color: $color-text-secondary;
+  background: $color-bg-tertiary;
+  padding: 6rpx $spacing-sm;
   border-radius: 20rpx;
 }
 
@@ -2136,7 +2136,7 @@ export default {
 .budget-progress-bg {
   height: 18rpx;
   background: $color-bg-tertiary;
-  border-radius: 12rpx;
+  border-radius: $border-radius-md;
   overflow: hidden;
   position: relative;
   box-shadow: inset 0 2rpx 4rpx rgba(0, 0, 0, 0.05);
@@ -2177,29 +2177,29 @@ export default {
 .budget-percentage {
   font-size: $font-size-body;
   font-weight: $font-weight-semibold;
-  color: $text-primary;
+  color: $color-text-primary;
 }
 
 .budget-remaining {
   font-size: $font-size-body;
-  color: $text-secondary;
+  color: $color-text-secondary;
 }
 
 /* 概览信息 */
 .summary-section {
   padding: 30rpx 20rpx;
-  background: #FFFFFF;
-  margin: 0 20rpx 24rpx 20rpx;
-  border-radius: 16rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
+  background: $color-bg-primary;
+  margin: 0 20rpx $spacing-md 20rpx;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-normal;
 }
 
 /* Tab切换样式 */
 .tab-section {
-  background: #FFFFFF;
-  margin: 0 20rpx 24rpx 20rpx;
-  border-radius: 16rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
+  background: $color-bg-primary;
+  margin: 0 20rpx $spacing-md 20rpx;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-normal;
   overflow: hidden;
 }
 
@@ -2208,7 +2208,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 0 20rpx;
-  border-bottom: 1rpx solid #F0F0F0;
+  border-bottom: 1rpx solid $color-border-light;
 }
 
 .tab-nav {
@@ -2227,21 +2227,21 @@ export default {
 
 .tab-text {
   font-size: $font-size-h3;
-  color: $text-secondary;
+  color: $color-text-secondary;
   font-weight: $font-weight-semibold;
   transition: color 0.3s ease;
 }
 
 .tab-item.active .tab-text {
-  color: $text-primary;
+  color: $color-text-primary;
   font-weight: $font-weight-bold;
 }
 
 .tab-badge {
-  background: #FF6B6B;
-  color: #FFFFFF;
+  background: $color-error;
+  color: $color-text-inverse;
   font-size: $font-size-xs;
-  padding: 2rpx 8rpx;
+  padding: 2rpx $spacing-xs;
   border-radius: 10rpx;
   min-width: 32rpx;
   text-align: center;
@@ -2255,7 +2255,7 @@ export default {
   transform: translateX(-50%);
   width: 40rpx;
   height: 4rpx;
-  background: #4CAF50;
+  background: $color-success;
   border-radius: 2rpx;
 }
 
@@ -2283,15 +2283,15 @@ export default {
 .recurring-title {
   font-size: $font-size-h3;
   font-weight: $font-weight-semibold;
-  color: $text-primary;
+  color: $color-text-primary;
 }
 
 .recurring-count {
   font-size: $font-size-body;
-  color: $text-secondary;
-  background: #F0F0F0;
+  color: $color-text-secondary;
+  background: $color-border-light;
   padding: 4rpx 12rpx;
-  border-radius: 12rpx;
+  border-radius: $border-radius-md;
 }
 
 .recurring-list {
@@ -2304,21 +2304,21 @@ export default {
   display: flex;
   align-items: center;
   padding: 20rpx;
-  background: #FAFAFA;
-  border-radius: 16rpx;
+  background: $color-bg-disabled;
+  border-radius: $border-radius-md;
   border: 2rpx solid transparent;
   transition: all 0.3s ease;
 }
 
 .recurring-item:active {
-  background: #F0F0F0;
+  background: $color-border-light;
   transform: scale(0.98);
 }
 
 .recurring-tag {
   width: 80rpx;
   height: 80rpx;
-  border-radius: 16rpx;
+  border-radius: $border-radius-md;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2346,24 +2346,24 @@ export default {
 .recurring-name {
   font-size: $font-size-h3;
   font-weight: $font-weight-semibold;
-  color: $text-primary;
+  color: $color-text-primary;
   margin-bottom: 4rpx;
 }
 
 .recurring-schedule {
   font-size: $font-size-body;
-  color: $text-secondary;
+  color: $color-text-secondary;
 }
 
 .recurring-amount {
   font-size: $font-size-h3;
   font-weight: $font-weight-bold;
-  color: #FF6B6B;
-  margin-left: 16rpx;
+  color: $color-error;
+  margin-left: $spacing-sm;
 }
 
 .recurring-amount.income-amount {
-  color: #4CAF50;
+  color: $color-success;
 }
 
 .recurring-actions {

@@ -1204,15 +1204,15 @@ export default {
 <style lang="scss" scoped>
 .page-container {
   min-height: 100vh;
-  background: $background-color;
-  padding-bottom: 40rpx;
+  background: $color-bg-secondary;
+  padding-bottom: $spacing-lg;
 }
 
 .book-selector {
-  background: linear-gradient(135deg, #FFFFFF, #F9FAFB);
-  padding: 24rpx 30rpx;
-  border-bottom: 1px solid #F0F0F0;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.03);
+  background: linear-gradient(135deg, $color-bg-primary, $color-bg-secondary);
+  padding: $spacing-md 30rpx;
+  border-bottom: 1px solid $color-border-light;
+  box-shadow: $shadow-light;
 }
 
 .book-selector-header {
@@ -1228,20 +1228,20 @@ export default {
 }
 
 .selector-label {
-  font-size: 26rpx;
-  color: #666666;
-  font-weight: 500;
+  font-size: $font-size-small;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
 }
 
 .book-switcher {
-  padding: 8rpx 20rpx;
+  padding: $spacing-xs 20rpx;
   display: flex;
   align-items: center;
   position: relative;
   background-color: rgba(255, 154, 90, 0.1);
   border-radius: 30rpx;
   border: 1rpx solid rgba(255, 154, 90, 0.2);
-  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+  box-shadow: $shadow-light;
   transition: all 0.3s ease;
 }
 
@@ -1261,9 +1261,9 @@ export default {
 }
 
 .current-book-name {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #333333;
+  font-size: $font-size-body;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
   max-width: 300rpx;
   white-space: nowrap;
   overflow: hidden;
@@ -1297,27 +1297,27 @@ export default {
 /* 类型切换 */
 .type-toggle {
   display: flex;
-  background: #F5F5F5;
-  border-radius: 40rpx;
+  background: $color-bg-tertiary;
+  border-radius: $border-radius-full;
   padding: 6rpx;
-  margin-bottom: 40rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-light;
 }
 
 .type-option {
   flex: 1;
   text-align: center;
-  padding: 16rpx 0;
-  border-radius: 40rpx;
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #666666;
+  padding: $spacing-sm 0;
+  border-radius: $border-radius-full;
+  font-size: $font-size-body;
+  font-weight: $font-weight-semibold;
+  color: $color-text-secondary;
   transition: all 0.3s ease;
 }
 
 .type-option.active {
-  background: linear-gradient(135deg, #FF9A5A, #FFD166);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  color: $color-text-inverse;
   box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
 }
 
@@ -1325,22 +1325,22 @@ export default {
 .amount-input-container {
   display: flex;
   align-items: center;
-  margin-bottom: 40rpx;
+  margin-bottom: $spacing-lg;
   padding: 0 20rpx;
 }
 
 .currency-symbol {
   font-size: 60rpx;
-  font-weight: 600;
-  color: #333333;
-  margin-right: 16rpx;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-right: $spacing-sm;
 }
 
 .amount-input {
   flex: 1;
   font-size: 60rpx;
-  font-weight: 600;
-  color: #333333;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
   height: 120rpx;
   line-height: 120rpx;
   border: none;
@@ -1353,10 +1353,10 @@ export default {
 }
 
 .section-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #333333;
-  margin-bottom: 16rpx;
+  font-size: $font-size-body;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
   display: block;
 }
 
@@ -1367,7 +1367,7 @@ export default {
 .tags-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 16rpx;
+  gap: $spacing-sm;
 }
 
 .tag-item {
@@ -1375,11 +1375,11 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 6rpx;
-  padding: 12rpx 16rpx;
-  border-radius: 24rpx;
-  background: #F5F5F5;
+  padding: 12rpx $spacing-sm;
+  border-radius: $border-radius-lg;
+  background: $color-bg-tertiary;
   transition: all 0.3s ease;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  box-shadow: $shadow-light;
   min-width: 80rpx;
   flex: 0 0 auto;
   position: relative;
@@ -1390,14 +1390,14 @@ export default {
 }
 
 .tag-item text {
-  font-size: 26rpx;
-  font-weight: 500;
-  color: #333333;
+  font-size: $font-size-small;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
 }
 
 .custom-tag {
-  background: #FFFFFF;
-  border: 1px dashed #CCCCCC;
+  background: $color-bg-primary;
+  border: 1px dashed $color-text-placeholder;
 }
 
 /* 自定义标签项样式 */
@@ -1492,11 +1492,11 @@ export default {
 .remark-input {
   width: 100%;
   height: 80rpx;
-  background: #F5F5F5;
-  border-radius: 12rpx;
+  background: $color-bg-tertiary;
+  border-radius: $border-radius-md;
   padding: 0 20rpx;
-  font-size: 28rpx;
-  color: #333333;
+  font-size: $font-size-body;
+  color: $color-text-primary;
   box-sizing: border-box;
 }
 
@@ -1510,11 +1510,11 @@ export default {
   justify-content: space-between;
   align-items: center;
   height: 80rpx;
-  background: #F5F5F5;
-  border-radius: 12rpx;
+  background: $color-bg-tertiary;
+  border-radius: $border-radius-md;
   padding: 0 20rpx;
-  font-size: 28rpx;
-  color: #333333;
+  font-size: $font-size-body;
+  color: $color-text-primary;
 }
 
 /* 周期记账 */
@@ -1530,8 +1530,8 @@ export default {
 }
 
 .recurring-options {
-  background: #F5F5F5;
-  border-radius: 12rpx;
+  background: $color-bg-tertiary;
+  border-radius: $border-radius-md;
   padding: 20rpx;
 }
 
@@ -1545,15 +1545,15 @@ export default {
 .recurring-type-option {
   padding: 10rpx 20rpx;
   border-radius: 30rpx;
-  font-size: 24rpx;
-  background: #FFFFFF;
-  color: #666666;
-  border: 1px solid #EEEEEE;
+  font-size: $font-size-small;
+  background: $color-bg-primary;
+  color: $color-text-secondary;
+  border: 1px solid $color-border-normal;
 }
 
 .recurring-type-option.active {
-  background: linear-gradient(135deg, #FF9A5A, #FFD166);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  color: $color-text-inverse;
   border: none;
 }
 
@@ -1564,31 +1564,31 @@ export default {
 }
 
 .recurring-label {
-  font-size: 26rpx;
-  color: #333333;
+  font-size: $font-size-small;
+  color: $color-text-primary;
 }
 
 .recurring-day-input {
   width: 100rpx;
   height: 60rpx;
-  background: #FFFFFF;
-  border-radius: 8rpx;
+  background: $color-bg-primary;
+  border-radius: $border-radius-sm;
   text-align: center;
-  font-size: 26rpx;
-  color: #333333;
+  font-size: $font-size-small;
+  color: $color-text-primary;
 }
 
 .recurring-day-unit {
-  font-size: 26rpx;
-  color: #333333;
+  font-size: $font-size-small;
+  color: $color-text-primary;
 }
 
 /* 周期记账样式 */
 .recurring-section {
-  margin: 32rpx 0;
-  padding: 32rpx;
-  background: #FFFFFF;
-  border-radius: 16rpx;
+  margin: $spacing-lg 0;
+  padding: $spacing-lg;
+  background: $color-bg-primary;
+  border-radius: $border-radius-md;
 }
 
 .recurring-header {
@@ -1610,17 +1610,17 @@ export default {
 }
 
 .recurring-type-option {
-  padding: 16rpx 24rpx;
-  background: #F5F5F5;
-  border-radius: 24rpx;
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-tertiary;
+  border-radius: $border-radius-lg;
   border: 2rpx solid transparent;
   transition: all 0.3s ease;
 }
 
 .recurring-type-option.active {
-  background: #FFF3E0;
-  border-color: #FF9A5A;
-  color: #FF9A5A;
+  background: $color-primary-bg;
+  border-color: $color-primary;
+  color: $color-primary;
 }
 
 /* 周期类型选择 */
@@ -1636,20 +1636,20 @@ export default {
 
 .recurring-type-btn {
   flex: 1;
-  padding: 16rpx 24rpx;
-  background: #F8F9FA;
-  border: 2rpx solid #E0E0E0;
-  border-radius: 12rpx;
-  font-size: 28rpx;
-  color: #333333;
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-secondary;
+  border: 2rpx solid $color-border-normal;
+  border-radius: $border-radius-md;
+  font-size: $font-size-body;
+  color: $color-text-primary;
   text-align: center;
   transition: all 0.3s ease;
 }
 
 .recurring-type-btn.active {
-  background: #FF9A5A;
-  border-color: #FF9A5A;
-  color: #FFFFFF;
+  background: $color-primary;
+  border-color: $color-primary;
+  color: $color-text-inverse;
 }
 
 /* 周期配置 */
@@ -1658,24 +1658,24 @@ export default {
 }
 
 .config-container {
-  padding: 24rpx;
-  background: #FFFFFF;
-  border-radius: 12rpx;
-  border: 1rpx solid #F0F0F0;
+  padding: $spacing-md;
+  background: $color-bg-primary;
+  border-radius: $border-radius-md;
+  border: 1rpx solid $color-border-light;
 }
 
 .config-description {
   margin-bottom: 20rpx;
-  padding: 16rpx;
-  background: #F8F9FA;
-  border-radius: 8rpx;
+  padding: $spacing-sm;
+  background: $color-bg-secondary;
+  border-radius: $border-radius-sm;
   text-align: center;
 }
 
 .config-description text {
   font-size: 30rpx;
-  color: #FF9A5A;
-  font-weight: bold;
+  color: $color-primary;
+  font-weight: $font-weight-bold;
 }
 
 /* 时间选择器容器 */
@@ -1693,9 +1693,9 @@ export default {
 }
 
 .picker-label {
-  font-size: 26rpx;
-  color: #666666;
-  font-weight: bold;
+  font-size: $font-size-small;
+  color: $color-text-secondary;
+  font-weight: $font-weight-bold;
   text-align: center;
   flex: 1;
 }
@@ -1713,16 +1713,16 @@ export default {
   align-items: center;
   justify-content: center;
   height: 50px;
-  font-size: 28rpx;
-  color: #333333;
+  font-size: $font-size-body;
+  color: $color-text-primary;
 }
 
 /* 执行预览 */
 .execution-preview {
-  padding: 24rpx;
-  background: #F8F9FA;
-  border-radius: 12rpx;
-  border: 2rpx solid #E8F4FD;
+  padding: $spacing-md;
+  background: $color-bg-secondary;
+  border-radius: $border-radius-md;
+  border: 2rpx solid $color-info-light;
 }
 
 .preview-content {
@@ -1732,60 +1732,60 @@ export default {
 .cron-expression {
   display: flex;
   align-items: center;
-  margin-bottom: 16rpx;
-  padding: 12rpx 16rpx;
-  background: #FFFFFF;
-  border-radius: 8rpx;
-  border: 1rpx solid #E0E0E0;
+  margin-bottom: $spacing-sm;
+  padding: 12rpx $spacing-sm;
+  background: $color-bg-primary;
+  border-radius: $border-radius-sm;
+  border: 1rpx solid $color-border-normal;
 }
 
 .expression-label {
-  font-size: 26rpx;
-  color: #666666;
+  font-size: $font-size-small;
+  color: $color-text-secondary;
   margin-right: 12rpx;
   min-width: 120rpx;
 }
 
 .expression-value {
-  font-size: 28rpx;
-  color: #2196F3;
-  font-family: 'Courier New', monospace;
-  font-weight: bold;
+  font-size: $font-size-body;
+  color: $color-info;
+  font-family: $font-family-mono;
+  font-weight: $font-weight-bold;
 }
 
 .execution-description {
   display: flex;
   align-items: center;
-  margin-bottom: 16rpx;
-  padding: 12rpx 16rpx;
-  background: #FFFFFF;
-  border-radius: 8rpx;
-  border: 1rpx solid #E0E0E0;
+  margin-bottom: $spacing-sm;
+  padding: 12rpx $spacing-sm;
+  background: $color-bg-primary;
+  border-radius: $border-radius-sm;
+  border: 1rpx solid $color-border-normal;
 }
 
 .description-label {
-  font-size: 26rpx;
-  color: #666666;
+  font-size: $font-size-small;
+  color: $color-text-secondary;
   margin-right: 12rpx;
   min-width: 120rpx;
 }
 
 .description-value {
-  font-size: 28rpx;
-  color: #FF9A5A;
-  font-weight: bold;
+  font-size: $font-size-body;
+  color: $color-primary;
+  font-weight: $font-weight-bold;
 }
 
 .next-executions {
-  padding: 12rpx 16rpx;
-  background: #FFFFFF;
-  border-radius: 8rpx;
-  border: 1rpx solid #E0E0E0;
+  padding: 12rpx $spacing-sm;
+  background: $color-bg-primary;
+  border-radius: $border-radius-sm;
+  border: 1rpx solid $color-border-normal;
 }
 
 .next-label {
-  font-size: 26rpx;
-  color: #666666;
+  font-size: $font-size-small;
+  color: $color-text-secondary;
   display: block;
   margin-bottom: 12rpx;
 }
@@ -1797,12 +1797,12 @@ export default {
 }
 
 .next-time {
-  font-size: 24rpx;
-  color: #333333;
-  padding: 8rpx 12rpx;
-  background: #F8F9FA;
+  font-size: $font-size-small;
+  color: $color-text-primary;
+  padding: $spacing-xs 12rpx;
+  background: $color-bg-secondary;
   border-radius: 6rpx;
-  font-family: 'Courier New', monospace;
+  font-family: $font-family-mono;
 }
 
 /* 保存按钮 */
@@ -1837,24 +1837,24 @@ export default {
 .picker-item {
   line-height: 50px;
   text-align: center;
-  font-size: 28rpx;
+  font-size: $font-size-body;
 }
 
 /* 模态框底部按钮 */
 .modal-footer {
   display: flex;
   gap: 12rpx;
-  padding: 24rpx;
-  border-top: 1px solid #F5F5F5;
+  padding: $spacing-md;
+  border-top: 1px solid $color-bg-tertiary;
 }
 
 .btn-cancel, .btn-confirm {
   flex: 1;
   height: 88rpx;
-  border-radius: 40rpx;
-  font-size: 28rpx;
+  border-radius: $border-radius-full;
+  font-size: $font-size-body;
   border: none;
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1862,9 +1862,9 @@ export default {
 }
 
 .btn-cancel {
-  background: #F5F5F5;
-  color: #666666;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  background: $color-bg-tertiary;
+  color: $color-text-secondary;
+  box-shadow: $shadow-light;
 }
 
 .btn-cancel:active {
@@ -1873,8 +1873,8 @@ export default {
 }
 
 .btn-confirm {
-  background: linear-gradient(135deg, #FF9A5A, #FFD166);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  color: $color-text-inverse;
   box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
 }
 
@@ -1893,9 +1893,9 @@ export default {
 }
 
 .form-label {
-  font-size: 26rpx;
-  color: #333333;
-  font-weight: 600;
+  font-size: $font-size-small;
+  color: $color-text-primary;
+  font-weight: $font-weight-semibold;
   margin-bottom: 12rpx;
   display: block;
 }
@@ -1903,11 +1903,11 @@ export default {
 .form-input {
   width: 100%;
   height: 80rpx;
-  background: #F5F5F5;
-  border-radius: 12rpx;
+  background: $color-bg-tertiary;
+  border-radius: $border-radius-md;
   padding: 0 20rpx;
-  font-size: 28rpx;
-  color: #333333;
+  font-size: $font-size-body;
+  color: $color-text-primary;
   box-sizing: border-box;
 }
 
@@ -1921,14 +1921,14 @@ export default {
 .color-option {
   width: 60rpx;
   height: 60rpx;
-  border-radius: 16rpx;
+  border-radius: $border-radius-md;
   transition: all 0.3s ease;
   position: relative;
 }
 
 .color-option.active {
   transform: scale(1.1);
-  border: 2rpx solid #FFFFFF;
+  border: 2rpx solid $color-text-inverse;
   box-shadow: 0 0 0 4rpx rgba(0, 0, 0, 0.1);
 }
 
@@ -1942,8 +1942,8 @@ export default {
 .icon-option {
   width: 60rpx;
   height: 60rpx;
-  border-radius: 16rpx;
-  background: #F5F5F5;
+  border-radius: $border-radius-md;
+  background: $color-bg-tertiary;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1952,8 +1952,8 @@ export default {
 }
 
 .icon-option.active {
-  background: #FF9A5A;
-  border-color: #FF9A5A;
+  background: $color-primary;
+  border-color: $color-primary;
   transform: scale(1.1);
 }
 
@@ -1962,7 +1962,7 @@ export default {
 }
 
 .icon-option.active uni-icons {
-  color: #FFFFFF !important;
+  color: $color-text-inverse !important;
 }
 
 /* 账本相关样式 */
@@ -1980,8 +1980,8 @@ export default {
 
 .modal-content {
   width: 100%;
-  background: #FFFFFF;
-  border-radius: 24rpx 24rpx 0 0;
+  background: $color-bg-primary;
+  border-radius: $border-radius-lg $border-radius-lg 0 0;
   overflow: hidden;
   animation: slideUp 0.3s ease-out;
 }
@@ -1999,19 +1999,19 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24rpx;
-  border-bottom: 1px solid #F5F5F5;
+  padding: $spacing-md;
+  border-bottom: 1px solid $color-bg-tertiary;
 }
 
 .modal-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: $text-primary;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
 }
 
 .close-btn {
-  font-size: 32rpx;
-  color: $text-secondary;
+  font-size: $font-size-h3;
+  color: $color-text-secondary;
   width: 40rpx;
   height: 40rpx;
   display: flex;
@@ -2020,21 +2020,21 @@ export default {
 }
 
 .modal-body {
-  padding: 24rpx;
+  padding: $spacing-md;
   max-height: 60vh;
   overflow-y: auto;
 }
 
 .books-group {
-  margin-bottom: 32rpx;
+  margin-bottom: $spacing-lg;
 }
 
 .group-label {
-  font-size: 24rpx;
-  color: $text-secondary;
+  font-size: $font-size-small;
+  color: $color-text-secondary;
   margin-bottom: 12rpx;
   display: block;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
 }
 
 .book-option {
@@ -2042,19 +2042,19 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 20rpx;
-  background: #F9F9F9;
-  border-radius: 16rpx;
-  margin-bottom: 16rpx;
+  background: $color-bg-secondary;
+  border-radius: $border-radius-md;
+  margin-bottom: $spacing-sm;
   border: 2rpx solid transparent;
   transition: all 0.3s ease;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.03);
+  box-shadow: $shadow-light;
   position: relative;
   overflow: hidden;
 }
 
 .book-option.active {
-  background: #FFF9E6;
-  border-color: #FFB800;
+  background: $color-primary-bg;
+  border-color: $color-warning;
   box-shadow: 0 2rpx 12rpx rgba(255, 184, 0, 0.15);
 }
 
@@ -2067,23 +2067,23 @@ export default {
 }
 
 .book-name {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: $text-primary;
+  font-size: $font-size-body;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
   display: block;
   margin-bottom: 4rpx;
 }
 
 .book-members {
-  font-size: 22rpx;
-  color: $text-secondary;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
   display: block;
 }
 
 .check-icon {
-  font-size: 28rpx;
-  color: #FFB800;
-  font-weight: 700;
+  font-size: $font-size-body;
+  color: $color-warning;
+  font-weight: $font-weight-bold;
   margin-left: 12rpx;
 }
 
@@ -2104,8 +2104,8 @@ export default {
 
 .delete-tag-confirm-content {
   width: 100%;
-  background: #FFFFFF;
-  border-radius: 24rpx 24rpx 0 0;
+  background: $color-bg-primary;
+  border-radius: $border-radius-lg $border-radius-lg 0 0;
   overflow: hidden;
   animation: slideUp 0.3s ease-out;
 }
@@ -2131,14 +2131,14 @@ export default {
 .delete-tag-confirm-header {
   padding: 60rpx 40rpx 40rpx;
   text-align: center;
-  background: #FFFFFF;
+  background: $color-bg-primary;
 }
 
 .delete-tag-confirm-icon {
   width: 120rpx;
   height: 120rpx;
   border-radius: 60rpx;
-  background: linear-gradient(135deg, #FFE8E8, #FFEBEB);
+  background: linear-gradient(135deg, $color-error-light, $color-error-light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2147,38 +2147,38 @@ export default {
 }
 
 .delete-tag-confirm-title {
-  font-size: 36rpx;
-  font-weight: 700;
-  color: #333333;
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
   text-align: center;
-  margin-bottom: 24rpx;
+  margin-bottom: $spacing-md;
   display: block;
 }
 
 .delete-tag-confirm-message {
-  font-size: 28rpx;
-  color: #666666;
+  font-size: $font-size-body;
+  color: $color-text-secondary;
   text-align: center;
-  margin-bottom: 16rpx;
+  margin-bottom: $spacing-sm;
   display: block;
-  line-height: 1.6;
+  line-height: $line-height-relaxed;
   padding: 0 20rpx;
 }
 
 .delete-tag-confirm-warning {
-  font-size: 24rpx;
-  color: #999999;
+  font-size: $font-size-small;
+  color: $color-text-tertiary;
   text-align: center;
   display: block;
-  line-height: 1.6;
+  line-height: $line-height-relaxed;
   padding: 0 20rpx;
 }
 
 .delete-tag-confirm-footer {
   padding: 30rpx 40rpx;
   padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
-  background: #F8F9FA;
-  border-top: 1rpx solid #F0F0F0;
+  background: $color-bg-secondary;
+  border-top: 1rpx solid $color-border-light;
   display: flex;
   gap: 20rpx;
 }
@@ -2186,34 +2186,34 @@ export default {
 .delete-tag-btn-cancel {
   flex: 1;
   height: 88rpx;
-  border-radius: 44rpx;
+  border-radius: $border-radius-full;
   font-size: 30rpx;
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #F5F5F5;
-  color: #666666;
-  border: 2rpx solid #E5E5E5;
+  background: $color-bg-tertiary;
+  color: $color-text-secondary;
+  border: 2rpx solid $color-border-normal;
   transition: all 0.3s ease;
 }
 
 .delete-tag-btn-cancel:active {
-  background: #EEEEEE;
+  background: $color-border-light;
   transform: scale(0.98);
 }
 
 .delete-tag-btn-delete {
   flex: 1;
   height: 88rpx;
-  border-radius: 44rpx;
+  border-radius: $border-radius-full;
   font-size: 30rpx;
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #FF6B6B, #FF5252);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, $color-error, #FF5252);
+  color: $color-text-inverse;
   border: none;
   box-shadow: 0 4rpx 16rpx rgba(255, 107, 107, 0.3);
   transition: all 0.3s ease;

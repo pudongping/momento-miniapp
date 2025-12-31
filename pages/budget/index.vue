@@ -82,11 +82,11 @@ export default {
     progressColor() {
       const percentage = this.progressWidth;
       if (percentage >= 90) {
-        return '#FF4D4F'; // 红色
+        return '#FF4D4F'; // $color-error
       } else if (percentage >= 70) {
-        return '#FAAD14'; // 黄色
+        return '#FAAD14'; // $color-warning
       } else {
-        return '#52C41A'; // 绿色
+        return '#52C41A'; // $color-success
       }
     },
     
@@ -201,7 +201,7 @@ export default {
 <style lang="scss" scoped>
 .page-container {
   min-height: 100vh;
-  background: $background-color;
+  background: $color-bg-secondary;
   padding: 20rpx;
 }
 
@@ -210,24 +210,24 @@ export default {
 }
 
 .title {
-  font-size: 36rpx;
-  font-weight: 600;
-  color: $text-primary;
+  font-size: $font-size-h2;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
   display: block;
   margin-bottom: 10rpx;
 }
 
 .subtitle {
-  font-size: 28rpx;
-  color: $text-secondary;
+  font-size: $font-size-body;
+  color: $color-text-secondary;
 }
 
 .budget-card {
-  background: #FFFFFF;
-  border-radius: 12rpx;
+  background: $color-bg-primary;
+  border-radius: $border-radius-md;
   padding: 30rpx;
   margin-bottom: 30rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  box-shadow: $shadow-light;
 }
 
 .input-section {
@@ -236,50 +236,50 @@ export default {
 
 .label {
   display: block;
-  font-size: 28rpx;
-  color: $text-primary;
+  font-size: $font-size-body;
+  color: $color-text-primary;
   margin-bottom: 20rpx;
 }
 
 .input-wrapper {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #EEEEEE;
+  border-bottom: 1px solid $color-border-normal;
   padding-bottom: 10rpx;
   margin-bottom: 10rpx;
 }
 
 .currency {
-  font-size: 36rpx;
-  color: $text-primary;
+  font-size: $font-size-h2;
+  color: $color-text-primary;
   margin-right: 10rpx;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
 }
 
 .budget-input {
   flex: 1;
-  font-size: 36rpx;
+  font-size: $font-size-h2;
   height: 80rpx;
 }
 
 .unit {
-  font-size: 28rpx;
-  color: $text-secondary;
+  font-size: $font-size-body;
+  color: $color-text-secondary;
 }
 
 .description {
   display: flex;
   align-items: flex-start;
-  background: #F8F8F8;
+  background: $color-bg-secondary;
   padding: 20rpx;
-  border-radius: 8rpx;
+  border-radius: $border-radius-sm;
   margin: 20rpx 0;
 }
 
 .desc-text {
-  font-size: 24rpx;
-  color: $text-secondary;
-  line-height: 1.5;
+  font-size: $font-size-small;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
   margin-left: 10rpx;
 }
 
@@ -288,21 +288,21 @@ export default {
 }
 
 .preview-title {
-  font-size: 28rpx;
-  color: $text-primary;
+  font-size: $font-size-body;
+  color: $color-text-primary;
   margin-bottom: 20rpx;
   display: block;
 }
 
 .preview-content {
-  background: #F8F8F8;
+  background: $color-bg-secondary;
   padding: 20rpx;
-  border-radius: 8rpx;
+  border-radius: $border-radius-sm;
 }
 
 .progress-bar {
   height: 20rpx;
-  background: #EEEEEE;
+  background: $color-border-normal;
   border-radius: 10rpx;
   overflow: hidden;
   margin-bottom: 10rpx;
@@ -316,27 +316,27 @@ export default {
 
 .status-text {
   text-align: center;
-  font-size: 28rpx;
-  font-weight: 500;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
   margin: 10rpx 0;
 }
 
 .budget-info {
   display: flex;
   justify-content: space-between;
-  font-size: 24rpx;
-  color: $text-secondary;
+  font-size: $font-size-small;
+  color: $color-text-secondary;
   margin-top: 10rpx;
 }
 
 .save-button {
-  background: linear-gradient(to right, #FF9A5A, #FFD166);
-  color: #FFFFFF;
+  background: linear-gradient(to right, $color-primary, $color-primary-light);
+  color: $color-text-inverse;
   height: 90rpx;
   line-height: 90rpx;
-  border-radius: 45rpx;
-  font-size: 32rpx;
-  font-weight: 500;
-  margin-top: 40rpx;
+  border-radius: $border-radius-full;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-medium;
+  margin-top: $spacing-lg;
 }
 </style>

@@ -432,14 +432,14 @@ export default {
 <style lang="scss" scoped>
 .page-container {
   min-height: 100vh;
-  background: $background-color;
+  background: $color-bg-secondary;
   padding-bottom: 40rpx;
 }
 
 /* 导航栏容器 */
 .navbar-container {
-  background: #FFFFFF;
-  border-bottom: 1px solid #F0F0F0;
+  background: $color-bg-primary;
+  border-bottom: 1px solid $color-border-light;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -456,8 +456,8 @@ export default {
   align-items: center;
   justify-content: space-between;
   height: 88rpx;
-  padding: 0 32rpx;
-  background: #FFFFFF;
+  padding: 0 $spacing-lg;
+  background: $color-bg-primary;
 }
 
 .navbar-left {
@@ -468,8 +468,8 @@ export default {
 }
 
 .back-text {
-  font-size: 28rpx;
-  color: #333333;
+  font-size: $font-size-body;
+  color: $color-text-primary;
 }
 
 .navbar-center {
@@ -478,9 +478,9 @@ export default {
 }
 
 .navbar-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #333333;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
 }
 
 .navbar-right {
@@ -495,27 +495,27 @@ export default {
 /* 类型切换 */
 .type-toggle {
   display: flex;
-  background: #F5F5F5;
-  border-radius: 40rpx;
+  background: $color-bg-tertiary;
+  border-radius: $border-radius-full;
   padding: 6rpx;
-  margin-bottom: 40rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-light;
 }
 
 .type-option {
   flex: 1;
   text-align: center;
-  padding: 16rpx 0;
-  border-radius: 40rpx;
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #666666;
+  padding: $spacing-sm 0;
+  border-radius: $border-radius-full;
+  font-size: $font-size-body;
+  font-weight: $font-weight-semibold;
+  color: $color-text-secondary;
   transition: all 0.3s ease;
 }
 
 .type-option.active {
-  background: linear-gradient(135deg, #FF9A5A, #FFD166);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  color: $color-text-inverse;
   box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
 }
 
@@ -523,22 +523,22 @@ export default {
 .amount-input-container {
   display: flex;
   align-items: center;
-  margin-bottom: 40rpx;
+  margin-bottom: $spacing-lg;
   padding: 0 20rpx;
 }
 
 .currency-symbol {
   font-size: 60rpx;
-  font-weight: 600;
-  color: #333333;
-  margin-right: 16rpx;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-right: $spacing-sm;
 }
 
 .amount-input {
   flex: 1;
   font-size: 60rpx;
-  font-weight: 600;
-  color: #333333;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
   height: 120rpx;
   line-height: 120rpx;
   border: none;
@@ -551,10 +551,10 @@ export default {
 }
 
 .section-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #333333;
-  margin-bottom: 16rpx;
+  font-size: $font-size-body;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
   display: block;
 }
 
@@ -565,7 +565,7 @@ export default {
 .tags-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 16rpx;
+  gap: $spacing-sm;
 }
 
 .tag-item {
@@ -573,11 +573,11 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 6rpx;
-  padding: 12rpx 16rpx;
-  border-radius: 24rpx;
-  background: #F5F5F5;
+  padding: 12rpx $spacing-sm;
+  border-radius: $border-radius-lg;
+  background: $color-bg-tertiary;
   transition: all 0.3s ease;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  box-shadow: $shadow-light;
   min-width: 80rpx;
   flex: 0 0 auto;
   position: relative;
@@ -588,9 +588,9 @@ export default {
 }
 
 .tag-item text {
-  font-size: 26rpx;
-  font-weight: 500;
-  color: #333333;
+  font-size: $font-size-small;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
 }
 
 /* FA图标样式 */
@@ -613,11 +613,11 @@ export default {
 .remark-input {
   width: 100%;
   height: 80rpx;
-  background: #F5F5F5;
-  border-radius: 12rpx;
+  background: $color-bg-tertiary;
+  border-radius: $border-radius-md;
   padding: 0 20rpx;
-  font-size: 28rpx;
-  color: #333333;
+  font-size: $font-size-body;
+  color: $color-text-primary;
   box-sizing: border-box;
 }
 
@@ -631,11 +631,11 @@ export default {
   justify-content: space-between;
   align-items: center;
   height: 80rpx;
-  background: #F5F5F5;
-  border-radius: 12rpx;
+  background: $color-bg-tertiary;
+  border-radius: $border-radius-md;
   padding: 0 20rpx;
-  font-size: 28rpx;
-  color: #333333;
+  font-size: $font-size-body;
+  color: $color-text-primary;
 }
 
 /* 保存按钮 */
@@ -670,7 +670,7 @@ export default {
 .picker-item {
   line-height: 50px;
   text-align: center;
-  font-size: 28rpx;
+  font-size: $font-size-body;
 }
 
 /* 模态框样式 */
@@ -688,8 +688,8 @@ export default {
 
 .modal-content {
   width: 100%;
-  background: #FFFFFF;
-  border-radius: 24rpx 24rpx 0 0;
+  background: $color-bg-primary;
+  border-radius: $border-radius-lg $border-radius-lg 0 0;
   overflow: hidden;
   animation: slideUp 0.3s ease-out;
 }
@@ -707,19 +707,19 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24rpx;
-  border-bottom: 1px solid #F5F5F5;
+  padding: $spacing-md;
+  border-bottom: 1px solid $color-bg-tertiary;
 }
 
 .modal-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: $text-primary;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
 }
 
 .close-btn {
-  font-size: 32rpx;
-  color: $text-secondary;
+  font-size: $font-size-h3;
+  color: $color-text-secondary;
   width: 40rpx;
   height: 40rpx;
   display: flex;
@@ -728,7 +728,7 @@ export default {
 }
 
 .modal-body {
-  padding: 24rpx;
+  padding: $spacing-md;
   max-height: 60vh;
   overflow-y: auto;
 }
@@ -737,18 +737,18 @@ export default {
 .modal-footer {
   display: flex;
   gap: 12rpx;
-  padding: 24rpx;
+  padding: $spacing-md;
   padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
-  border-top: 1px solid #F5F5F5;
+  border-top: 1px solid $color-bg-tertiary;
 }
 
 .btn-cancel, .btn-confirm {
   flex: 1;
   height: 88rpx;
-  border-radius: 40rpx;
-  font-size: 28rpx;
+  border-radius: $border-radius-full;
+  font-size: $font-size-body;
   border: none;
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -756,9 +756,9 @@ export default {
 }
 
 .btn-cancel {
-  background: #F5F5F5;
-  color: #666666;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  background: $color-bg-tertiary;
+  color: $color-text-secondary;
+  box-shadow: $shadow-light;
 }
 
 .btn-cancel:active {
@@ -767,8 +767,8 @@ export default {
 }
 
 .btn-confirm {
-  background: linear-gradient(135deg, #FF9A5A, #FFD166);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  color: $color-text-inverse;
   box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
 }
 

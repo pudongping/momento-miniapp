@@ -530,15 +530,15 @@ export default {
 <style lang="scss" scoped>
 .page-container {
   min-height: 100vh;
-  background: $background-color;
-  padding-bottom: 40rpx;
+  background: $color-bg-secondary;
+  padding-bottom: $spacing-lg;
 }
 
 .invitations-section {
   padding: 20rpx;
-  background: #FFF9E6;
-  border-bottom: 1px solid #FFE8B6;
-  margin-bottom: 16rpx;
+  background: $color-primary-bg;
+  border-bottom: 1px solid $color-warning;
+  margin-bottom: $spacing-sm;
 }
 
 .section-header {
@@ -551,16 +551,16 @@ export default {
 .section-title {
   font-size: $font-size-h3;
   font-weight: $font-weight-semibold;
-  color: $text-primary;
+  color: $color-text-primary;
 }
 
 .invitation-card {
-  background: #FFFFFF;
-  border-radius: 16rpx;
-  padding: 24rpx;
-  margin-bottom: 16rpx;
-  border-left: 4rpx solid #FFB800;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  background: $color-bg-primary;
+  border-radius: $border-radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-sm;
+  border-left: 4rpx solid $color-warning;
+  box-shadow: $shadow-light;
 }
 
 .invitation-content {
@@ -575,29 +575,29 @@ export default {
 }
 
 .inviter-name {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #FF9A5A;
+  font-size: $font-size-body;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
 }
 
 .invitation-time {
-  font-size: 22rpx;
-  color: $text-tertiary;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
 }
 
 .invitation-message {
-  font-size: 26rpx;
-  color: $text-primary;
-  line-height: 1.6;
+  font-size: $font-size-small;
+  color: $color-text-primary;
+  line-height: $line-height-relaxed;
 }
 
 .message-intro, .message-outro {
-  color: $text-secondary;
+  color: $color-text-secondary;
 }
 
 .book-name {
-  font-weight: 600;
-  color: #FF9A5A;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
   margin: 0 4rpx;
 }
 
@@ -645,20 +645,20 @@ export default {
 
 .group-label {
   font-size: $font-size-small;
-  color: $text-secondary;
+  color: $color-text-secondary;
   margin-bottom: 12rpx;
   display: block;
 }
 
 .book-card {
-  background: #FFFFFF;
-  border-radius: 16rpx;
-  padding: 24rpx;
-  margin: 0 20rpx 16rpx;
+  background: $color-bg-primary;
+  border-radius: $border-radius-md;
+  padding: $spacing-md;
+  margin: 0 20rpx $spacing-sm;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+  box-shadow: $shadow-normal;
   border-left: 6rpx solid;
   transition: all 0.3s ease;
   position: relative;
@@ -671,7 +671,7 @@ export default {
 }
 
 .created-book {
-  border-left-color: #FF9A5A;
+  border-left-color: $color-primary;
 }
 
 .created-book::after {
@@ -686,7 +686,7 @@ export default {
 }
 
 .joined-book {
-  border-left-color: #6C63FF;
+  border-left-color: $color-info;
 }
 
 .joined-book::after {
@@ -714,16 +714,16 @@ export default {
 .book-name {
   font-size: $font-size-h3;
   font-weight: $font-weight-semibold;
-  color: $text-primary;
+  color: $color-text-primary;
 }
 
 .default-badge {
-  background: linear-gradient(135deg, #FF9A5A, #FFD166);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  color: $color-text-inverse;
   font-size: 20rpx;
-  padding: 4rpx 16rpx;
+  padding: 4rpx $spacing-sm;
   border-radius: 20rpx;
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   box-shadow: 0 2rpx 6rpx rgba(255, 154, 90, 0.3);
 }
 
@@ -732,7 +732,7 @@ export default {
   align-items: center;
   gap: 8rpx;
   font-size: $font-size-small;
-  color: $text-secondary;
+  color: $color-text-secondary;
 }
 
 .info-item {
@@ -740,7 +740,7 @@ export default {
 }
 
 .info-separator {
-  color: #CCCCCC;
+  color: $color-text-placeholder;
 }
 
 .book-card-right {
@@ -748,13 +748,13 @@ export default {
 }
 
 .status-badge {
-  background: #F5F5F5;
-  color: $text-secondary;
-  font-size: 22rpx;
-  padding: 6rpx 16rpx;
+  background: $color-bg-tertiary;
+  color: $color-text-secondary;
+  font-size: $font-size-xs;
+  padding: 6rpx $spacing-sm;
   border-radius: 20rpx;
-  font-weight: 500;
-  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+  font-weight: $font-weight-medium;
+  box-shadow: $shadow-light;
 }
 
 .empty-state {
@@ -769,16 +769,16 @@ export default {
 }
 
 .empty-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: $text-primary;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
   margin-bottom: 12rpx;
   display: block;
 }
 
 .empty-desc {
-  font-size: 26rpx;
-  color: $text-secondary;
+  font-size: $font-size-small;
+  color: $color-text-secondary;
   display: block;
 }
 
@@ -797,8 +797,8 @@ export default {
 
 .modal-content {
   width: 100%;
-  background: #FFFFFF;
-  border-radius: 24rpx 24rpx 0 0;
+  background: $color-bg-primary;
+  border-radius: $border-radius-lg $border-radius-lg 0 0;
   overflow: hidden;
   animation: slideUp 0.3s ease-out;
 }
@@ -821,19 +821,19 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24rpx;
-  border-bottom: 1px solid #F5F5F5;
+  padding: $spacing-md;
+  border-bottom: 1px solid $color-bg-tertiary;
 }
 
 .modal-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: $text-primary;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
 }
 
 .close-btn {
-  font-size: 32rpx;
-  color: $text-secondary;
+  font-size: $font-size-h3;
+  color: $color-text-secondary;
   width: 40rpx;
   height: 40rpx;
   display: flex;
@@ -842,7 +842,7 @@ export default {
 }
 
 .modal-body {
-  padding: 24rpx;
+  padding: $spacing-md;
   max-height: calc(80vh - 120rpx);
   overflow-y: auto;
 }
@@ -850,17 +850,17 @@ export default {
 .modal-footer {
   display: flex;
   gap: 12rpx;
-  padding: 24rpx;
-  border-top: 1px solid #F5F5F5;
+  padding: $spacing-md;
+  border-top: 1px solid $color-bg-tertiary;
 }
 
 .btn-cancel, .btn-confirm {
   flex: 1;
   height: 88rpx;
-  border-radius: 40rpx;
-  font-size: 28rpx;
+  border-radius: $border-radius-full;
+  font-size: $font-size-body;
   border: none;
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -868,9 +868,9 @@ export default {
 }
 
 .btn-cancel {
-  background: #F5F5F5;
-  color: $text-secondary;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  background: $color-bg-tertiary;
+  color: $color-text-secondary;
+  box-shadow: $shadow-light;
 }
 
 .btn-cancel:active {
@@ -879,8 +879,8 @@ export default {
 }
 
 .btn-confirm {
-  background: linear-gradient(135deg, #FF9A5A, #FFD166);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  color: $color-text-inverse;
   box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
 }
 
@@ -892,10 +892,10 @@ export default {
 .book-name-input {
   width: 100%;
   height: 88rpx;
-  border: 1px solid #EEEEEE;
-  border-radius: 12rpx;
+  border: 1px solid $color-border-normal;
+  border-radius: $border-radius-md;
   padding: 0 20rpx;
-  font-size: 28rpx;
+  font-size: $font-size-body;
   box-sizing: border-box;
 }
 
@@ -904,19 +904,19 @@ export default {
 }
 
 .subsection-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: $text-primary;
-  margin-bottom: 16rpx;
+  font-size: $font-size-body;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
   display: block;
 }
 
 .member-item {
   display: flex;
   align-items: center;
-  padding: 16rpx;
-  background: #F9F9F9;
-  border-radius: 12rpx;
+  padding: $spacing-sm;
+  background: $color-bg-secondary;
+  border-radius: $border-radius-md;
   margin-bottom: 12rpx;
 }
 
@@ -932,16 +932,16 @@ export default {
 }
 
 .member-name {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: $text-primary;
+  font-size: $font-size-body;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
   display: block;
   margin-bottom: 4rpx;
 }
 
 .member-status {
-  font-size: 22rpx;
-  color: $text-secondary;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
   display: block;
 }
 
@@ -950,19 +950,19 @@ export default {
 }
 
 .remove-btn {
-  color: #FF6B6B;
-  font-size: 24rpx;
-  font-weight: 500;
-  background: #FFE8E8;
-  padding: 6rpx 16rpx;
+  color: $color-error;
+  font-size: $font-size-small;
+  font-weight: $font-weight-medium;
+  background: $color-error-light;
+  padding: 6rpx $spacing-sm;
   border-radius: 20rpx;
   box-shadow: 0 2rpx 6rpx rgba(255, 107, 107, 0.1);
 }
 
 .invite-section {
-  margin-bottom: 32rpx;
-  padding-bottom: 32rpx;
-  border-bottom: 1px solid #F5F5F5;
+  margin-bottom: $spacing-lg;
+  padding-bottom: $spacing-lg;
+  border-bottom: 1px solid $color-bg-tertiary;
 }
 
 .invite-input-group {
@@ -973,22 +973,22 @@ export default {
 .invite-input {
   flex: 1;
   height: 80rpx;
-  border: 1px solid #EEEEEE;
-  border-radius: 12rpx;
-  padding: 0 16rpx;
-  font-size: 26rpx;
+  border: 1px solid $color-border-normal;
+  border-radius: $border-radius-md;
+  padding: 0 $spacing-sm;
+  font-size: $font-size-small;
   box-sizing: border-box;
 }
 
 .btn-invite {
   width: 140rpx;
   height: 80rpx;
-  background: linear-gradient(135deg, #FF9A5A, #FFD166);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  color: $color-text-inverse;
   border: none;
-  border-radius: 40rpx;
-  font-size: 26rpx;
-  font-weight: 600;
+  border-radius: $border-radius-full;
+  font-size: $font-size-small;
+  font-weight: $font-weight-semibold;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1009,10 +1009,10 @@ export default {
 
 .btn-action {
   height: 88rpx;
-  border-radius: 40rpx;
-  font-size: 28rpx;
+  border-radius: $border-radius-full;
+  font-size: $font-size-body;
   border: none;
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -1025,9 +1025,9 @@ export default {
 }
 
 .btn-exit {
-  background: #F5F5F5;
-  color: $text-secondary;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  background: $color-bg-tertiary;
+  color: $color-text-secondary;
+  box-shadow: $shadow-light;
 }
 
 .btn-exit:active {
@@ -1035,8 +1035,8 @@ export default {
 }
 
 .btn-delete {
-  background: #FFE8E8;
-  color: #FF6B6B;
+  background: $color-error-light;
+  color: $color-error;
   box-shadow: 0 4rpx 12rpx rgba(255, 107, 107, 0.15);
 }
 
@@ -1045,10 +1045,10 @@ export default {
 }
 
 .btn-default {
-  background: #F5F5F5;
-  color: $text-secondary;
-  border: 2rpx solid #EEEEEE;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  background: $color-bg-tertiary;
+  color: $color-text-secondary;
+  border: 2rpx solid $color-border-normal;
+  box-shadow: $shadow-light;
 }
 
 .btn-default:active {
@@ -1056,8 +1056,8 @@ export default {
 }
 
 .btn-default.active {
-  background: linear-gradient(135deg, #FF9A5A, #FFD166);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  color: $color-text-inverse;
   border: none;
   box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
 }

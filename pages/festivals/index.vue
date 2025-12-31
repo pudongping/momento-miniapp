@@ -365,9 +365,9 @@ export default {
 <style lang="scss" scoped>
 .page-container {
   min-height: 100vh;
-  background: $background-color;
+  background: $color-bg-secondary;
   padding: 20rpx;
-  padding-bottom: 140rpx; // 为底部按钮留出空间
+  padding-bottom: 140rpx;
 }
 
 .header {
@@ -375,16 +375,16 @@ export default {
 }
 
 .title {
-  font-size: 36rpx;
-  font-weight: 600;
-  color: $text-primary;
+  font-size: $font-size-h2;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
   display: block;
   margin-bottom: 10rpx;
 }
 
 .subtitle {
-  font-size: 28rpx;
-  color: $text-secondary;
+  font-size: $font-size-body;
+  color: $color-text-secondary;
 }
 
 .empty-tip {
@@ -402,8 +402,8 @@ export default {
 }
 
 .empty-text {
-  font-size: 28rpx;
-  color: $text-secondary;
+  font-size: $font-size-body;
+  color: $color-text-secondary;
 }
 
 .festival-list {
@@ -411,13 +411,13 @@ export default {
 }
 
 .festival-item {
-  background: #FFFFFF;
-  border-radius: 12rpx;
+  background: $color-bg-primary;
+  border-radius: $border-radius-md;
   padding: 20rpx;
   margin-bottom: 20rpx;
   display: flex;
   align-items: center;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  box-shadow: $shadow-light;
 }
 
 .festival-info {
@@ -431,35 +431,35 @@ export default {
 }
 
 .festival-name {
-  font-size: 32rpx;
-  font-weight: 500;
-  color: $text-primary;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
   margin-right: 10rpx;
 }
 
 .visibility-tag {
-  font-size: 22rpx;
+  font-size: $font-size-xs;
   padding: 2rpx 10rpx;
   border-radius: 6rpx;
-  background: #F5F5F5;
-  color: #999;
+  background: $color-bg-tertiary;
+  color: $color-text-tertiary;
   
   &.visible {
-    background: rgba(255, 154, 90, 0.1);
-    color: #FF9A5A;
+    background: $color-primary-bg;
+    color: $color-primary;
   }
 }
 
 .festival-date {
-  font-size: 26rpx;
-  color: $text-secondary;
+  font-size: $font-size-small;
+  color: $color-text-secondary;
   margin-bottom: 6rpx;
 }
 
 .countdown {
-  font-size: 24rpx;
-  color: #FF9A5A;
-  font-weight: 500;
+  font-size: $font-size-small;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
 }
 
 .action-buttons {
@@ -480,10 +480,10 @@ export default {
   bottom: 30rpx;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(to right, #FF9A5A, #FFD166);
+  background: linear-gradient(to right, $color-primary, $color-primary-light);
   width: 90%;
   height: 90rpx;
-  border-radius: 45rpx;
+  border-radius: $border-radius-full;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -492,7 +492,7 @@ export default {
 
 .add-text {
   font-size: 30rpx;
-  color: #FFFFFF;
+  color: $color-text-inverse;
   margin-left: 10rpx;
 }
 
@@ -512,21 +512,21 @@ export default {
 
 .modal-content {
   width: 80%;
-  background: #FFFFFF;
-  border-radius: 12rpx;
+  background: $color-bg-primary;
+  border-radius: $border-radius-md;
   overflow: hidden;
 }
 
 .modal-header {
   padding: 30rpx;
   text-align: center;
-  border-bottom: 1px solid #F5F5F5;
+  border-bottom: 1px solid $color-bg-tertiary;
 }
 
 .modal-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: $text-primary;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
 }
 
 .modal-body {
@@ -538,18 +538,18 @@ export default {
 }
 
 .form-label {
-  font-size: 28rpx;
-  color: $text-primary;
+  font-size: $font-size-body;
+  color: $color-text-primary;
   margin-bottom: 10rpx;
   display: block;
 }
 
 .form-input {
-  border: 1px solid #EEEEEE;
+  border: 1px solid $color-border-normal;
   height: 80rpx;
-  border-radius: 8rpx;
+  border-radius: $border-radius-sm;
   padding: 0 20rpx;
-  font-size: 28rpx;
+  font-size: $font-size-body;
 }
 
 .date-picker {
@@ -557,11 +557,11 @@ export default {
 }
 
 .picker-value {
-  border: 1px solid #EEEEEE;
+  border: 1px solid $color-border-normal;
   height: 80rpx;
-  border-radius: 8rpx;
+  border-radius: $border-radius-sm;
   padding: 0 20rpx;
-  font-size: 28rpx;
+  font-size: $font-size-body;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -575,7 +575,7 @@ export default {
 
 .modal-footer {
   display: flex;
-  border-top: 1px solid #F5F5F5;
+  border-top: 1px solid $color-bg-tertiary;
 }
 
 .cancel-btn, .confirm-btn {
@@ -588,12 +588,12 @@ export default {
 }
 
 .cancel-btn {
-  background: #F5F5F5;
-  color: $text-secondary;
+  background: $color-bg-tertiary;
+  color: $color-text-secondary;
 }
 
 .confirm-btn {
-  background: linear-gradient(to right, #FF9A5A, #FFD166);
-  color: #FFFFFF;
+  background: linear-gradient(to right, $color-primary, $color-primary-light);
+  color: $color-text-inverse;
 }
 </style>
