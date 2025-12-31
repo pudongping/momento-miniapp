@@ -46,6 +46,22 @@
       <text class="add-text">添加节日</text>
     </view>
     
+    <!-- 删除确认弹窗 -->
+    <view v-if="showDeleteModal" class="modal-mask" @click="hideDeleteModal">
+      <view class="modal-content delete-modal-content" @click.stop>
+        <view class="modal-header">
+          <text class="modal-title">确认删除</text>
+        </view>
+        <view class="modal-body">
+          <text class="delete-message">确定要删除"{{ festivalToDelete?.festival_name }}"吗？</text>
+        </view>
+        <view class="modal-footer">
+          <button class="cancel-btn" @click="hideDeleteModal">取消</button>
+          <button class="confirm-btn delete-confirm-btn" @click="deleteFestival">确认删除</button>
+        </view>
+      </view>
+    </view>
+    
     <!-- 添加/编辑节日弹窗 -->
     <view v-if="showModal" class="modal-mask" @click="hideModal">
       <view class="modal-content" @click.stop>
@@ -109,6 +125,8 @@ export default {
     return {
       festivals: [],
       showModal: false,
+      showDeleteModal: false,
+      festivalToDelete: null,
       isEdit: false,
       festivalForm: {
         festival_id: 0,
@@ -247,29 +265,33 @@ export default {
     
     // 确认删除
     confirmDelete(festival) {
-      uni.showModal({
-        title: '确认删除',
-        content: `确定要删除"${festival.festival_name}"吗？`,
-        success: async (res) => {
-          if (res.confirm) {
-            this.deleteFestival(festival.festival_id);
-          }
-        }
-      });
+      this.festivalToDelete = festival;
+      this.showDeleteModal = true;
+    },
+    
+    // 隐藏删除弹窗
+    hideDeleteModal() {
+      this.showDeleteModal = false;
+      this.festivalToDelete = null;
     },
     
     // 删除节日
-    async deleteFestival(festival_id) {
+    async deleteFestival() {
+      if (!this.festivalToDelete) return;
+      
       try {
-        await deleteFestivalApi(festival_id);
+        await deleteFestivalApi(this.festivalToDelete.festival_id);
         
         // 更新本地数据
-        this.festivals = this.festivals.filter(item => item.festival_id !== festival_id);
+        this.festivals = this.festivals.filter(item => item.festival_id !== this.festivalToDelete.festival_id);
         
         uni.showToast({
           title: '删除成功',
           icon: 'success'
         });
+        
+        // 隐藏删除弹窗
+        this.hideDeleteModal();
       } catch (error) {
         console.error('删除节日失败', error);
         uni.showToast({
@@ -506,15 +528,25 @@ export default {
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
 }
 
 .modal-content {
-  width: 80%;
+  width: 100%;
   background: $color-bg-primary;
-  border-radius: $border-radius-md;
+  border-radius: $border-radius-lg $border-radius-lg 0 0;
   overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 .modal-header {
@@ -575,25 +607,65 @@ export default {
 
 .modal-footer {
   display: flex;
-  border-top: 1px solid $color-bg-tertiary;
+  gap: $spacing-sm;
+  padding: $spacing-md;
+  padding-bottom: calc($spacing-md + env(safe-area-inset-bottom));
 }
 
 .cancel-btn, .confirm-btn {
   flex: 1;
-  height: 90rpx;
-  line-height: 90rpx;
-  text-align: center;
-  font-size: 30rpx;
-  border-radius: 0;
+  height: 88rpx;
+  border-radius: $border-radius-full;
+  font-size: $font-size-body;
+  border: none;
+  font-weight: $font-weight-semibold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
 }
 
 .cancel-btn {
   background: $color-bg-tertiary;
   color: $color-text-secondary;
+  box-shadow: $shadow-light;
+}
+
+.cancel-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.03);
 }
 
 .confirm-btn {
-  background: linear-gradient(to right, $color-primary, $color-primary-light);
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
   color: $color-text-inverse;
+  box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
+}
+
+.confirm-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 6rpx rgba(255, 154, 90, 0.1);
+}
+
+/* 删除弹窗特定样式 */
+.delete-modal-content {
+  width: 100%;
+}
+
+.delete-message {
+  font-size: $font-size-body;
+  color: $color-text-primary;
+  text-align: center;
+  line-height: $line-height-relaxed;
+}
+
+.delete-confirm-btn {
+  background: linear-gradient(135deg, $color-error, #FF8A80);
+  box-shadow: 0 4rpx 12rpx rgba(255, 77, 79, 0.2);
+}
+
+.delete-confirm-btn:active {
+  box-shadow: 0 2rpx 6rpx rgba(255, 77, 79, 0.1);
 }
 </style>
+

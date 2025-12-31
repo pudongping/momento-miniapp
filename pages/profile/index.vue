@@ -427,7 +427,8 @@ export default {
 
 .menu-desc {
   font-size: $font-size-xs;
-  color: $color-text-secondary;
+  color: $color-text-tertiary;
+  padding-left: 16rpx;
 }
 
 .logout-section {
@@ -470,15 +471,25 @@ export default {
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
 }
 
 .modal-content {
-  width: 80%;
+  width: 100%;
   background: $color-bg-primary;
-  border-radius: $border-radius-md;
+  border-radius: $border-radius-lg $border-radius-lg 0 0;
   overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 .modal-header {
@@ -507,25 +518,43 @@ export default {
 
 .modal-footer {
   display: flex;
-  border-top: 1px solid $color-bg-tertiary;
+  gap: $spacing-sm;
+  padding: $spacing-md;
+  padding-bottom: calc($spacing-md + env(safe-area-inset-bottom));
 }
 
 .cancel-btn, .confirm-btn {
   flex: 1;
-  height: 90rpx;
-  line-height: 90rpx;
-  text-align: center;
-  font-size: 30rpx;
-  border-radius: 0;
+  height: 88rpx;
+  border-radius: $border-radius-full;
+  font-size: $font-size-body;
+  border: none;
+  font-weight: $font-weight-semibold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
 }
 
 .cancel-btn {
   background: $color-bg-tertiary;
   color: $color-text-secondary;
+  box-shadow: $shadow-light;
+}
+
+.cancel-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.03);
 }
 
 .confirm-btn {
-  background: linear-gradient(to right, $color-primary, $color-primary-light);
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
   color: $color-text-inverse;
+  box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
+}
+
+.confirm-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 6rpx rgba(255, 154, 90, 0.1);
 }
 </style>

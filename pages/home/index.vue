@@ -4,14 +4,14 @@
     <view class="book-selector">
       <view class="book-selector-header">
         <view class="selector-left">
-          <uni-icons type="wallet" size="20" color="#FF9A5A"></uni-icons>
+          <uni-icons type="wallet" size="20" color="#FFFFFF"></uni-icons>
           <text class="selector-label">当前账本</text>
         </view>
         <view class="book-switcher" @click="showBookPicker">
           <view class="switcher-inner">
             <text class="current-book-name">{{ currentBook?.name || '请选择账本' }}</text>
             <view class="arrow-icon">
-              <uni-icons type="down" size="16" color="#FF9A5A"></uni-icons>
+              <uni-icons type="down" size="16" color="#FFFFFF"></uni-icons>
             </view>
           </view>
         </view>
@@ -182,6 +182,7 @@
         @refresherrefresh="refreshTransactions"
         :refresher-enabled="true"
         :refresher-triggered="isRefreshing"
+        :lower-threshold="50"
       >
         <view v-if="transactions.length > 0" class="transaction-list">
           <view v-for="(group, date) in groupedTransactions" :key="date" class="transaction-group">
@@ -278,20 +279,28 @@
             v-for="recurring in recurringTransactions" 
             :key="recurring.recurring_id" 
             class="recurring-item"
+            :class="{ 'income-item': recurring.type === 'income' }"
           >
             <view class="recurring-tag" :style="{ backgroundColor: recurring.tag_color || '#FF9A5A' }">
-              <uni-icons :type="recurring.tag_icon || 'shop'" size="20" color="#FFFFFF"></uni-icons>
+              <uni-icons :type="recurring.tag_icon || 'shop'" size="24" color="#FFFFFF"></uni-icons>
             </view>
             
             <view class="recurring-content">
               <view class="recurring-main">
                 <view class="recurring-info">
                   <text class="recurring-name">{{ recurring.name }}</text>
-                  <text class="recurring-schedule">{{ formatRecurringSchedule(recurring) }}</text>
+                  <text class="recurring-remark" v-if="recurring.remark">{{ recurring.remark }}</text>
                 </view>
                 <text :class="['recurring-amount', recurring.type === 'income' ? 'income-amount' : '']">
                   {{ recurring.type === 'income' ? '+' : '-' }}{{ formatAmount(recurring.amount) }}
                 </text>
+              </view>
+              
+              <view class="recurring-details">
+                <view class="recurring-schedule-info">
+                  <text class="schedule-label">周期：</text>
+                  <text class="schedule-text">{{ formatRecurringSchedule(recurring) }}</text>
+                </view>
               </view>
             </view>
             
@@ -1867,10 +1876,9 @@ export default {
 }
 
 .book-selector {
-  background: linear-gradient(135deg, $color-bg-primary, $color-bg-secondary);
+  background: linear-gradient(to right, $color-primary, $color-primary-light);
   padding: $spacing-md 30rpx;
-  border-bottom: 1px solid $color-border-light;
-  box-shadow: $shadow-light;
+  box-shadow: $shadow-normal;
 }
 
 .book-selector-header {
@@ -1887,7 +1895,7 @@ export default {
 
 .selector-label {
   font-size: $font-size-small;
-  color: $color-text-secondary;
+  color: $color-text-inverse;
   font-weight: $font-weight-medium;
 }
 
@@ -1896,7 +1904,7 @@ export default {
   display: flex;
   align-items: center;
   position: relative;
-  background-color: rgba(255, 154, 90, 0.1);
+  background-color: rgba(255, 255, 255, 0.2);
   border-radius: 30rpx;
   border: 1rpx solid rgba(255, 154, 90, 0.2);
   box-shadow: $shadow-light;
@@ -1904,7 +1912,7 @@ export default {
 }
 
 .book-switcher:active {
-  background-color: rgba(255, 154, 90, 0.2);
+  background-color: rgba(255, 255, 255, 0.3);
   transform: translateY(1rpx);
 }
 
@@ -1921,7 +1929,7 @@ export default {
 .current-book-name {
   font-size: $font-size-body;
   font-weight: $font-weight-semibold;
-  color: $color-text-primary;
+  color: $color-text-inverse;
   max-width: 300rpx;
   white-space: nowrap;
   overflow: hidden;
@@ -2304,15 +2312,20 @@ export default {
   display: flex;
   align-items: center;
   padding: 20rpx;
-  background: $color-bg-disabled;
+  background: $color-bg-primary;
   border-radius: $border-radius-md;
-  border: 2rpx solid transparent;
+  margin-bottom: $spacing-sm;
+  box-shadow: $shadow-light;
   transition: all 0.3s ease;
 }
 
 .recurring-item:active {
-  background: $color-border-light;
+  background: $color-bg-secondary;
   transform: scale(0.98);
+}
+
+.recurring-item.income-item {
+  border-left: 4rpx solid $color-success;
 }
 
 .recurring-tag {
@@ -2322,8 +2335,9 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 20rpx;
+  margin-right: $spacing-sm;
   flex-shrink: 0;
+  box-shadow: $shadow-light;
 }
 
 .recurring-content {
@@ -2350,9 +2364,11 @@ export default {
   margin-bottom: 4rpx;
 }
 
-.recurring-schedule {
-  font-size: $font-size-body;
+.recurring-remark {
+  font-size: $font-size-small;
   color: $color-text-secondary;
+  margin-top: 4rpx;
+  display: block;
 }
 
 .recurring-amount {
@@ -2360,10 +2376,34 @@ export default {
   font-weight: $font-weight-bold;
   color: $color-error;
   margin-left: $spacing-sm;
+  white-space: nowrap;
 }
 
 .recurring-amount.income-amount {
   color: $color-success;
+}
+
+.recurring-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8rpx;
+}
+
+.recurring-schedule-info {
+  display: flex;
+  align-items: center;
+  font-size: $font-size-small;
+}
+
+.schedule-label {
+  color: $color-text-tertiary;
+  margin-right: 4rpx;
+}
+
+.schedule-text {
+  color: $color-primary;
+  font-weight: $font-weight-medium;
 }
 
 .recurring-actions {
@@ -2371,14 +2411,14 @@ export default {
   flex-shrink: 0;
 }
 
-.delete-btn {
+.recurring-actions .delete-btn {
   width: 60rpx;
   height: 60rpx;
   border-radius: 12rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #F0F0F0;
+  background: $color-bg-tertiary;
   transition: all 0.3s ease;
 }
 

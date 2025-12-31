@@ -404,7 +404,7 @@ export default {
 }
 
 .app-slogan {
-  font-size: $font-size-small;
+  font-size: $font-size-body;
   color: $color-text-secondary;
   font-weight: $font-weight-normal;
   letter-spacing: 0.5rpx;
