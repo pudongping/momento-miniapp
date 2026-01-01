@@ -2189,7 +2189,7 @@ export default {
 }
 
 .budget-remaining {
-  font-size: $font-size-body;
+  font-size: $font-size-small;
   color: $color-text-secondary;
 }
 

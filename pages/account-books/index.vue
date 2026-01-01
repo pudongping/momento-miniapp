@@ -150,6 +150,12 @@
 
           <!-- 操作按钮 -->
           <view class="actions-section">
+            <button
+              :class="['btn-action', 'btn-default', selectedBook.is_default ? 'active' : '']"
+              @click="toggleDefault"
+            >
+              {{ selectedBook.is_default ? '✓ 默认账本' : '设为默认' }}
+            </button>          
             <button 
               v-if="!isBookCreator"
               class="btn-action btn-exit" 
@@ -163,12 +169,6 @@
               @click="deleteBook"
             >
               删除账本
-            </button>
-            <button 
-              :class="['btn-action', 'btn-default', selectedBook.is_default ? 'active' : '']"
-              @click="toggleDefault"
-            >
-              {{ selectedBook.is_default ? '✓ 默认账本' : '设为默认' }}
             </button>
           </view>
         </view>
@@ -851,6 +851,7 @@ export default {
   display: flex;
   gap: 12rpx;
   padding: $spacing-md;
+  padding-bottom: calc($spacing-md + env(safe-area-inset-bottom) + 40rpx);
   border-top: 1px solid $color-bg-tertiary;
 }
 
@@ -1005,6 +1006,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 12rpx;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 40rpx);
 }
 
 .btn-action {
@@ -1025,13 +1027,13 @@ export default {
 }
 
 .btn-exit {
-  background: $color-bg-tertiary;
-  color: $color-text-secondary;
-  box-shadow: $shadow-light;
+  background: linear-gradient(135deg, #FF6B6B, #FF9A5A);
+  color: $color-text-inverse;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 107, 0.2);
 }
 
 .btn-exit:active {
-  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.03);
+  box-shadow: 0 2rpx 6rpx rgba(255, 107, 107, 0.1);
 }
 
 .btn-delete {
@@ -1045,24 +1047,24 @@ export default {
 }
 
 .btn-default {
-  background: $color-bg-tertiary;
-  color: $color-text-secondary;
-  border: 2rpx solid $color-border-normal;
-  box-shadow: $shadow-light;
-}
-
-.btn-default:active {
-  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.03);
-}
-
-.btn-default.active {
   background: linear-gradient(135deg, $color-primary, $color-primary-light);
   color: $color-text-inverse;
   border: none;
   box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
 }
 
-.btn-default.active:active {
+.btn-default:active {
   box-shadow: 0 2rpx 6rpx rgba(255, 154, 90, 0.1);
+}
+
+.btn-default.active {
+  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  color: $color-text-inverse;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(76, 175, 80, 0.3);
+}
+
+.btn-default.active:active {
+  box-shadow: 0 2rpx 6rpx rgba(76, 175, 80, 0.2);
 }
 </style>

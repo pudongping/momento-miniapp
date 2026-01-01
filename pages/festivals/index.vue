@@ -251,7 +251,7 @@ export default {
         }
         
         uni.showToast({
-          title: festival.is_show_home === 1 ? '已隐藏' : '已显示',
+          title: festival.is_show_home === 1 ? '已显示' : '已隐藏',
           icon: 'success'
         });
       } catch (error) {
@@ -482,6 +482,7 @@ export default {
   font-size: $font-size-small;
   color: $color-primary;
   font-weight: $font-weight-medium;
+  margin-left: 10rpx;
 }
 
 .action-buttons {
@@ -589,14 +590,21 @@ export default {
 }
 
 .picker-value {
-  border: 1px solid $color-border-normal;
+  background: $color-bg-tertiary;
+  border: 1px solid $color-border-light;
   height: 80rpx;
-  border-radius: $border-radius-sm;
+  border-radius: $border-radius-md;
   padding: 0 20rpx;
   font-size: $font-size-body;
+  color: $color-text-primary;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition: all 0.3s ease;
+  
+  &:active {
+    background: $color-bg-secondary;
+  }
 }
 
 .switch-item {
