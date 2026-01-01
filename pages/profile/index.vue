@@ -291,6 +291,24 @@ export default {
         }
       });
     }
+  },
+  
+  // 分享到好友
+  onShareAppMessage() {
+    return {
+      title: '有人拍了拍你：发现一个超好用的记账小程序，一起来用吧！',
+      path: '/pages/home/index',
+      imageUrl: '/static/images/share-cover.png'
+    };
+  },
+  
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '有人拍了拍你：时光小账本，记录美好生活',
+      query: '',
+      imageUrl: '/static/images/share-cover.png'
+    };
   }
 };
 </script>

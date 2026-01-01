@@ -111,22 +111,8 @@
             :class="{ active: selectedTagId === tag.tag_id, 'custom-tag-item': !tag.is_system }"
             :style="{ backgroundColor: selectedTagId === tag.tag_id ? tag.color : '#F5F5F5' }"
             @click="selectTag(tag)"
+            @longpress="!tag.is_system && showTagActions(tag)"
           >
-            <!-- 自定义标签操作按钮 -->
-            <view v-if="!tag.is_system" class="tag-actions">
-              <view 
-                class="edit-tag-btn" 
-                @click.stop="openEditTagModal(tag)"
-              >
-                <text class="edit-icon">✎</text>
-              </view>
-              <view 
-                class="delete-tag-btn" 
-                @click.stop="confirmDeleteTag(tag)"
-              >
-                <text class="delete-icon">−</text>
-              </view>
-            </view>
             
             <!-- FA图标或uni-icons -->
             <view v-if="tag.fa_icon" class="fa-icon" :style="{ color: selectedTagId === tag.tag_id ? '#FFFFFF' : tag.color }">
@@ -548,8 +534,10 @@ export default {
       editTagIcon: 'home',
       tagColors: [
         '#FF9A5A', '#F44336', '#E91E63', '#9C27B0', '#673AB7',
-        '#3F51B5', '#2196F3', '#03A9F4', '#00BCD4', '#009688',
-        '#4CAF50', '#8BC34A', '#CDDC39', '#FFC107', '#FF9800'
+        '#3F51B5', '#03A9F4', '#00BCD4', '#009688',
+        '#4CAF50', '#8BC34A', '#CDDC39', '#FFC107', '#FF9800',
+        '#FF5722', '#795548', '#607D8B', '#FF6B9D', '#BA68C8',
+        '#7E57C2', '#5C6BC0', '#42A5F5'
       ],
       tagIcons: [
         'home', 'shop', 'cart', 'calendar', 'camera', 'chat',
@@ -676,6 +664,20 @@ export default {
     
     selectTag(tag) {
       this.selectedTagId = tag.tag_id;
+    },
+    
+    // 长按标签显示操作菜单
+    showTagActions(tag) {
+      uni.showActionSheet({
+        itemList: ['编辑标签', '删除标签'],
+        success: (res) => {
+          if (res.tapIndex === 0) {
+            this.openEditTagModal(tag);
+          } else if (res.tapIndex === 1) {
+            this.confirmDeleteTag(tag);
+          }
+        }
+      });
     },
     
     openCustomTagModal() {
@@ -1197,6 +1199,24 @@ export default {
         });
       }
     }
+  },
+  
+  // 分享到好友
+  onShareAppMessage() {
+    return {
+      title: '有人拍了拍你：一起来记账吧，轻松管理每一笔收支！',
+      path: '/pages/record/index',
+      imageUrl: '/static/images/share-cover.png'
+    };
+  },
+  
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '有人拍了拍你：时光小账本，让记账变得简单有趣',
+      query: '',
+      imageUrl: '/static/images/share-cover.png'
+    };
   }
 };
 </script>
@@ -1398,78 +1418,6 @@ export default {
 .custom-tag {
   background: $color-bg-primary;
   border: 1px dashed $color-text-placeholder;
-}
-
-/* 自定义标签项样式 */
-.custom-tag-item {
-  position: relative;
-}
-
-/* 标签操作按钮容器 */
-.tag-actions {
-  position: absolute;
-  top: -10rpx;
-  right: -10rpx;
-  display: flex;
-  gap: 6rpx;
-  z-index: 11;
-}
-
-/* 修改标签按钮 */
-.edit-tag-btn {
-  position: relative;
-  width: 36rpx;
-  height: 36rpx;
-  background: linear-gradient(135deg, #4CAF50, #45a049);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  box-shadow: 0 6rpx 16rpx rgba(76, 175, 80, 0.4);
-  transition: all 0.3s ease;
-  border: 3rpx solid #FFFFFF;
-}
-
-.edit-tag-btn:active {
-  transform: scale(0.85);
-  box-shadow: 0 4rpx 10rpx rgba(76, 175, 80, 0.3);
-}
-
-.edit-icon {
-  color: #FFFFFF;
-  font-size: 18rpx;
-  font-weight: bold;
-  line-height: 1;
-}
-
-/* 删除标签按钮 */
-.delete-tag-btn {
-  position: relative;
-  width: 36rpx;
-  height: 36rpx;
-  background: linear-gradient(135deg, #FF6B6B, #FF5252);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  box-shadow: 0 6rpx 16rpx rgba(255, 107, 107, 0.4);
-  transition: all 0.3s ease;
-  border: 3rpx solid #FFFFFF;
-}
-
-.delete-tag-btn:active {
-  transform: scale(0.85);
-  box-shadow: 0 4rpx 10rpx rgba(255, 107, 107, 0.3);
-}
-
-.delete-icon {
-  color: #FFFFFF;
-  font-size: 18rpx;
-  font-weight: bold;
-  line-height: 1;
-  transform: translateY(-0.5rpx);
 }
 
 /* FA图标样式 */

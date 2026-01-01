@@ -2,14 +2,14 @@
   <view class="page-container">
     <view class="header">
       <text class="title">预算设置</text>
-      <text class="subtitle">设置"红绿灯"的总金额</text>
+      <text class="subtitle">设置每月预算总金额</text>
     </view>
     
     <view class="budget-card">
       <view class="input-section">
-        <text class="label">每月家庭预算总限额</text>
+        <text class="label">每月预算总金额</text>
         <view class="input-wrapper">
-          <text class="currency">¥</text>
+          <text class="currency">￥</text>
           <input 
             type="digit" 
             v-model="budget"
@@ -17,32 +17,13 @@
             placeholder="请输入金额" 
             @input="validateInput"
           />
+          <text class="unit">元</text>
         </view>
-        <text class="unit">元</text>
       </view>
       
       <view class="description">
         <uni-icons type="info" size="16" color="#999"></uni-icons>
-        <text class="desc-text">设置预算后，系统将根据当月支出计算剩余预算，并以红绿灯形式直观展示</text>
-      </view>
-      
-      <view class="preview-section">
-        <text class="preview-title">预览效果</text>
-        <view class="preview-content">
-          <view class="progress-bar">
-            <view 
-              class="progress-filled" 
-              :style="{ width: progressWidth + '%', backgroundColor: progressColor }"
-            ></view>
-          </view>
-          <view class="status-text">
-            <text :style="{ color: progressColor }">{{ statusText }}</text>
-          </view>
-          <view class="budget-info">
-            <text class="spent">已支出: ¥{{ formatNumber(spentAmount) }}</text>
-            <text class="remain">剩余: ¥{{ formatNumber(remainAmount) }}</text>
-          </view>
-        </view>
+        <text class="desc-text">设置后，首页将根据当月支出计算剩余可用预算，并以进度条形式直观展示您的预算使用情况</text>
       </view>
     </view>
     
@@ -57,50 +38,9 @@ export default {
   data() {
     return {
       budget: '',
-      // 模拟数据 - 实际应该从API获取
-      spentAmount: 2500,
-      
       // 预算设置之前的旧值，用于检测是否有变化
       originalBudget: ''
     };
-  },
-  
-  computed: {
-    // 预算剩余金额
-    remainAmount() {
-      const budgetNum = parseFloat(this.budget) || 0;
-      return Math.max(0, budgetNum - this.spentAmount);
-    },
-    
-    // 进度条宽度百分比
-    progressWidth() {
-      const budgetNum = parseFloat(this.budget) || 1; // 避免除以0
-      return Math.min(100, (this.spentAmount / budgetNum) * 100);
-    },
-    
-    // 进度条颜色
-    progressColor() {
-      const percentage = this.progressWidth;
-      if (percentage >= 90) {
-        return '#FF4D4F'; // $color-error
-      } else if (percentage >= 70) {
-        return '#FAAD14'; // $color-warning
-      } else {
-        return '#52C41A'; // $color-success
-      }
-    },
-    
-    // 状态文本
-    statusText() {
-      const percentage = this.progressWidth;
-      if (percentage >= 90) {
-        return '预算告急';
-      } else if (percentage >= 70) {
-        return '预算注意';
-      } else {
-        return '预算充足';
-      }
-    }
   },
   
   onLoad() {
@@ -115,11 +55,6 @@ export default {
         if (data && data.budget !== undefined) {
           this.budget = data.budget.toString();
           this.originalBudget = this.budget;
-          
-          // 如果API返回了已支出金额，更新本地变量
-          if (data.spent !== undefined) {
-            this.spentAmount = data.spent;
-          }
         }
       } catch (error) {
         console.error('获取预算设置失败', error);
@@ -281,52 +216,6 @@ export default {
   color: $color-text-secondary;
   line-height: $line-height-normal;
   margin-left: 10rpx;
-}
-
-.preview-section {
-  margin-top: 40rpx;
-}
-
-.preview-title {
-  font-size: $font-size-body;
-  color: $color-text-primary;
-  margin-bottom: 20rpx;
-  display: block;
-}
-
-.preview-content {
-  background: $color-bg-secondary;
-  padding: 20rpx;
-  border-radius: $border-radius-sm;
-}
-
-.progress-bar {
-  height: 20rpx;
-  background: $color-border-normal;
-  border-radius: 10rpx;
-  overflow: hidden;
-  margin-bottom: 10rpx;
-}
-
-.progress-filled {
-  height: 100%;
-  border-radius: 10rpx;
-  transition: width 0.3s, background-color 0.3s;
-}
-
-.status-text {
-  text-align: center;
-  font-size: $font-size-body;
-  font-weight: $font-weight-medium;
-  margin: 10rpx 0;
-}
-
-.budget-info {
-  display: flex;
-  justify-content: space-between;
-  font-size: $font-size-small;
-  color: $color-text-secondary;
-  margin-top: 10rpx;
 }
 
 .save-button {

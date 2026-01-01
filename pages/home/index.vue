@@ -1,5 +1,12 @@
 <template>
   <view class="page-container">
+    <!-- 自定义导航栏 -->
+    <view class="custom-navbar">
+      <view class="navbar-content">
+        <text class="navbar-title">时光小账本</text>
+      </view>
+    </view>
+    
     <!-- 账本选择器 -->
     <view class="book-selector">
       <view class="book-selector-header">
@@ -1864,6 +1871,24 @@ export default {
       }
       return '您确定要删除吗？删除后无法恢复。';
     }
+  },
+  
+  // 分享到好友
+  onShareAppMessage() {
+    return {
+      title: '有人拍了拍你：快来一起记账，管理你的每一笔支出！',
+      path: '/pages/home/index',
+      imageUrl: '/static/images/share-cover.png'
+    };
+  },
+  
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '有人拍了拍你：时光小账本，记录生活每一笔',
+      query: '',
+      imageUrl: '/static/images/share-cover.png'
+    };
   }
 };
 </script>
@@ -1875,9 +1900,35 @@ export default {
   padding-bottom: $spacing-lg;
 }
 
+.custom-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: linear-gradient(to right, $color-primary, $color-primary-light);
+  padding-top: env(safe-area-inset-top);
+}
+
+.navbar-content {
+  height: 110rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.navbar-title {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  color: $color-text-inverse;
+  letter-spacing: 1rpx;
+}
+
 .book-selector {
   background: linear-gradient(to right, $color-primary, $color-primary-light);
   padding: $spacing-md 30rpx;
+  padding-top: calc(110rpx + env(safe-area-inset-top) + $spacing-md);
   box-shadow: $shadow-normal;
 }
 
