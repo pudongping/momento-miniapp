@@ -113,6 +113,8 @@
             @click="selectTag(tag)"
             @longpress="!tag.is_system && showTagActions(tag)"
           >
+            <!-- 自定义标签标识 -->
+            <view v-if="!tag.is_system" class="custom-tag-badge"></view>
             
             <!-- FA图标或uni-icons -->
             <view v-if="tag.fa_icon" class="fa-icon" :style="{ color: selectedTagId === tag.tag_id ? '#FFFFFF' : tag.color }">
@@ -1418,6 +1420,19 @@ export default {
 .custom-tag {
   background: $color-bg-primary;
   border: 1px dashed $color-text-placeholder;
+}
+
+/* 自定义标签标识 */
+.custom-tag-badge {
+  position: absolute;
+  top: 6rpx;
+  right: 6rpx;
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  box-shadow: 0 2rpx 4rpx rgba(255, 154, 90, 0.3);
+  z-index: 1;
 }
 
 /* FA图标样式 */

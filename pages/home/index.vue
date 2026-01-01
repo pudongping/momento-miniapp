@@ -531,7 +531,10 @@ import {
   getFestivalsApi,
   getBudgetApi,
   getRecurringTransactionsApi,
-  deleteRecurringTransactionApi
+  deleteRecurringTransactionApi,
+  uploadFileApi,
+  updateBackgroundApi,
+  getBackgroundApi
 } from '@/api/index.js';
 
 export default {
@@ -547,7 +550,7 @@ export default {
       
       // 背景墙相关
       customBackground: null,
-      defaultBackground: '/static/images/default-background.jpg',
+      defaultBackground: '/static/images/default-background.png',
       
       // 节日和纪念日相关
       festivals: [],
@@ -631,13 +634,7 @@ export default {
         groups[date].push(transaction);
       });
       
-      // 按日期降序排序
-      const sortedGroups = {};
-      Object.keys(groups).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
-        sortedGroups[date] = groups[date];
-      });
-      
-      return sortedGroups;
+      return groups;
     },
     
     // 背景样式
@@ -738,12 +735,12 @@ export default {
     },
     
     // 背景墙相关方法
-    loadCustomBackground() {
-      // 从本地存储加载自定义背景
+    async loadCustomBackground() {
+      // 从服务器加载自定义背景
       try {
-        const savedBackground = uni.getStorageSync('customBackground');
-        if (savedBackground) {
-          this.customBackground = savedBackground;
+        const result = await getBackgroundApi();
+        if (result && result.background_url) {
+          this.customBackground = result.background_url;
         }
       } catch (error) {
         console.error('加载自定义背景失败', error);
@@ -760,21 +757,82 @@ export default {
               count: 1,
               sizeType: ['compressed'],
               sourceType: ['album'],
-              success: (res) => {
+              success: async (res) => {
                 const tempFilePath = res.tempFilePaths[0];
-                this.customBackground = tempFilePath;
                 
-                // 保存到本地存储
-                uni.setStorageSync('customBackground', tempFilePath);
+                // 显示上传中
+                uni.showLoading({
+                  title: '上传中...'
+                });
+                
+                try {
+                  // 调用上传文件API
+                  const uploadResult = await uploadFileApi({
+                    file: tempFilePath,
+                    file_type: 'image',
+                    business_type: 'home_background'
+                  });
+                  
+                  if (uploadResult && uploadResult.absolute_url) {
+                    // 调用更新背景图片API
+                    await updateBackgroundApi({
+                      background_url: uploadResult.absolute_url
+                    });
+                    
+                    // 更新本地显示
+                    this.customBackground = uploadResult.absolute_url;
+                    
+                    uni.hideLoading();
+                    uni.showToast({
+                      title: '背景更换成功',
+                      icon: 'success'
+                    });
+                  }
+                } catch (error) {
+                  uni.hideLoading();
+                  console.error('上传背景图片失败', error);
+                  uni.showToast({
+                    title: '上传失败，请重试',
+                    icon: 'none'
+                  });
+                }
               }
             });
           } else if (res.tapIndex === 1) {
             // 恢复默认背景
-            this.customBackground = null;
-            uni.removeStorageSync('customBackground');
+            this.restoreDefaultBackground();
           }
         }
       });
+    },
+    
+    async restoreDefaultBackground() {
+      try {
+        uni.showLoading({
+          title: '恢复中...'
+        });
+        
+        // 调用API清除背景
+        await updateBackgroundApi({
+          background_url: ''
+        });
+        
+        // 清除本地显示
+        this.customBackground = null;
+        
+        uni.hideLoading();
+        uni.showToast({
+          title: '已恢复默认背景',
+          icon: 'success'
+        });
+      } catch (error) {
+        uni.hideLoading();
+        console.error('恢复默认背景失败', error);
+        uni.showToast({
+          title: '操作失败，请重试',
+          icon: 'none'
+        });
+      }
     },
     
     // 节日和纪念日相关方法
@@ -1911,7 +1969,7 @@ export default {
 }
 
 .navbar-content {
-  height: 110rpx;
+  height: 88rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1919,16 +1977,15 @@ export default {
 }
 
 .navbar-title {
-  font-size: $font-size-h2;
-  font-weight: $font-weight-bold;
+  font-size: 32rpx;
+  font-weight: $font-weight-semibold;
   color: $color-text-inverse;
-  letter-spacing: 1rpx;
 }
 
 .book-selector {
   background: linear-gradient(to right, $color-primary, $color-primary-light);
   padding: $spacing-md 30rpx;
-  padding-top: calc(110rpx + env(safe-area-inset-top) + $spacing-md);
+  padding-top: calc(88rpx + env(safe-area-inset-top) + $spacing-md);
   box-shadow: $shadow-normal;
 }
 

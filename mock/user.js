@@ -134,3 +134,38 @@ export function bindPhone(data) {
   
   return user;
 }
+
+/**
+ * 获取用户背景图片
+ * @returns {Object} 背景图片信息
+ */
+export function getBackground() {
+  // 模拟获取背景图片
+  // 如果用户没有设置背景图片，返回null
+  const hasCustomBackground = Math.random() > 0.7;
+  
+  if (hasCustomBackground) {
+    return {
+      background_url: 'https://cdn.example.com/uploads/background/sample_bg.jpg',
+      updated_at: Math.floor(Date.now() / 1000) - 86400 * 3 // 3天前更新
+    };
+  }
+  
+  return {
+    background_url: null,
+    updated_at: null
+  };
+}
+
+/**
+ * 更新用户背景图片
+ * @param {Object} data 包含背景图片URL的数据
+ * @returns {Object} 更新结果
+ */
+export function updateBackground(data) {
+  // 模拟更新背景图片
+  return {
+    background_url: data.background_url,
+    updated_at: Math.floor(Date.now() / 1000)
+  };
+}

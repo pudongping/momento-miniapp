@@ -48,3 +48,10 @@ export const exitAccountBookApi = (book_id) => post('/accountBooks/exit', { book
 export const setDefaultAccountBookApi = (book_id) => put('/accountBooks/setDefault', { book_id });
 export const getAccountBookMembersApi = (book_id) => get('/accountBooks/members', { book_id });
 export const removeAccountBookMemberApi = (data) => post('/accountBooks/removeMember', data);
+
+// 文件上传相关接口
+export const uploadFileApi = (data) => post('/upload/file', data);
+
+// 背景图片相关接口
+export const updateBackgroundApi = (data) => put('/user/background', data);
+export const getBackgroundApi = () => get('/user/background');

@@ -3,7 +3,8 @@
  * 所有的时间戳均为秒级时间戳，避免前端精度问题
  * 约定：仅用户 uid 为雪花算法分布式 ID（字符串）；其他业务主键为 int 自增 ID
  */
-import { wxLogin, getUserInfo, updateUserInfo, bindPhone } from './user.js';
+import { wxLogin, getUserInfo, updateUserInfo, bindPhone, getBackground, updateBackground } from './user.js';
+import uploadMock from './upload.js';
 import { getBudget, updateBudget } from './budget.js';
 import { getFestivals, addFestival, updateFestival, deleteFestival, toggleFestivalVisibility } from './festivals.js';
 import { 
@@ -371,5 +372,28 @@ export const mockApis = {
       return error('更新失败：预算金额无效');
     }
     return success(updateBudget(budget));
+  },
+  
+  // 文件上传相关接口
+  '/upload/file': (options) => {
+    const { file_type, business_type } = options.data;
+    if (!file_type || !business_type) {
+      return error('上传失败：参数不完整');
+    }
+    return uploadMock['POST /upload/file'](options);
+  },
+  
+  // 背景图片相关接口
+  '/user/background': (options) => {
+    if (options.method === 'GET') {
+      return success(getBackground());
+    } else if (options.method === 'PUT') {
+      const { background_url } = options.data;
+      if (!background_url) {
+        return error('更新失败：缺少background_url参数');
+      }
+      return success(updateBackground({ background_url }));
+    }
+    return error('不支持的请求方法');
   }
 };
