@@ -30,8 +30,7 @@
       <view class="login-action">
         <button 
           class="wx-login-btn" 
-          open-type="getUserInfo" 
-          @getuserinfo="handleGetUserInfo"
+          @tap="handleWxLogin"
         >
           <view class="btn-inner">
             <uni-icons type="weixin" size="22" color="#FFFFFF"></uni-icons>
@@ -77,13 +76,12 @@
 </template>
 
 <script>
-import { loginApi, updateUserInfoApi } from '@/api/index.js';
+import { loginApi } from '@/api/index.js';
 
 export default {
   data() {
     return {
       isLoading: false,
-      wxUserInfo: null,
       loginStatus: 'pending', // pending, success, fail
       redirectUrl: '' // 登录成功后的重定向URL
     };
@@ -109,25 +107,10 @@ export default {
       }
     },
     
-    // 处理用户信息授权
-    async handleGetUserInfo(e) {
-      const userInfo = e.detail.userInfo;
-      
-      if (!userInfo) {
-        uni.showToast({
-          title: '需要授权才能登录',
-          icon: 'none'
-        });
-        return;
-      }
-      
-      // 保存微信用户信息
-      this.wxUserInfo = {
-        nickname: userInfo.nickName,
-        avatar: userInfo.avatarUrl
-      };
-      
-      // 继续登录流程
+    // 处理微信登录
+    async handleWxLogin() {
+      // 直接登录，不在登录时获取用户信息
+      // 用户可以在登录后在个人中心页面主动更新头像和昵称
       await this.handleLogin();
     },
     
@@ -156,23 +139,11 @@ export default {
             // 保存token
             uni.setStorageSync('token', result.token);
             
-            // 如果有微信用户信息，更新用户信息
-            if (this.wxUserInfo) {
-              try {
-                await updateUserInfoApi({
-                  nickname: this.wxUserInfo.nickname,
-                  avatar: this.wxUserInfo.avatar
-                });
-              } catch (error) {
-                console.error('更新用户信息失败', error);
-              }
-            }
-            
             // 保存用户信息
             uni.setStorageSync('userInfo', {
               uid: result.uid,
-              nickname: this.wxUserInfo.nickname || result.nickname,
-              avatar: this.wxUserInfo.avatar || result.avatar,
+              nickname: result.nickname || '',
+              avatar: result.avatar || '',
               phone: result.phone || ''
             });
             
@@ -211,10 +182,26 @@ export default {
     // 登录后导航
     navigateAfterLogin() {
       if (this.redirectUrl) {
-        // 跳转到指定页面
-        uni.redirectTo({
-          url: this.redirectUrl
-        });
+        // 判断是否为tabbar页面
+        const tabbarPages = [
+          '/pages/home/index',
+          '/pages/record/index',
+          '/pages/profile/index'
+        ];
+        
+        const isTabbarPage = tabbarPages.some(page => this.redirectUrl.includes(page));
+        
+        if (isTabbarPage) {
+          // tabbar页面使用switchTab
+          uni.switchTab({
+            url: this.redirectUrl.split('?')[0] // 移除query参数
+          });
+        } else {
+          // 非tabbar页面使用redirectTo
+          uni.redirectTo({
+            url: this.redirectUrl
+          });
+        }
       } else {
         // 跳转到首页
         uni.switchTab({

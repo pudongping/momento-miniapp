@@ -2,7 +2,7 @@
   <view class="page-container">
     <!-- 用户信息卡片 -->
     <view class="user-card">
-      <button class="avatar-section" open-type="getUserInfo" @getuserinfo="handleGetUserInfo">
+      <button class="avatar-section" open-type="chooseAvatar" @chooseavatar="onChooseAvatar">
         <image :src="userInfo.avatar || '/static/images/default-avatar.png'" class="avatar" mode="aspectFill"></image>
         <view class="edit-icon">
           <uni-icons type="camera" size="16" color="#FFFFFF"></uni-icons>
@@ -10,8 +10,14 @@
       </button>
       <view class="user-info">
         <view class="nickname-row">
-          <text class="nickname">{{ userInfo.nickname || '未设置昵称' }}</text>
-          <view class="edit-btn" @click="showEditNickname">
+          <input 
+            type="nickname" 
+            v-model="userInfo.nickname" 
+            class="nickname-input" 
+            placeholder="请输入昵称"
+            @blur="updateNicknameOnBlur"
+          />
+          <view class="edit-btn">
             <uni-icons type="compose" size="16" color="#999"></uni-icons>
           </view>
         </view>
@@ -69,28 +75,6 @@
         <text>退出登录</text>
       </button>
     </view>
-
-    <!-- 修改昵称弹窗 -->
-    <view v-if="showNicknameModal" class="modal-mask" @click="hideEditNickname">
-      <view class="modal-content" @click.stop>
-        <view class="modal-header">
-          <text class="modal-title">修改昵称</text>
-        </view>
-        <view class="modal-body">
-          <input 
-            type="text" 
-            v-model="newNickname" 
-            class="nickname-input"
-            placeholder="请输入新昵称"
-            maxlength="10"
-          />
-        </view>
-        <view class="modal-footer">
-          <button class="cancel-btn" @click="hideEditNickname">取消</button>
-          <button class="confirm-btn" :loading="isUpdatingNickname" :disabled="isUpdatingNickname" @click="updateNickname">确认</button>
-        </view>
-      </view>
-    </view>
   </view>
 </template>
 
@@ -107,8 +91,6 @@ export default {
         avatar: '',
         phone: ''
       },
-      showNicknameModal: false,
-      newNickname: '',
       isUpdatingNickname: false
     };
   },
@@ -135,151 +117,76 @@ export default {
       }
     },
     
-    // 获取微信用户信息
-    async handleGetUserInfo(e) {
-      const userInfo = e.detail.userInfo;
+    // 选择微信头像
+    async onChooseAvatar(e) {
+      const { avatarUrl } = e.detail;
       
-      if (!userInfo) {
-        uni.showToast({
-          title: '需要授权才能更新信息',
-          icon: 'none'
-        });
+      if (!avatarUrl) {
         return;
       }
       
-      // 显示确认弹窗
-      uni.showModal({
-        title: '更新信息',
-        content: `是否使用微信头像和昵称？\n昵称：${userInfo.nickName}`,
-        success: async (res) => {
-          if (res.confirm) {
-            try {
-              uni.showLoading({ title: '更新中...' });
-              
-              await updateUserInfoApi({
-                nickname: userInfo.nickName,
-                avatar: userInfo.avatarUrl
-              });
-              
-              this.userInfo.nickname = userInfo.nickName;
-              this.userInfo.avatar = userInfo.avatarUrl;
-              
-              uni.hideLoading();
-              uni.showToast({
-                title: '更新成功',
-                icon: 'success'
-              });
-            } catch (error) {
-              uni.hideLoading();
-              uni.showToast({
-                title: '更新失败',
-                icon: 'none'
-              });
-              console.error('更新用户信息失败', error);
-            }
-          }
-        }
-      });
-    },
-    
-    // 选择头像
-    chooseAvatar() {
-      uni.chooseImage({
-        count: 1,
-        sizeType: ['compressed'],
-        sourceType: ['album', 'camera'],
-        success: async (res) => {
-          const tempFilePath = res.tempFilePaths[0];
-          
-          // 显示上传中
-          uni.showLoading({
-            title: '上传中...'
-          });
-          
-          try {
-            // 先调用上传文件API
-            const uploadResult = await uploadFileApi(tempFilePath, 'image', 'user_avatar');
-            
-            if (uploadResult && uploadResult.absolute_url) {
-              // 再调用更新用户信息API
-              await this.updateUserAvatar(uploadResult.absolute_url);
-              
-              uni.hideLoading();
-              uni.showToast({
-                title: '头像更新成功',
-                icon: 'success'
-              });
-            }
-          } catch (error) {
-            uni.hideLoading();
-            uni.showToast({
-              title: '头像上传失败',
-              icon: 'none'
-            });
-            console.error('头像上传失败', error);
-          }
-        }
-      });
-    },
-    
-    // 更新用户头像
-    async updateUserAvatar(avatarUrl) {
       try {
+        uni.showLoading({ title: '更新中...' });
+        
+        // 直接使用微信返回的头像URL更新用户信息
         await updateUserInfoApi({
           avatar: avatarUrl
         });
         
         this.userInfo.avatar = avatarUrl;
+        
+        uni.hideLoading();
+        uni.showToast({
+          title: '头像更新成功',
+          icon: 'success'
+        });
       } catch (error) {
-        throw error;
+        uni.hideLoading();
+        uni.showToast({
+          title: '头像更新失败',
+          icon: 'none'
+        });
+        console.error('头像更新失败', error);
       }
     },
     
-    // 显示修改昵称弹窗
-    showEditNickname() {
-      this.newNickname = this.userInfo.nickname;
-      this.showNicknameModal = true;
-    },
-    
-    // 隐藏修改昵称弹窗
-    hideEditNickname() {
-      this.showNicknameModal = false;
-      this.newNickname = '';
-    },
-    
-    // 更新昵称
-    async updateNickname() {
-      if (this.isUpdatingNickname) return;
+    // 昵称失去焦点时更新
+    async updateNicknameOnBlur() {
+      const nickname = this.userInfo.nickname ? this.userInfo.nickname.trim() : '';
       
-      if (!this.newNickname.trim()) {
+      if (!nickname) {
         uni.showToast({
           title: '昵称不能为空',
           icon: 'none'
         });
+        // 恢复原来的昵称
+        await this.getUserInfo();
         return;
       }
       
       try {
-        this.isUpdatingNickname = true;
+        uni.showLoading({ title: '更新中...' });
+        
         await updateUserInfoApi({
-          nickname: this.newNickname.trim()
+          nickname: nickname
         });
         
-        this.userInfo.nickname = this.newNickname.trim();
-        this.hideEditNickname();
+        this.userInfo.nickname = nickname;
         
+        uni.hideLoading();
         uni.showToast({
           title: '昵称更新成功',
           icon: 'success'
         });
       } catch (error) {
+        uni.hideLoading();
         uni.showToast({
           title: '昵称更新失败',
           icon: 'none'
         });
         console.error('昵称更新失败', error);
-      } finally {
-        this.isUpdatingNickname = false;
+        // 恢复原来的昵称
+        await this.getUserInfo();
       }
     },
     
@@ -402,9 +309,22 @@ export default {
 }
 
 .nickname {
-  font-size: $font-size-h2;
-  font-weight: $font-weight-semibold;
-  margin-right: 10rpx;
+  font-size: $font-size-h3;
+  color: $color-text-inverse;
+  font-weight: $font-weight-bold;
+  margin-right: $spacing-xs;
+}
+
+.nickname-input {
+  font-size: $font-size-h3;
+  color: $color-text-inverse;
+  font-weight: $font-weight-bold;
+  margin-right: $spacing-xs;
+  background: transparent;
+  border: none;
+  padding: 0;
+  max-width: 400rpx;
+  flex: 1;
 }
 
 .edit-btn {
@@ -515,100 +435,4 @@ export default {
   box-shadow: 0 2rpx 8rpx rgba(255, 107, 107, 0.15);
 }
 
-/* 修改昵称弹窗 */
-.modal-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-
-.modal-content {
-  width: 100%;
-  background: $color-bg-primary;
-  border-radius: $border-radius-lg $border-radius-lg 0 0;
-  overflow: hidden;
-  animation: slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-.modal-header {
-  padding: 30rpx;
-  text-align: center;
-  border-bottom: 1px solid $color-bg-tertiary;
-}
-
-.modal-title {
-  font-size: $font-size-h3;
-  font-weight: $font-weight-semibold;
-  color: $color-text-primary;
-}
-
-.modal-body {
-  padding: 30rpx;
-}
-
-.nickname-input {
-  border: 1px solid $color-border-normal;
-  height: 80rpx;
-  border-radius: $border-radius-sm;
-  padding: 0 20rpx;
-  font-size: $font-size-body;
-}
-
-.modal-footer {
-  display: flex;
-  gap: $spacing-sm;
-  padding: $spacing-md;
-  padding-bottom: calc($spacing-md + env(safe-area-inset-bottom));
-}
-
-.cancel-btn, .confirm-btn {
-  flex: 1;
-  height: 88rpx;
-  border-radius: $border-radius-full;
-  font-size: $font-size-body;
-  border: none;
-  font-weight: $font-weight-semibold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.cancel-btn {
-  background: $color-bg-tertiary;
-  color: $color-text-secondary;
-  box-shadow: $shadow-light;
-}
-
-.cancel-btn:active {
-  transform: translateY(2rpx);
-  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.03);
-}
-
-.confirm-btn {
-  background: linear-gradient(135deg, $color-primary, $color-primary-light);
-  color: $color-text-inverse;
-  box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
-}
-
-.confirm-btn:active {
-  transform: translateY(2rpx);
-  box-shadow: 0 2rpx 6rpx rgba(255, 154, 90, 0.1);
-}
 </style>

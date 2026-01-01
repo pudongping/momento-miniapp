@@ -672,8 +672,7 @@ export default {
     this.initBooks();
     this.loadCustomBackground();
     this.getBudget();
-    this.getFestivals();
-    this.getRecurringTransactions();
+    this.loadEvents();
   },
 
   onLoad() {
@@ -2021,6 +2020,10 @@ export default {
   display: flex;
   align-items: center;
   gap: 8rpx;
+  
+  .uni-icons {
+    opacity: 0.9;
+  }
 }
 
 .selector-label {
@@ -2153,6 +2156,7 @@ export default {
   color: $color-text-inverse;
   box-sizing: border-box;
   margin-bottom: $spacing-md;
+  margin-top: calc(env(safe-area-inset-top) + 140rpx + 60rpx);
 }
 
 .background-wall::after {
