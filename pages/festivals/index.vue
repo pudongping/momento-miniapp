@@ -81,17 +81,10 @@
           </view>
           <view class="form-item">
             <text class="form-label">节日日期</text>
-            <picker 
-              mode="date" 
-              :value="festivalFormDateStr" 
-              @change="onDateChange"
-              class="date-picker"
-            >
-              <view class="picker-value">
-                {{ festivalFormDateStr || '请选择日期' }}
-                <uni-icons type="calendar" size="16" color="#999"></uni-icons>
-              </view>
-            </picker>
+            <view class="custom-date-input" @click="showDatePickerModal = true">
+              <text class="date-display">{{ festivalFormDateStr || '请选择日期' }}</text>
+              <uni-icons type="calendar" size="16" color="#999999"></uni-icons>
+            </view>
           </view>
           <view class="form-item switch-item">
             <text class="form-label">首页显示</text>
@@ -105,6 +98,44 @@
         <view class="modal-footer">
           <button class="cancel-btn" @click="hideModal">取消</button>
           <button class="confirm-btn" @click="saveFestival">确认</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 日期选择器弹窗 -->
+    <view v-if="showDatePickerModal" class="modal-mask" @click="closeDatePickerModal">
+      <view class="modal-content" @click.stop>
+        <view class="modal-header">
+          <text class="modal-title">选择节日日期</text>
+          <view class="close-btn" @click="closeDatePickerModal">✕</view>
+        </view>
+        <view class="modal-body">
+          <picker-view
+            :indicator-style="'height: 50px;'"
+            :value="datePickerValue"
+            @change="onDatePickerChange"
+            class="date-picker-view"
+          >
+            <picker-view-column>
+              <view class="picker-item" v-for="(year, index) in years" :key="'year-'+index">
+                {{ year }}年
+              </view>
+            </picker-view-column>
+            <picker-view-column>
+              <view class="picker-item" v-for="(month, index) in months" :key="'month-'+index">
+                {{ month }}月
+              </view>
+            </picker-view-column>
+            <picker-view-column>
+              <view class="picker-item" v-for="(day, index) in days" :key="'day-'+index">
+                {{ day }}日
+              </view>
+            </picker-view-column>
+          </picker-view>
+        </view>
+        <view class="modal-footer">
+          <button class="cancel-btn" @click="closeDatePickerModal">取消</button>
+          <button class="confirm-btn" @click="confirmDatePicker">确认</button>
         </view>
       </view>
     </view>
@@ -135,12 +166,21 @@ export default {
         is_show_home: 1
       },
       festivalFormDateStr: '',
-      currentDate: new Date().toISOString().split('T')[0]
+      currentDate: new Date().toISOString().split('T')[0],
+      showDatePickerModal: false,
+      years: [],
+      months: [],
+      days: [],
+      datePickerValue: [0, 0, 0]
     };
   },
   
   onShow() {
     this.getFestivals();
+  },
+  
+  onLoad() {
+    this.initDatePicker();
   },
   
   methods: {
@@ -225,10 +265,87 @@ export default {
       this.showModal = false;
     },
     
+    // 初始化日期选择器
+    initDatePicker() {
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth() + 1;
+      const currentDay = currentDate.getDate();
+      
+      // 初始化年份列表（当前年往前5年，往后5年）
+      this.years = [];
+      for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+        this.years.push(i);
+      }
+      
+      // 初始化月份列表
+      this.months = [];
+      for (let i = 1; i <= 12; i++) {
+        this.months.push(i);
+      }
+      
+      // 初始化天数列表
+      this.updateDays(currentYear, currentMonth);
+      
+      // 设置默认值
+      const yearIndex = this.years.findIndex(year => year === currentYear);
+      const monthIndex = currentMonth - 1;
+      const dayIndex = currentDay - 1;
+      
+      this.datePickerValue = [yearIndex, monthIndex, dayIndex];
+    },
+    
+    // 更新天数列表
+    updateDays(year, month) {
+      const daysInMonth = new Date(year, month, 0).getDate();
+      this.days = [];
+      for (let i = 1; i <= daysInMonth; i++) {
+        this.days.push(i);
+      }
+    },
+    
     // 日期选择器变化
-    onDateChange(e) {
-      this.festivalFormDateStr = e.detail.value;
-      this.festivalForm.festival_date = this.ymdStrToInt(e.detail.value);
+    onDatePickerChange(e) {
+      const values = e.detail.value;
+      this.datePickerValue = [...values];
+      
+      // 当年月变化时，更新天数
+      const year = this.years[values[0]];
+      const month = this.months[values[1]];
+      const currentDayIndex = values[2];
+      
+      // 更新天数列表
+      this.updateDays(year, month);
+      
+      // 如果当前选中的天数超过了新月份的最大天数，则重置为最后一天
+      if (currentDayIndex >= this.days.length) {
+        this.datePickerValue[2] = this.days.length - 1;
+      }
+      
+      // 强制更新视图
+      this.$forceUpdate();
+    },
+    
+    // 关闭日期选择器
+    closeDatePickerModal() {
+      this.showDatePickerModal = false;
+    },
+    
+    // 确认日期选择
+    confirmDatePicker() {
+      const year = this.years[this.datePickerValue[0]];
+      const month = this.months[this.datePickerValue[1]];
+      const day = this.days[this.datePickerValue[2]];
+      
+      // 格式化日期字符串
+      const monthStr = month.toString().padStart(2, '0');
+      const dayStr = day.toString().padStart(2, '0');
+      this.festivalFormDateStr = `${year}-${monthStr}-${dayStr}`;
+      
+      // 转换为整数格式
+      this.festivalForm.festival_date = this.ymdStrToInt(this.festivalFormDateStr);
+      
+      this.closeDatePickerModal();
     },
     
     // 可见性开关变化
@@ -551,6 +668,9 @@ export default {
 }
 
 .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 30rpx;
   text-align: center;
   border-bottom: 1px solid $color-bg-tertiary;
@@ -585,11 +705,7 @@ export default {
   font-size: $font-size-body;
 }
 
-.date-picker {
-  width: 100%;
-}
-
-.picker-value {
+.custom-date-input {
   background: $color-bg-tertiary;
   border: 1px solid $color-border-light;
   height: 80rpx;
@@ -601,10 +717,32 @@ export default {
   align-items: center;
   justify-content: space-between;
   transition: all 0.3s ease;
+  box-sizing: border-box;
   
   &:active {
     background: $color-bg-secondary;
   }
+}
+
+.date-display {
+  font-size: $font-size-body;
+  color: $color-text-primary;
+  flex: 1;
+}
+
+.date-picker-view {
+  width: 100%;
+  height: 400rpx;
+}
+
+.picker-item {
+  line-height: 50px;
+  text-align: center;
+  font-size: $font-size-body;
+  color: $color-text-primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .switch-item {
@@ -615,9 +753,10 @@ export default {
 
 .modal-footer {
   display: flex;
-  gap: $spacing-sm;
+  gap: 12rpx;
   padding: $spacing-md;
   padding-bottom: calc($spacing-md + env(safe-area-inset-bottom));
+  border-top: 1px solid $color-bg-tertiary;
 }
 
 .cancel-btn, .confirm-btn {
