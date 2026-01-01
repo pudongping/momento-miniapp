@@ -16,7 +16,8 @@
 				"navigationBarTitleText": "时光小账本",
 				"navigationBarBackgroundColor": "#FAFAFA",
 				"navigationBarTextStyle": "black",
-				"backgroundColor": "#FAFAFA"
+				"backgroundColor": "#FAFAFA",
+				"navigationStyle": "custom"
 			}
 		},
 		{

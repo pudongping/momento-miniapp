@@ -1877,7 +1877,7 @@ export default {
 
 .book-selector {
   background: linear-gradient(to right, $color-primary, $color-primary-light);
-  padding: $spacing-md 30rpx;
+  padding: calc(180rpx + env(safe-area-inset-top)) 40rpx 20rpx;
   box-shadow: $shadow-normal;
 }
 
