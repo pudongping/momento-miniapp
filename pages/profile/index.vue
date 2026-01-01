@@ -87,7 +87,7 @@
         </view>
         <view class="modal-footer">
           <button class="cancel-btn" @click="hideEditNickname">取消</button>
-          <button class="confirm-btn" @click="updateNickname">确认</button>
+          <button class="confirm-btn" :loading="isUpdatingNickname" :disabled="isUpdatingNickname" @click="updateNickname">确认</button>
         </view>
       </view>
     </view>
@@ -107,7 +107,8 @@ export default {
         phone: ''
       },
       showNicknameModal: false,
-      newNickname: ''
+      newNickname: '',
+      isUpdatingNickname: false
     };
   },
   
@@ -195,6 +196,8 @@ export default {
     
     // 更新昵称
     async updateNickname() {
+      if (this.isUpdatingNickname) return;
+      
       if (!this.newNickname.trim()) {
         uni.showToast({
           title: '昵称不能为空',
@@ -204,11 +207,12 @@ export default {
       }
       
       try {
+        this.isUpdatingNickname = true;
         await updateUserInfoApi({
-          nickname: this.newNickname
+          nickname: this.newNickname.trim()
         });
         
-        this.userInfo.nickname = this.newNickname;
+        this.userInfo.nickname = this.newNickname.trim();
         this.hideEditNickname();
         
         uni.showToast({
@@ -221,6 +225,8 @@ export default {
           icon: 'none'
         });
         console.error('昵称更新失败', error);
+      } finally {
+        this.isUpdatingNickname = false;
       }
     },
     

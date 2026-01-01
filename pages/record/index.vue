@@ -305,7 +305,7 @@
       
       <!-- 保存按钮 -->
       <view class="save-section">
-        <button class="btn-save" @click="saveTransaction">保存</button>
+        <button class="btn-save" :loading="isSaving" :disabled="isSaving" @click="saveTransaction">保存</button>
       </view>
     </view>
     
@@ -410,7 +410,7 @@
         </view>
         <view class="modal-footer">
           <button class="btn-cancel" @click="closeEditTagModal">取消</button>
-          <button class="btn-confirm" @click="saveEditTag">保存</button>
+          <button class="btn-confirm" :loading="isSavingTag" :disabled="isSavingTag" @click="saveEditTag">保存</button>
         </view>
       </view>
     </view>
@@ -468,7 +468,7 @@
         </view>
         <view class="modal-footer">
           <button class="btn-cancel" @click="closeCustomTagModal">取消</button>
-          <button class="btn-confirm" @click="saveCustomTag">保存</button>
+          <button class="btn-confirm" :loading="isSavingTag" :disabled="isSavingTag" @click="saveCustomTag">保存</button>
         </view>
       </view>
     </view>
@@ -534,6 +534,8 @@ export default {
       editTagName: '',
       editTagColor: '#FF9A5A',
       editTagIcon: 'home',
+      isSaving: false,
+      isSavingTag: false,
       tagColors: [
         '#FF9A5A', '#F44336', '#E91E63', '#9C27B0', '#673AB7',
         '#3F51B5', '#03A9F4', '#00BCD4', '#009688',
@@ -692,6 +694,8 @@ export default {
     },
     
     async saveCustomTag() {
+      if (this.isSavingTag) return;
+      
       if (!this.customTagName.trim()) {
         uni.showToast({
           title: '请输入标签名称',
@@ -709,6 +713,7 @@ export default {
       }
       
       try {
+        this.isSavingTag = true;
         const newTag = await addTagApi({
           name: this.customTagName.trim(),
           color: this.customTagColor,
@@ -733,6 +738,8 @@ export default {
           title: '添加标签失败',
           icon: 'none'
         });
+      } finally {
+        this.isSavingTag = false;
       }
     },
 
@@ -760,6 +767,7 @@ export default {
       if (!this.tagToDelete) return;
       
       try {
+        this.isSavingTag = true;
         await deleteTagApi(this.tagToDelete.tag_id);
         
         // 从本地列表中移除
@@ -786,6 +794,8 @@ export default {
           title: '删除失败',
           icon: 'none'
         });
+      } finally {
+        this.isSavingTag = false;
       }
     },
 
@@ -809,6 +819,8 @@ export default {
 
     // 保存修改的标签
     async saveEditTag() {
+      if (this.isSavingTag) return;
+      
       if (!this.editTagName.trim()) {
         uni.showToast({
           title: '请输入标签名称',
@@ -826,6 +838,7 @@ export default {
       }
       
       try {
+        this.isSavingTag = true;
         const updatedTag = await updateTagApi({
           tag_id: this.editTagId,
           name: this.editTagName.trim(),
@@ -854,6 +867,8 @@ export default {
           title: '修改标签失败',
           icon: 'none'
         });
+      } finally {
+        this.isSavingTag = false;
       }
     },
     
@@ -1092,6 +1107,8 @@ export default {
     
     // 保存交易
     async saveTransaction() {
+      if (this.isSaving) return;
+      
       // 验证账本
       if (!this.currentBook) {
         uni.showToast({
@@ -1199,6 +1216,8 @@ export default {
           title: '保存失败，请重试',
           icon: 'none'
         });
+      } finally {
+        this.isSaving = false;
       }
     }
   },

@@ -10,6 +10,13 @@ let _config = {
 	useMock: true // 使用mock数据，生产环境请设置为false
 }
 
+// 生成唯一的请求ID
+function generateRequestId() {
+	const timestamp = Date.now();
+	const random = Math.random().toString(36).substring(2, 15);
+	return `${timestamp}_${random}`;
+}
+
 export function setRequestConfig(partialConfig = {}) {
 	_config = {
 		..._config,
@@ -41,11 +48,18 @@ export function request(options = {}) {
 		const url = options.url || ''
 		const method = (options.method || 'GET').toUpperCase()
 		
+		// 为请求添加唯一标识
+		const requestId = generateRequestId();
+		const requestData = {
+			...options.data,
+			request_id: requestId
+		};
+		
 		// 处理mock数据
 		if (_config.useMock && mockApis[url]) {
-			console.log(`[MOCK] ${method} ${url}`, options.data)
+			console.log(`[MOCK] ${method} ${url}`, requestData)
 			try {
-				const mockResult = mockApis[url]({ ...options, method })
+				const mockResult = mockApis[url]({ ...options, data: requestData, method })
 				console.log(`[MOCK] 结果:`, mockResult)
 				
 				if (mockResult.code === 0) {
@@ -84,6 +98,7 @@ export function request(options = {}) {
 		uni.request({
 			...options,
 			url: requestUrl,
+			data: requestData,
 			header,
 			timeout: options.timeout ?? _config.timeout,
 			success: (res) => {
@@ -136,14 +151,21 @@ export function del(url, data, options = {}) {
 // 文件上传专用方法
 export function upload(url, filePath, formData = {}, options = {}) {
 	return new Promise((resolve, reject) => {
+		// 为请求添加唯一标识
+		const requestId = generateRequestId();
+		const uploadData = {
+			...formData,
+			request_id: requestId
+		};
+		
 		// 处理mock数据
 		if (_config.useMock && mockApis[url]) {
-			console.log(`[MOCK] UPLOAD ${url}`, { filePath, ...formData })
+			console.log(`[MOCK] UPLOAD ${url}`, { filePath, ...uploadData })
 			try {
 				const mockResult = mockApis[url]({ 
 					...options, 
 					method: 'POST',
-					data: { ...formData, file: filePath }
+					data: { ...uploadData, file: filePath }
 				})
 				console.log(`[MOCK] 结果:`, mockResult)
 				
@@ -183,7 +205,7 @@ export function upload(url, filePath, formData = {}, options = {}) {
 			url: requestUrl,
 			filePath: filePath,
 			name: 'file',
-			formData: formData,
+			formData: uploadData,
 			header: header,
 			success: (res) => {
 				const statusCode = res?.statusCode

@@ -57,7 +57,7 @@
         </view>
         <view class="modal-footer">
           <button class="cancel-btn" @click="hideDeleteModal">取消</button>
-          <button class="confirm-btn delete-confirm-btn" @click="deleteFestival">确认删除</button>
+          <button class="confirm-btn delete-confirm-btn" :loading="isDeleting" :disabled="isDeleting" @click="deleteFestival">确认删除</button>
         </view>
       </view>
     </view>
@@ -97,7 +97,7 @@
         </view>
         <view class="modal-footer">
           <button class="cancel-btn" @click="hideModal">取消</button>
-          <button class="confirm-btn" @click="saveFestival">确认</button>
+          <button class="confirm-btn" :loading="isSaving" :disabled="isSaving" @click="saveFestival">确认</button>
         </view>
       </view>
     </view>
@@ -171,7 +171,9 @@ export default {
       years: [],
       months: [],
       days: [],
-      datePickerValue: [0, 0, 0]
+      datePickerValue: [0, 0, 0],
+      isSaving: false,
+      isDeleting: false
     };
   },
   
@@ -394,9 +396,10 @@ export default {
     
     // 删除节日
     async deleteFestival() {
-      if (!this.festivalToDelete) return;
+      if (!this.festivalToDelete || this.isDeleting) return;
       
       try {
+        this.isDeleting = true;
         await deleteFestivalApi(this.festivalToDelete.festival_id);
         
         // 更新本地数据
@@ -415,11 +418,15 @@ export default {
           title: '删除失败',
           icon: 'none'
         });
+      } finally {
+        this.isDeleting = false;
       }
     },
     
     // 保存节日
     async saveFestival() {
+      if (this.isSaving) return;
+      
       // 验证表单
       if (!this.festivalForm.festival_name.trim()) {
         uni.showToast({
@@ -438,6 +445,7 @@ export default {
       }
       
       try {
+        this.isSaving = true;
         if (this.isEdit) {
           // 编辑节日
           await updateFestivalApi(this.festivalForm);
@@ -475,6 +483,8 @@ export default {
           title: '操作失败',
           icon: 'none'
         });
+      } finally {
+        this.isSaving = false;
       }
     },
 

@@ -27,7 +27,7 @@
       </view>
     </view>
     
-    <button class="save-button" @click="saveBudget">保存设置</button>
+    <button class="save-button" :loading="isSaving" :disabled="isSaving" @click="saveBudget">保存设置</button>
   </view>
 </template>
 
@@ -39,7 +39,8 @@ export default {
     return {
       budget: '',
       // 预算设置之前的旧值，用于检测是否有变化
-      originalBudget: ''
+      originalBudget: '',
+      isSaving: false
     };
   },
   
@@ -107,7 +108,10 @@ export default {
         return;
       }
       
+      if (this.isSaving) return;
+      
       try {
+        this.isSaving = true;
         await updateUserSettingsApi({
           budget: parseFloat(this.budget)
         });
@@ -127,6 +131,8 @@ export default {
           title: '预算设置失败',
           icon: 'none'
         });
+      } finally {
+        this.isSaving = false;
       }
     }
   }
