@@ -1,15 +1,15 @@
 // API 接口统一管理
 // 所有网络请求方法都以 Api 为后缀命名
-import { get, post, put, del } from './request.js'
+import { get, post, put, del, upload } from './request.js'
 
 // 用户相关接口
 export const getUserInfoApi = () => get('/user/info');
 export const loginApi = (code) => post('/user/login', { code });
 export const updateUserInfoApi = (data) => put('/user/update', data);
 
-// 预算相关接口
-export const getBudgetApi = () => get('/budget');
-export const updateBudgetApi = (data) => put('/budget', data);
+// 用户设置相关接口（包含预算和背景图片）
+export const getUserSettingsApi = () => get('/user/settings');
+export const updateUserSettingsApi = (data) => put('/user/settings', data);
 
 // 节日相关接口
 export const getFestivalsApi = () => get('/festivals/list');
@@ -50,8 +50,9 @@ export const getAccountBookMembersApi = (book_id) => get('/accountBooks/members'
 export const removeAccountBookMemberApi = (data) => post('/accountBooks/removeMember', data);
 
 // 文件上传相关接口
-export const uploadFileApi = (data) => post('/upload/file', data);
-
-// 背景图片相关接口
-export const updateBackgroundApi = (data) => put('/user/background', data);
-export const getBackgroundApi = () => get('/user/background');
+export const uploadFileApi = (filePath, fileType, businessType) => {
+  return upload('/upload/file', filePath, {
+    file_type: fileType,
+    business_type: businessType
+  });
+};

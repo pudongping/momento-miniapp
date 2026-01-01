@@ -132,3 +132,95 @@ export function put(url, data, options = {}) {
 export function del(url, data, options = {}) {
 	return request({ ...options, url, data, method: 'DELETE' })
 }
+
+// 文件上传专用方法
+export function upload(url, filePath, formData = {}, options = {}) {
+	return new Promise((resolve, reject) => {
+		// 处理mock数据
+		if (_config.useMock && mockApis[url]) {
+			console.log(`[MOCK] UPLOAD ${url}`, { filePath, ...formData })
+			try {
+				const mockResult = mockApis[url]({ 
+					...options, 
+					method: 'POST',
+					data: { ...formData, file: filePath }
+				})
+				console.log(`[MOCK] 结果:`, mockResult)
+				
+				if (mockResult.code === 0 || mockResult.code === 200) {
+					setTimeout(() => {
+						resolve(mockResult.data)
+					}, 500)
+					return
+				} else {
+					_toast(mockResult.msg || mockResult.message)
+					setTimeout(() => {
+						reject(mockResult)
+					}, 500)
+					return
+				}
+			} catch (err) {
+				console.error(`[MOCK] Error:`, err)
+				_toast(err?.message || 'Mock数据处理异常')
+				reject(err)
+				return
+			}
+		}
+		
+		// 真实上传处理
+		const requestUrl = _isAbsoluteUrl(url) ? url : _joinUrl(_config.baseURL, url)
+		
+		const header = {
+			...(options.header || {})
+		}
+		
+		const token = typeof _config.getToken === 'function' ? _config.getToken() : uni.getStorageSync('token')
+		if (token && !header[_config.tokenHeader]) {
+			header[_config.tokenHeader] = _config.tokenPrefix ? _config.tokenPrefix + token : token
+		}
+		
+		uni.uploadFile({
+			url: requestUrl,
+			filePath: filePath,
+			name: 'file',
+			formData: formData,
+			header: header,
+			success: (res) => {
+				const statusCode = res?.statusCode
+				let body = res?.data
+				
+				// 尝试解析JSON响应
+				if (typeof body === 'string') {
+					try {
+						body = JSON.parse(body)
+					} catch (e) {
+						console.error('解析上传响应失败', e)
+					}
+				}
+				
+				if (typeof statusCode === 'number' && (statusCode < 200 || statusCode >= 300)) {
+					_toast(body?.msg || body?.message || `上传失败(${statusCode})`)
+					reject({ statusCode, data: body, raw: res })
+					return
+				}
+				
+				if (body && typeof body === 'object' && Object.prototype.hasOwnProperty.call(body, 'code')) {
+					if (body.code === 0 || body.code === 200) {
+						resolve(body.data)
+						return
+					}
+					
+					_toast(body.msg || body.message)
+					reject(body)
+					return
+				}
+				
+				resolve(body)
+			},
+			fail: (err) => {
+				_toast(err?.errMsg || '上传失败')
+				reject(err)
+			}
+		})
+	})
+}

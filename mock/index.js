@@ -3,9 +3,8 @@
  * 所有的时间戳均为秒级时间戳，避免前端精度问题
  * 约定：仅用户 uid 为雪花算法分布式 ID（字符串）；其他业务主键为 int 自增 ID
  */
-import { wxLogin, getUserInfo, updateUserInfo, bindPhone, getBackground, updateBackground } from './user.js';
+import { wxLogin, getUserInfo, updateUserInfo, bindPhone, getUserSettings, updateUserSettings } from './user.js';
 import uploadMock from './upload.js';
-import { getBudget, updateBudget } from './budget.js';
 import { getFestivals, addFestival, updateFestival, deleteFestival, toggleFestivalVisibility } from './festivals.js';
 import { 
   getAccountBooks, 
@@ -87,16 +86,12 @@ export const mockApis = {
     return success(bindPhone({ phone, code }));
   },
 
-  // 预算相关接口
-  '/budget': (options) => {
+  // 用户设置相关接口（包含预算和背景图片）
+  '/user/settings': (options) => {
     if (options.method === 'GET') {
-      return success(getBudget());
+      return success(getUserSettings());
     } else if (options.method === 'PUT') {
-      const { budget } = options.data;
-      if (budget === undefined) {
-        return error('更新失败：缺少budget参数');
-      }
-      return success(updateBudget(budget));
+      return success(updateUserSettings(options.data));
     }
     return error('不支持的请求方法');
   },
@@ -380,20 +375,6 @@ export const mockApis = {
     if (!file_type || !business_type) {
       return error('上传失败：参数不完整');
     }
-    return uploadMock['POST /upload/file'](options);
-  },
-  
-  // 背景图片相关接口
-  '/user/background': (options) => {
-    if (options.method === 'GET') {
-      return success(getBackground());
-    } else if (options.method === 'PUT') {
-      const { background_url } = options.data;
-      if (!background_url) {
-        return error('更新失败：缺少background_url参数');
-      }
-      return success(updateBackground({ background_url }));
-    }
-    return error('不支持的请求方法');
+    return uploadMock['POST /upload/file'](options.data);
   }
 };

@@ -105,17 +105,32 @@ export function getTransactions(params = {}) {
     result = result.filter(t => t.timestamp <= params.end_date);
   }
   
-  // 分页
+  // 分页处理
   const page = params.page || 1;
-  const pageSize = params.page_size || 20;
-  const start = (page - 1) * pageSize;
-  const end = start + pageSize;
+  const perPage = params.per_page || 20;
+  const lastTransactionId = params.last_transaction_id || 0;
+  
+  // 如果有last_transaction_id，从该ID之后开始
+  let startIndex = 0;
+  if (lastTransactionId > 0) {
+    const lastIndex = result.findIndex(t => t.transaction_id === lastTransactionId);
+    if (lastIndex !== -1) {
+      startIndex = lastIndex + 1; // 从下一条开始
+    }
+  } else {
+    // 否则使用page参数
+    startIndex = (page - 1) * perPage;
+  }
+  
+  const list = result.slice(startIndex, startIndex + perPage);
+  const hasMore = startIndex + perPage < result.length;
   
   return {
-    list: result.slice(start, end),
+    list,
+    has_more: hasMore,
     total: result.length,
     page,
-    page_size: pageSize
+    per_page: perPage
   };
 }
 

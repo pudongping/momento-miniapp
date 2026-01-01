@@ -10,7 +10,7 @@ const MOCK_USERS = [
   {
     uid: '123456789012345678', // 字符串格式的雪花算法ID
     nickname: '小时光',
-    avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJfN8DhRLHyHoUQL6Vicic2gzmyj3xZjcwqcxgNrhAD6wfhOgHWTiaKYI69B9BSZDCRibnDMurZpdbLyQ/132',
+    avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132',
     phone: '13812345678',
     created_at: Math.floor(Date.now() / 1000) - 86400 * 30, // 30天前注册，秒级时间戳
     updated_at: Math.floor(Date.now() / 1000) - 86400 * 2 // 2天前更新，秒级时间戳
@@ -18,7 +18,7 @@ const MOCK_USERS = [
   {
     uid: '223456789012345678', // 字符串格式的雪花算法ID
     nickname: '账本达人',
-    avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/kAqKtjL7YrDzQmvDpticCINGvfxgkMFXAGJMJFUYNhX6y1n74NJpKAeJB5gyzytbq6EmV4tCZ6Kibwe5puMD0HnQ/132',
+    avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132',
     phone: '13912345678',
     created_at: Math.floor(Date.now() / 1000) - 86400 * 60, // 60天前注册，秒级时间戳
     updated_at: Math.floor(Date.now() / 1000) - 86400 * 5 // 5天前更新，秒级时间戳
@@ -136,36 +136,30 @@ export function bindPhone(data) {
 }
 
 /**
- * 获取用户背景图片
- * @returns {Object} 背景图片信息
+ * 获取用户设置（包含背景图片和预算）
+ * @returns {Object} 用户设置信息
  */
-export function getBackground() {
-  // 模拟获取背景图片
-  // 如果用户没有设置背景图片，返回null
+export function getUserSettings() {
+  // 模拟获取用户设置
   const hasCustomBackground = Math.random() > 0.7;
   
-  if (hasCustomBackground) {
-    return {
-      background_url: 'https://cdn.example.com/uploads/background/sample_bg.jpg',
-      updated_at: Math.floor(Date.now() / 1000) - 86400 * 3 // 3天前更新
-    };
-  }
-  
   return {
-    background_url: null,
-    updated_at: null
+    background_url: hasCustomBackground ? 'https://cdn.example.com/uploads/background/sample_bg.jpg' : null,
+    budget: 10000,
+    updated_at: Math.floor(Date.now() / 1000)
   };
 }
 
 /**
- * 更新用户背景图片
- * @param {Object} data 包含背景图片URL的数据
+ * 更新用户设置（可以更新背景图片、预算或两者）
+ * @param {Object} data 包含要更新的设置
  * @returns {Object} 更新结果
  */
-export function updateBackground(data) {
-  // 模拟更新背景图片
+export function updateUserSettings(data) {
+  // 模拟更新用户设置
   return {
-    background_url: data.background_url,
+    background_url: data.background_url !== undefined ? data.background_url : null,
+    budget: data.budget !== undefined ? data.budget : 10000,
     updated_at: Math.floor(Date.now() / 1000)
   };
 }

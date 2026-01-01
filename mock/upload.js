@@ -3,7 +3,7 @@
 export default {
   // 上传文件
   'POST /upload/file': (req) => {
-    const { file_type, business_type } = req.body;
+    const { file_type, business_type } = req;
     
     // 模拟文件上传成功
     const timestamp = Date.now();

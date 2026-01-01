@@ -272,7 +272,6 @@
         </view>
         
         <view v-else class="empty-transactions">
-          <image src="/static/images/empty-state.png" mode="aspectFit" class="empty-image"></image>
           <text class="empty-text">暂无账单记录</text>
           <button class="btn-add-record" @click="navigateToRecord">立即记账</button>
         </view>
@@ -322,7 +321,6 @@
         </view>
         
         <view v-else class="empty-recurring">
-          <image src="/static/images/empty-state.png" mode="aspectFit" class="empty-image"></image>
           <text class="empty-text">暂无周期记账规则</text>
           <button class="btn-add-recurring" @click="navigateToRecord">添加周期记账</button>
         </view>
@@ -529,12 +527,11 @@ import {
   getTransactionStats,
   deleteTransactionApi,
   getFestivalsApi,
-  getBudgetApi,
   getRecurringTransactionsApi,
   deleteRecurringTransactionApi,
   uploadFileApi,
-  updateBackgroundApi,
-  getBackgroundApi
+  getUserSettingsApi,
+  updateUserSettingsApi
 } from '@/api/index.js';
 
 export default {
@@ -580,7 +577,8 @@ export default {
       isRefreshing: false,
       isLoadingMore: false,
       hasMoreTransactions: true,
-      lastTransactionId: null,
+      lastTransactionId: 0,
+      currentPage: 1,
       expandedDays: {},
       
       // 删除确认
@@ -738,12 +736,23 @@ export default {
     async loadCustomBackground() {
       // 从服务器加载自定义背景
       try {
-        const result = await getBackgroundApi();
+        const result = await getUserSettingsApi();
         if (result && result.background_url) {
           this.customBackground = result.background_url;
         }
       } catch (error) {
         console.error('加载自定义背景失败', error);
+      }
+    },
+    
+    async getBudget() {
+      try {
+        const data = await getUserSettingsApi();
+        if (data && data.budget !== undefined) {
+          this.budget = data.budget;
+        }
+      } catch (error) {
+        console.error('获取预算失败', error);
       }
     },
     
@@ -767,15 +776,11 @@ export default {
                 
                 try {
                   // 调用上传文件API
-                  const uploadResult = await uploadFileApi({
-                    file: tempFilePath,
-                    file_type: 'image',
-                    business_type: 'home_background'
-                  });
+                  const uploadResult = await uploadFileApi(tempFilePath, 'image', 'home_background');
                   
                   if (uploadResult && uploadResult.absolute_url) {
-                    // 调用更新背景图片API
-                    await updateBackgroundApi({
+                    // 调用更新用户设置API
+                    await updateUserSettingsApi({
                       background_url: uploadResult.absolute_url
                     });
                     
@@ -813,7 +818,7 @@ export default {
         });
         
         // 调用API清除背景
-        await updateBackgroundApi({
+        await updateUserSettingsApi({
           background_url: ''
         });
         
@@ -922,18 +927,20 @@ export default {
       try {
         this.isLoading = true;
         this.hasMoreTransactions = true;
-        this.lastTransactionId = null;
+        this.lastTransactionId = 0;
+        this.currentPage = 1;
         
         const result = await getTransactionsApi({
           book_id: this.currentBook.book_id,
-          limit: 20,
-          cursor: null
+          page: 1,
+          per_page: 20,
+          last_transaction_id: 0
         });
         
         if (result && result.list) {
           this.transactions = result.list;
           
-          // 设置最后一条交易的ID作为游标
+          // 设置最后一条交易的ID
           if (result.list.length > 0) {
             this.lastTransactionId = result.list[result.list.length - 1].transaction_id;
           }
@@ -964,18 +971,20 @@ export default {
       
       try {
         this.isLoadingMore = true;
+        this.currentPage += 1;
         
         const result = await getTransactionsApi({
           book_id: this.currentBook.book_id,
-          limit: 20,
-          cursor: this.lastTransactionId
+          page: this.currentPage,
+          per_page: 20,
+          last_transaction_id: this.lastTransactionId
         });
         
         if (result && result.list && result.list.length > 0) {
           // 将新数据添加到列表中
           this.transactions = [...this.transactions, ...result.list];
           
-          // 更新游标
+          // 更新最后一条交易ID
           this.lastTransactionId = result.list[result.list.length - 1].transaction_id;
           
           // 更新是否还有更多数据
@@ -1004,18 +1013,20 @@ export default {
       try {
         const result = await getTransactionsApi({
           book_id: this.currentBook.book_id,
-          limit: 20,
-          cursor: null
+          page: 1,
+          per_page: 20,
+          last_transaction_id: 0
         });
         
         if (result && result.list) {
           this.transactions = result.list;
           
-          // 重置游标和加载状态
+          // 重置分页状态
+          this.currentPage = 1;
           if (result.list.length > 0) {
             this.lastTransactionId = result.list[result.list.length - 1].transaction_id;
           } else {
-            this.lastTransactionId = null;
+            this.lastTransactionId = 0;
           }
           
           this.hasMoreTransactions = result.has_more;
@@ -1969,7 +1980,7 @@ export default {
 }
 
 .navbar-content {
-  height: 88rpx;
+  height: 96rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1985,7 +1996,7 @@ export default {
 .book-selector {
   background: linear-gradient(to right, $color-primary, $color-primary-light);
   padding: $spacing-md 30rpx;
-  padding-top: calc(88rpx + env(safe-area-inset-top) + $spacing-md);
+  padding-top: calc(96rpx + env(safe-area-inset-top) + $spacing-md);
   box-shadow: $shadow-normal;
 }
 
@@ -2588,7 +2599,7 @@ export default {
   text-align: center;
 }
 
-.empty-recurring .empty-image {
+.empty-recurring {
   width: 200rpx;
   height: 200rpx;
   margin-bottom: 32rpx;
@@ -2970,12 +2981,6 @@ export default {
 .empty-transactions {
   padding: 60rpx 0;
   text-align: center;
-}
-
-.empty-image {
-  width: 200rpx;
-  height: 200rpx;
-  margin-bottom: 20rpx;
 }
 
 .empty-text {

@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { getBudgetApi, updateBudgetApi } from '@/api/index.js';
+import { getUserSettingsApi, updateUserSettingsApi } from '@/api/index.js';
 
 export default {
   data() {
@@ -51,7 +51,7 @@ export default {
     // 获取预算设置
     async getBudget() {
       try {
-        const data = await getBudgetApi();
+        const data = await getUserSettingsApi();
         if (data && data.budget !== undefined) {
           this.budget = data.budget.toString();
           this.originalBudget = this.budget;
@@ -108,7 +108,7 @@ export default {
       }
       
       try {
-        await updateBudgetApi({
+        await updateUserSettingsApi({
           budget: parseFloat(this.budget)
         });
         

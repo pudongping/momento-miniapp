@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import { getUserInfoApi, updateUserInfoApi } from '@/api/index.js';
+import { getUserInfoApi, updateUserInfoApi, uploadFileApi } from '@/api/index.js';
 
 export default {
   data() {
@@ -142,19 +142,20 @@ export default {
             title: '上传中...'
           });
           
-          // 上传头像
           try {
-            // 实际项目中这里应该调用上传API
-            // 模拟上传成功
-            setTimeout(async () => {
-              // 假设这是服务器返回的头像URL
-              const avatarUrl = tempFilePath;
-              
-              // 更新用户信息
-              await this.updateUserAvatar(avatarUrl);
+            // 先调用上传文件API
+            const uploadResult = await uploadFileApi(tempFilePath, 'image', 'user_avatar');
+            
+            if (uploadResult && uploadResult.absolute_url) {
+              // 再调用更新用户信息API
+              await this.updateUserAvatar(uploadResult.absolute_url);
               
               uni.hideLoading();
-            }, 1000);
+              uni.showToast({
+                title: '头像更新成功',
+                icon: 'success'
+              });
+            }
           } catch (error) {
             uni.hideLoading();
             uni.showToast({
@@ -175,16 +176,8 @@ export default {
         });
         
         this.userInfo.avatar = avatarUrl;
-        uni.showToast({
-          title: '头像更新成功',
-          icon: 'success'
-        });
       } catch (error) {
-        uni.showToast({
-          title: '头像更新失败',
-          icon: 'none'
-        });
-        console.error('头像更新失败', error);
+        throw error;
       }
     },
     
