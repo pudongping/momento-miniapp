@@ -150,6 +150,7 @@ import {
   deleteFestivalApi,
   toggleFestivalVisibilityApi 
 } from '@/api/index.js';
+import { checkLoginStatus } from '@/utils/auth.js';
 
 export default {
   data() {
@@ -178,6 +179,11 @@ export default {
   },
   
   onShow() {
+    // 检查登录状态
+    if (!checkLoginStatus('/pages/festivals/index')) {
+      return;
+    }
+    
     this.getFestivals();
   },
   

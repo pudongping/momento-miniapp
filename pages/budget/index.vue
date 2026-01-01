@@ -33,6 +33,7 @@
 
 <script>
 import { getUserSettingsApi, updateUserSettingsApi } from '@/api/index.js';
+import { checkLoginStatus } from '@/utils/auth.js';
 
 export default {
   data() {
@@ -45,6 +46,11 @@ export default {
   },
   
   onLoad() {
+    // 检查登录状态
+    if (!checkLoginStatus('/pages/budget/index')) {
+      return;
+    }
+    
     this.getBudget();
   },
   

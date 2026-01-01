@@ -1,24 +1,22 @@
 <template>
   <view class="page-container">
-    <!-- 自定义导航栏 -->
+    <!-- 自定义导航栏（合并导航栏和账本选择器） -->
     <view class="custom-navbar">
-      <view class="navbar-content">
+      <view class="navbar-header">
         <text class="navbar-title">时光小账本</text>
       </view>
-    </view>
-    
-    <!-- 账本选择器 -->
-    <view class="book-selector">
-      <view class="book-selector-header">
-        <view class="selector-left">
-          <uni-icons type="wallet" size="20" color="#FFFFFF"></uni-icons>
-          <text class="selector-label">当前账本</text>
-        </view>
-        <view class="book-switcher" @click="showBookPicker">
-          <view class="switcher-inner">
-            <text class="current-book-name">{{ currentBook?.name || '请选择账本' }}</text>
-            <view class="arrow-icon">
-              <uni-icons type="down" size="16" color="#FFFFFF"></uni-icons>
+      <view class="book-selector">
+        <view class="book-selector-header">
+          <view class="selector-left">
+            <uni-icons type="wallet" size="20" color="#FFFFFF"></uni-icons>
+            <text class="selector-label">当前账本</text>
+          </view>
+          <view class="book-switcher" @click="showBookPicker">
+            <view class="switcher-inner">
+              <text class="current-book-name">{{ currentBook?.name || '请选择账本' }}</text>
+              <view class="arrow-icon">
+                <uni-icons type="down" size="16" color="#FFFFFF"></uni-icons>
+              </view>
             </view>
           </view>
         </view>
@@ -521,6 +519,7 @@
 
 <script>
 import { getAccountBooks, getCurrentBook, setCurrentBook, restoreAccountBookState } from '@/utils/account-book.js';
+import { checkLoginStatus } from '@/utils/auth.js';
 import { 
   getAccountBooksApi, 
   getTransactionsApi, 
@@ -665,10 +664,24 @@ export default {
   },
 
   onShow() {
+    // 检查登录状态
+    if (!checkLoginStatus('/pages/home/index')) {
+      return;
+    }
+    
     this.initBooks();
+    this.loadCustomBackground();
+    this.getBudget();
+    this.getFestivals();
+    this.getRecurringTransactions();
   },
 
   onLoad() {
+    // 检查登录状态
+    if (!checkLoginStatus('/pages/home/index')) {
+      return;
+    }
+    
     // 初始化自定义日历选择器
     this.initCustomDateTimePicker();
     
@@ -1975,29 +1988,27 @@ export default {
   left: 0;
   right: 0;
   z-index: 1000;
-  background: linear-gradient(to right, $color-primary, $color-primary-light);
-  padding-top: env(safe-area-inset-top);
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  padding: calc(60rpx + env(safe-area-inset-top)) 30rpx 24rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
 }
 
-.navbar-content {
-  height: 96rpx;
+.navbar-header {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  margin-bottom: 20rpx;
 }
 
 .navbar-title {
-  font-size: 32rpx;
-  font-weight: $font-weight-semibold;
+  font-size: 36rpx;
+  font-weight: $font-weight-bold;
   color: $color-text-inverse;
+  letter-spacing: 2rpx;
 }
 
 .book-selector {
-  background: linear-gradient(to right, $color-primary, $color-primary-light);
-  padding: $spacing-md 30rpx;
-  padding-top: calc(96rpx + env(safe-area-inset-top) + $spacing-md);
-  box-shadow: $shadow-normal;
+  /* 不再需要额外的背景和padding，已经在custom-navbar中 */
 }
 
 .book-selector-header {

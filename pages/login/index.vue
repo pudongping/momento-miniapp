@@ -31,7 +31,7 @@
         <button 
           class="wx-login-btn" 
           open-type="getUserInfo" 
-          @getuserinfo="handleUserInfo"
+          @getuserinfo="handleGetUserInfo"
         >
           <view class="btn-inner">
             <uni-icons type="weixin" size="22" color="#FFFFFF"></uni-icons>
@@ -77,11 +77,13 @@
 </template>
 
 <script>
-import { loginApi } from '@/api/index.js';
+import { loginApi, updateUserInfoApi } from '@/api/index.js';
 
 export default {
   data() {
     return {
+      isLoading: false,
+      wxUserInfo: null,
       loginStatus: 'pending', // pending, success, fail
       redirectUrl: '' // 登录成功后的重定向URL
     };
@@ -108,23 +110,29 @@ export default {
     },
     
     // 处理用户信息授权
-    async handleUserInfo(e) {
-      console.log('用户信息授权结果:', e);
+    async handleGetUserInfo(e) {
+      const userInfo = e.detail.userInfo;
       
-      if (e.detail.errMsg === 'getUserInfo:ok') {
-        // 用户同意授权
-        this.wxLogin(e.detail);
-      } else {
-        // 用户拒绝授权
+      if (!userInfo) {
         uni.showToast({
-          title: '授权失败，无法使用完整功能',
+          title: '需要授权才能登录',
           icon: 'none'
         });
+        return;
       }
+      
+      // 保存微信用户信息
+      this.wxUserInfo = {
+        nickname: userInfo.nickName,
+        avatar: userInfo.avatarUrl
+      };
+      
+      // 继续登录流程
+      await this.handleLogin();
     },
     
-    // 微信登录
-    async wxLogin(userInfo) {
+    // 处理登录
+    async handleLogin() {
       try {
         uni.showLoading({
           title: '登录中...',
@@ -145,12 +153,26 @@ export default {
           const result = await loginApi(loginResult.code);
           
           if (result && result.token) {
-            // 存储登录信息
+            // 保存token
             uni.setStorageSync('token', result.token);
+            
+            // 如果有微信用户信息，更新用户信息
+            if (this.wxUserInfo) {
+              try {
+                await updateUserInfoApi({
+                  nickname: this.wxUserInfo.nickname,
+                  avatar: this.wxUserInfo.avatar
+                });
+              } catch (error) {
+                console.error('更新用户信息失败', error);
+              }
+            }
+            
+            // 保存用户信息
             uni.setStorageSync('userInfo', {
               uid: result.uid,
-              nickname: userInfo.userInfo.nickName || result.nickname,
-              avatar: userInfo.userInfo.avatarUrl || result.avatar,
+              nickname: this.wxUserInfo.nickname || result.nickname,
+              avatar: this.wxUserInfo.avatar || result.avatar,
               phone: result.phone || ''
             });
             

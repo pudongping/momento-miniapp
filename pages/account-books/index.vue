@@ -191,6 +191,7 @@ import {
   getAccountBookMembersApi,
   removeAccountBookMemberApi
 } from '@/api/index.js';
+import { checkLoginStatus } from '@/utils/auth.js';
 
 export default {
   data() {
@@ -209,6 +210,11 @@ export default {
   },
 
   onShow() {
+    // 检查登录状态
+    if (!checkLoginStatus('/pages/account-books/index')) {
+      return;
+    }
+    
     this.loadAccountBooks();
     this.loadInvitations();
   },

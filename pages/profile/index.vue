@@ -2,12 +2,12 @@
   <view class="page-container">
     <!-- 用户信息卡片 -->
     <view class="user-card">
-      <view class="avatar-section" @click="chooseAvatar">
+      <button class="avatar-section" open-type="getUserInfo" @getuserinfo="handleGetUserInfo">
         <image :src="userInfo.avatar || '/static/images/default-avatar.png'" class="avatar" mode="aspectFill"></image>
         <view class="edit-icon">
           <uni-icons type="camera" size="16" color="#FFFFFF"></uni-icons>
         </view>
-      </view>
+      </button>
       <view class="user-info">
         <view class="nickname-row">
           <text class="nickname">{{ userInfo.nickname || '未设置昵称' }}</text>
@@ -96,6 +96,7 @@
 
 <script>
 import { getUserInfoApi, updateUserInfoApi, uploadFileApi } from '@/api/index.js';
+import { checkLoginStatus, logout } from '@/utils/auth.js';
 
 export default {
   data() {
@@ -113,6 +114,11 @@ export default {
   },
   
   onShow() {
+    // 检查登录状态
+    if (!checkLoginStatus('/pages/profile/index')) {
+      return;
+    }
+    
     this.getUserInfo();
   },
   
@@ -127,6 +133,53 @@ export default {
       } catch (error) {
         console.error('获取用户信息失败', error);
       }
+    },
+    
+    // 获取微信用户信息
+    async handleGetUserInfo(e) {
+      const userInfo = e.detail.userInfo;
+      
+      if (!userInfo) {
+        uni.showToast({
+          title: '需要授权才能更新信息',
+          icon: 'none'
+        });
+        return;
+      }
+      
+      // 显示确认弹窗
+      uni.showModal({
+        title: '更新信息',
+        content: `是否使用微信头像和昵称？\n昵称：${userInfo.nickName}`,
+        success: async (res) => {
+          if (res.confirm) {
+            try {
+              uni.showLoading({ title: '更新中...' });
+              
+              await updateUserInfoApi({
+                nickname: userInfo.nickName,
+                avatar: userInfo.avatarUrl
+              });
+              
+              this.userInfo.nickname = userInfo.nickName;
+              this.userInfo.avatar = userInfo.avatarUrl;
+              
+              uni.hideLoading();
+              uni.showToast({
+                title: '更新成功',
+                icon: 'success'
+              });
+            } catch (error) {
+              uni.hideLoading();
+              uni.showToast({
+                title: '更新失败',
+                icon: 'none'
+              });
+              console.error('更新用户信息失败', error);
+            }
+          }
+        }
+      });
     },
     
     // 选择头像
@@ -258,35 +311,12 @@ export default {
 
     logout() {
       uni.showModal({
-        title: '退出登录',
-        content: '确定要退出登录吗？\n\n退出后需要重新登录才能使用应用',
-        cancelText: '取消',
-        confirmText: '退出',
+        title: '提示',
+        content: '确定要退出登录吗？',
         success: (res) => {
-          if (!res.confirm) return;
-
-          uni.showLoading({
-            title: '退出中...',
-            mask: true
-          });
-
-          setTimeout(() => {
-            uni.removeStorageSync('token');
-            uni.removeStorageSync('userInfo');
-
-            uni.hideLoading();
-            uni.showToast({
-              title: '已退出登录',
-              icon: 'success',
-              duration: 1500
-            });
-
-            setTimeout(() => {
-              uni.reLaunch({
-                url: '/pages/login/index'
-              });
-            }, 1500);
-          }, 500);
+          if (res.confirm) {
+            logout();
+          }
         }
       });
     }
@@ -332,6 +362,13 @@ export default {
 .avatar-section {
   position: relative;
   margin-right: 30rpx;
+  padding: 0;
+  background: transparent;
+  border: none;
+  
+  &::after {
+    border: none;
+  }
 }
 
 .avatar {

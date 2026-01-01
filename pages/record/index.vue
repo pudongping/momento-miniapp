@@ -494,7 +494,8 @@
 </template>
 
 <script>
-import { setCurrentBook, restoreAccountBookState } from '@/utils/account-book.js';
+import { getAccountBooks, getCurrentBook, setCurrentBook, restoreAccountBookState } from '@/utils/account-book.js';
+import { checkLoginStatus } from '@/utils/auth.js';
 import { 
   getAccountBooksApi, 
   getTagsApi, 
@@ -598,10 +599,26 @@ export default {
   },
 
   async onShow() {
+    // 检查登录状态
+    if (!checkLoginStatus('/pages/record/index')) {
+      return;
+    }
+    
+    // 每次显示页面时重新加载账本和标签
     this.initBooks();
     await this.initTags();
     this.initDatePicker();
     this.initRecurringOptions();
+  },
+
+  onLoad() {
+    // 检查登录状态
+    if (!checkLoginStatus('/pages/record/index')) {
+      return;
+    }
+    
+    this.initBooks();
+    this.initDatePicker();
   },
 
   methods: {
