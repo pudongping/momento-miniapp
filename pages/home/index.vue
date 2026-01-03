@@ -2051,7 +2051,7 @@ export default {
 }
 
 .navbar-title {
-  font-size: 36rpx;
+  font-size: $font-size-h3;
   font-weight: $font-weight-bold;
   color: $color-text-inverse;
   letter-spacing: 2rpx;
