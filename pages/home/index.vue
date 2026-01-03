@@ -1,7 +1,7 @@
 <template>
   <view class="page-container">
     <!-- 自定义导航栏（合并导航栏和账本选择器） -->
-    <view class="custom-navbar">
+    <view class="custom-navbar" :style="navBarStyle">
       <view class="navbar-header">
         <text class="navbar-title">时光小账本</text>
       </view>
@@ -536,6 +536,11 @@ import {
 export default {
   data() {
     return {
+      // 导航栏相关
+      navBarHeight: 0,
+      statusBarHeight: 0,
+      menuButtonInfo: null,
+      
       // 账本相关
       currentBook: null,
       allBooks: [],
@@ -660,6 +665,16 @@ export default {
       } else {
         return '#FF4D4F'; // 红色 - 预算告急
       }
+    },
+    
+    // 导航栏动态样式
+    navBarStyle() {
+      const paddingTop = this.statusBarHeight + 'px';
+      const paddingBottom = '12px';
+      return {
+        paddingTop: paddingTop,
+        paddingBottom: paddingBottom
+      };
     }
   },
 
@@ -681,6 +696,9 @@ export default {
       return;
     }
     
+    // 获取系统信息，计算导航栏高度
+    this.initNavBarHeight();
+    
     // 初始化自定义日历选择器
     this.initCustomDateTimePicker();
     
@@ -695,6 +713,43 @@ export default {
   },
   
   methods: {
+    // 初始化导航栏高度
+    initNavBarHeight() {
+      try {
+        // 获取系统信息
+        const systemInfo = uni.getSystemInfoSync();
+        this.statusBarHeight = systemInfo.statusBarHeight || 0;
+        
+        // 获取胶囊按钮信息
+        // #ifdef MP-WEIXIN
+        const menuButtonInfo = uni.getMenuButtonBoundingClientRect();
+        this.menuButtonInfo = menuButtonInfo;
+        
+        // 计算导航栏高度
+        // 导航栏高度 = 胶囊按钮bottom + 胶囊按钮top - 状态栏高度
+        // 这样可以确保导航栏内容在胶囊按钮下方
+        const navBarHeight = (menuButtonInfo.bottom - this.statusBarHeight) + 8;
+        this.navBarHeight = navBarHeight;
+        
+        console.log('导航栏信息:', {
+          statusBarHeight: this.statusBarHeight,
+          menuButtonInfo: menuButtonInfo,
+          navBarHeight: this.navBarHeight
+        });
+        // #endif
+        
+        // #ifndef MP-WEIXIN
+        // 非微信小程序环境，使用默认值
+        this.navBarHeight = 44;
+        // #endif
+      } catch (error) {
+        console.error('获取导航栏高度失败', error);
+        // 使用默认值
+        this.navBarHeight = 44;
+        this.statusBarHeight = 20;
+      }
+    },
+    
     async initBooks() {
       try {
         // 获取最新的账本列表
@@ -1982,13 +2037,9 @@ export default {
 }
 
 .custom-navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
   background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
-  padding: calc(60rpx + env(safe-area-inset-top)) 30rpx 24rpx;
+  padding-left: 30rpx;
+  padding-right: 30rpx;
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
 }
 
@@ -2007,7 +2058,7 @@ export default {
 }
 
 .book-selector {
-  /* 不再需要额外的背景和padding，已经在custom-navbar中 */
+  position: relative;
 }
 
 .book-selector-header {
@@ -2036,7 +2087,6 @@ export default {
   padding: $spacing-xs 20rpx;
   display: flex;
   align-items: center;
-  position: relative;
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 30rpx;
   border: 1rpx solid rgba(255, 154, 90, 0.2);
@@ -2102,8 +2152,9 @@ export default {
 
 .switcher-tooltip {
   position: absolute;
-  top: 80rpx;
-  right: 10rpx;
+  top: 100%;
+  right: 0;
+  margin-top: 12rpx;
   background: rgba(255, 154, 90, 0.9);
   color: $color-text-inverse;
   padding: $spacing-sm $spacing-md;
@@ -2143,7 +2194,6 @@ export default {
 
 /* 背景墙 */
 .background-wall {
-  position: relative;
   height: 400rpx;
   width: 100%;
   background-size: cover;
@@ -2156,7 +2206,7 @@ export default {
   color: $color-text-inverse;
   box-sizing: border-box;
   margin-bottom: $spacing-md;
-  margin-top: calc(env(safe-area-inset-top) + 140rpx + 60rpx);
+  position: relative;
 }
 
 .background-wall::after {
@@ -2171,16 +2221,15 @@ export default {
 }
 
 .countdown-container {
-  position: absolute;
-  top: 40rpx;
-  left: 0;
-  right: 0;
-  z-index: 2;
+  width: 100%;
   height: 80rpx;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 40rpx;
+  position: relative;
+  z-index: 2;
 }
 
 .countdown-swiper {
@@ -2209,10 +2258,13 @@ export default {
 }
 
 .nearest-event {
-  position: relative;
   z-index: 2;
   text-align: center;
-  margin-bottom: 60rpx;
+  margin-top: 40rpx;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .event-text {
@@ -2224,9 +2276,6 @@ export default {
 }
 
 .background-tip {
-  position: absolute;
-  bottom: 20rpx;
-  right: 20rpx;
   z-index: 2;
   display: flex;
   align-items: center;
@@ -2234,6 +2283,10 @@ export default {
   background: rgba(0, 0, 0, 0.3);
   border-radius: 30rpx;
   padding: 8rpx 16rpx;
+  margin-top: auto;
+  margin-left: auto;
+  margin-right: 20rpx;
+  margin-bottom: 20rpx;
 }
 
 .background-tip text {
@@ -2762,7 +2815,6 @@ export default {
 .transaction-scroll {
   height: calc(100vh - 800rpx);
   width: 100%;
-  position: relative;
   overflow: hidden;
   border-radius: 16rpx;
   /* Add a subtle indicator to show it's scrollable */
@@ -2839,7 +2891,6 @@ export default {
   margin-bottom: 12rpx;
   background: #FFFFFF;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.03);
-  position: relative;
   flex-wrap: nowrap;
 }
 
@@ -3469,8 +3520,6 @@ export default {
   padding: 30rpx 24rpx;
   padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
   background: #FFFFFF;
-  position: relative;
-  z-index: 1000;
   box-shadow: 0 -4rpx 12rpx rgba(0, 0, 0, 0.1);
   border-top: 1rpx solid #F0F0F0;
   margin-top: 20rpx;
@@ -3521,7 +3570,6 @@ export default {
   border: 2rpx solid transparent;
   transition: all 0.3s ease;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.03);
-  position: relative;
   overflow: hidden;
 }
 
