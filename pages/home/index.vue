@@ -3,7 +3,7 @@
     <!-- 自定义导航栏（合并导航栏和账本选择器） -->
     <view class="custom-navbar" :style="navBarStyle">
       <view class="navbar-header">
-        <text class="navbar-title">时光小账本</text>
+        <text class="navbar-title">时光账记</text>
       </view>
       <view class="book-selector">
         <view class="book-selector-header">

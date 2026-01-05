@@ -7,7 +7,7 @@ const MOCK_ACCOUNT_BOOKS = [
   {
     book_id: 1,
     name: '家庭账本',
-    creator_uid: '123456789012345678',
+    creator_user_id: 123456789012345678,
     is_creator: true,
     is_default: true,
     member_count: 2,
@@ -17,7 +17,7 @@ const MOCK_ACCOUNT_BOOKS = [
   {
     book_id: 2,
     name: '旅游账本',
-    creator_uid: '223456789012345678',
+    creator_user_id: 223456789012345678,
     is_creator: false,
     is_default: false,
     member_count: 3,
@@ -32,9 +32,9 @@ const MOCK_INVITATIONS = [
     invitation_id: 1,
     book_id: 3,
     book_name: '公司聚餐账本',
-    inviter_uid: '223456789012345678',
+    inviter_uid: 223456789012345678,
     inviter_nickname: '账本达人',
-    target_uid: '123456789012345678',
+    target_uid: 123456789012345678,
     status: 'pending',
     created_at: Math.floor(Date.now() / 1000) - 3600
   }
@@ -44,13 +44,13 @@ const MOCK_INVITATIONS = [
 const MOCK_MEMBERS = {
   1: [
     {
-      uid: '123456789012345678',
+      user_id: 123456789012345678,
       nickname: '小时光',
       avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJfN8DhRLHyHoUQL6Vicic2gzmyj3xZjcwqcxgNrhAD6wfhOgHWTiaKYI69B9BSZDCRibnDMurZpdbLyQ/132',
       status: 'joined'
     },
     {
-      uid: '223456789012345678',
+      user_id: 223456789012345678,
       nickname: '账本达人',
       avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/kAqKtjL7YrDzQmvDpticCINGvfxgkMFXAGJMJFUYNhX6y1n74NJpKAeJB5gyzytbq6EmV4tCZ6Kibwe5puMD0HnQ/132',
       status: 'waiting'
@@ -58,19 +58,19 @@ const MOCK_MEMBERS = {
   ],
   2: [
     {
-      uid: '223456789012345678',
+      user_id: 223456789012345678,
       nickname: '账本达人',
       avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/kAqKtjL7YrDzQmvDpticCINGvfxgkMFXAGJMJFUYNhX6y1n74NJpKAeJB5gyzytbq6EmV4tCZ6Kibwe5puMD0HnQ/132',
       status: 'joined'
     },
     {
-      uid: '123456789012345678',
+      user_id: 123456789012345678,
       nickname: '小时光',
       avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJfN8DhRLHyHoUQL6Vicic2gzmyj3xZjcwqcxgNrhAD6wfhOgHWTiaKYI69B9BSZDCRibnDMurZpdbLyQ/132',
       status: 'joined'
     },
     {
-      uid: '323456789012345678',
+      user_id: 323456789012345678,
       nickname: '旅游小能手',
       avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/DYAOo6OH5seFZkzsTEaVw8N0nxrsKcjMFXo9NjxjgqKYL5V8ibZGWA8m0saP8OQcaYOQVVVVVVVVVVVVVVVVVVV/132',
       status: 'joined'
@@ -92,7 +92,7 @@ export function createAccountBook(data) {
   const newBook = {
     book_id: Math.max(...MOCK_ACCOUNT_BOOKS.map(b => b.book_id), 0) + 1,
     name: data.name,
-    creator_uid: '123456789012345678',
+    creator_user_id: 123456789012345678,
     is_creator: true,
     is_default: false,
     member_count: 1,
@@ -102,7 +102,7 @@ export function createAccountBook(data) {
   MOCK_ACCOUNT_BOOKS.push(newBook);
   MOCK_MEMBERS[newBook.book_id] = [
     {
-      uid: '123456789012345678',
+      user_id: 123456789012345678,
       nickname: '小时光',
       avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJfN8DhRLHyHoUQL6Vicic2gzmyj3xZjcwqcxgNrhAD6wfhOgHWTiaKYI69B9BSZDCRibnDMurZpdbLyQ/132',
       status: 'joined'
@@ -142,8 +142,8 @@ export function inviteUser(data) {
 
   // 添加待加入成员
   members.push({
-    uid: target_uid,
-    nickname: `用户${target_uid.substr(-4)}`,
+    user_id: target_uid,
+    nickname: `用户${String(target_uid).substr(-4)}`,
     avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/default/132',
     status: 'waiting'
   });
@@ -174,7 +174,7 @@ export function acceptInvitation(invitationId) {
 
   // 更新成员状态
   const members = MOCK_MEMBERS[invitation.book_id] || [];
-  const member = members.find(m => m.uid === invitation.target_uid);
+  const member = members.find(m => m.user_id === invitation.target_uid);
   if (member) {
     member.status = 'joined';
   }
@@ -195,7 +195,7 @@ export function rejectInvitation(invitationId) {
 
   // 移除成员
   const members = MOCK_MEMBERS[invitation.book_id] || [];
-  const index = members.findIndex(m => m.uid === invitation.target_uid);
+  const index = members.findIndex(m => m.user_id === invitation.target_uid);
   if (index > -1) {
     members.splice(index, 1);
   }
@@ -213,7 +213,7 @@ export function rejectInvitation(invitationId) {
  */
 export function exitAccountBook(bookId) {
   const members = MOCK_MEMBERS[bookId] || [];
-  const index = members.findIndex(m => m.uid === '123456789012345678');
+  const index = members.findIndex(m => m.user_id === 123456789012345678);
   if (index > -1) {
     members.splice(index, 1);
   }
@@ -249,7 +249,7 @@ export function getAccountBookMembers(bookId) {
 export function removeAccountBookMember(data) {
   const { book_id, target_uid } = data;
   const members = MOCK_MEMBERS[book_id] || [];
-  const index = members.findIndex(m => m.uid === target_uid);
+  const index = members.findIndex(m => m.user_id === target_uid);
   if (index > -1) {
     members.splice(index, 1);
   }

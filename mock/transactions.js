@@ -57,6 +57,7 @@ const generateTransactions = () => {
     transactions.push({
       transaction_id: i,
       book_id: Math.floor(Math.random() * 2) + 1, // 随机分配到账本1或2
+      user_id: 123456789012345678, // 用户ID
       type,
       amount,
       tag_id: tag.tag_id,
@@ -64,9 +65,10 @@ const generateTransactions = () => {
       tag_color: tag.color,
       tag_icon: tag.icon,
       remark: Math.random() > 0.3 ? remark : '', // 70%概率有备注
+      transaction_time: timestamp,
       created_at: timestamp,
       updated_at: timestamp,
-      is_auto_generated: false
+      is_auto_generated: 2 // 1-是 2-否
     });
   }
   

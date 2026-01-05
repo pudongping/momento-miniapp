@@ -2,83 +2,103 @@
 const SYSTEM_TAGS = [
   {
     tag_id: 1,
+    user_id: 0, // 系统标签，user_id为0
     name: '买菜',
     color: '#4CAF50', // 绿色
     icon: 'shopping-cart',
-    is_system: true,
-    type: 'expense'
+    is_system: 1, // 1-是 2-否
+    type: 'expense',
+    sort_num: 1
   },
   {
     tag_id: 2,
+    user_id: 0,
     name: '房贷',
     color: '#2196F3', // 蓝色
     icon: 'home',
-    is_system: true,
-    type: 'expense'
+    is_system: 1,
+    type: 'expense',
+    sort_num: 2
   },
   {
     tag_id: 3,
+    user_id: 0,
     name: '孩子',
     color: '#FF9800', // 橙色
     icon: 'child',
-    is_system: true,
-    type: 'expense'
+    is_system: 1,
+    type: 'expense',
+    sort_num: 3
   },
   {
     tag_id: 4,
+    user_id: 0,
     name: '餐饮',
     color: '#F44336', // 红色
     icon: 'food',
-    is_system: true,
-    type: 'expense'
+    is_system: 1,
+    type: 'expense',
+    sort_num: 4
   },
   {
     tag_id: 5,
+    user_id: 0,
     name: '交通',
     color: '#9C27B0', // 紫色
     icon: 'car',
-    is_system: true,
-    type: 'expense'
+    is_system: 1,
+    type: 'expense',
+    sort_num: 5
   },
   {
     tag_id: 6,
+    user_id: 0,
     name: '其他',
     color: '#607D8B', // 灰蓝色
     icon: 'more',
-    is_system: true,
-    type: 'expense'
+    is_system: 1,
+    type: 'expense',
+    sort_num: 6
   },
   {
     tag_id: 7,
+    user_id: 0,
     name: '工资',
     color: '#4CAF50', // 绿色
     icon: 'wallet',
-    is_system: true,
-    type: 'income'
+    is_system: 1,
+    type: 'income',
+    sort_num: 7
   },
   {
     tag_id: 8,
+    user_id: 0,
     name: '奖金',
     color: '#FF9800', // 橙色
     icon: 'gift',
-    is_system: true,
-    type: 'income'
+    is_system: 1,
+    type: 'income',
+    sort_num: 8
   },
   {
     tag_id: 9,
+    user_id: 0,
     name: '投资',
     color: '#2196F3', // 蓝色
     icon: 'chart',
-    is_system: true,
-    type: 'income'
+    is_system: 1,
+    type: 'income',
+    sort_num: 9
   },
   {
     tag_id: 10,
+    user_id: 0,
     name: '其他收入',
     color: '#607D8B', // 灰蓝色
     icon: 'more',
-    is_system: true,
-    type: 'income'
+    is_system: 1,
+    type: 'income',
+    sort_num: 10
   }
 ];
 

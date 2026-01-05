@@ -15,6 +15,7 @@ export const RECURRING_TYPES = {
 let RECURRING_TRANSACTIONS = [
   {
     recurring_id: 1,
+    user_id: 1,
     book_id: 1,
     name: '房贷',
     type: 'expense',
@@ -24,15 +25,16 @@ let RECURRING_TRANSACTIONS = [
     recurring_type: RECURRING_TYPES.MONTHLY,
     recurring_hour: 9,
     recurring_minute: 0,
-    recurring_month: null, // 每月执行，不限定月份
+    recurring_month: 0, // 每月执行，不限定月份
     recurring_day: 10, // 每月10号
-    recurring_weekday: null,
-    is_recurring_enabled: true,
+    recurring_weekday: 0,
+    is_recurring_enabled: 1,
     created_at: Math.floor(Date.now() / 1000) - 86400 * 30,
     updated_at: Math.floor(Date.now() / 1000) - 86400 * 30
   },
   {
     recurring_id: 2,
+    user_id: 1,
     book_id: 1,
     name: '物业费',
     type: 'expense',
@@ -42,15 +44,16 @@ let RECURRING_TRANSACTIONS = [
     recurring_type: RECURRING_TYPES.QUARTERLY,
     recurring_hour: 10,
     recurring_minute: 0,
-    recurring_month: null, // 每季度执行，不限定月份
+    recurring_month: 0, // 每季度执行，不限定月份
     recurring_day: 15, // 每季度第15天
-    recurring_weekday: null,
-    is_recurring_enabled: true,
+    recurring_weekday: 0,
+    is_recurring_enabled: 1,
     created_at: Math.floor(Date.now() / 1000) - 86400 * 20,
     updated_at: Math.floor(Date.now() / 1000) - 86400 * 20
   },
   {
     recurring_id: 3,
+    user_id: 1,
     book_id: 1,
     name: '工资',
     type: 'income',
@@ -60,10 +63,10 @@ let RECURRING_TRANSACTIONS = [
     recurring_type: RECURRING_TYPES.MONTHLY,
     recurring_hour: 12,
     recurring_minute: 0,
-    recurring_month: null, // 每月执行，不限定月份
+    recurring_month: 0, // 每月执行，不限定月份
     recurring_day: 15, // 每月15号
-    recurring_weekday: null,
-    is_recurring_enabled: true,
+    recurring_weekday: 0,
+    is_recurring_enabled: 1,
     created_at: Math.floor(Date.now() / 1000) - 86400 * 15,
     updated_at: Math.floor(Date.now() / 1000) - 86400 * 15
   }
@@ -102,6 +105,7 @@ export function addRecurringTransaction(data) {
   
   const newRecurringTransaction = {
     recurring_id: Math.max(...RECURRING_TRANSACTIONS.map(t => t.recurring_id), 0) + 1,
+    user_id: data.user_id,
     book_id: data.book_id,
     name: data.name,
     type: data.type || 'expense',
@@ -114,7 +118,7 @@ export function addRecurringTransaction(data) {
     recurring_weekday: data.recurring_weekday,
     recurring_month: data.recurring_month,
     recurring_day: data.recurring_day,
-    is_recurring_enabled: data.is_recurring_enabled !== undefined ? data.is_recurring_enabled : true,
+    is_recurring_enabled: data.is_recurring_enabled !== undefined ? data.is_recurring_enabled : 1,
     created_at: data.created_at || Math.floor(Date.now() / 1000),
     updated_at: Math.floor(Date.now() / 1000)
   };

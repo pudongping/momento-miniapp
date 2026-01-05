@@ -5,21 +5,27 @@
 
 import { generateSnowflakeId } from '../utils/snowflake.js';
 
-// 生成固定的UID，模拟数据库中已存在的用户
+// 生成固定的user_id，模拟数据库中已存在的用户
 const MOCK_USERS = [
   {
-    uid: '123456789012345678', // 字符串格式的雪花算法ID
+    user_id: 123456789012345678, // BIGINT类型的雪花算法ID
+    openid: 'oXXXXXXXXXXXXXXXXXXX',
+    unionid: 'oXXXXXXXXXXXXXXXXXXX',
     nickname: '小时光',
     avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132',
     phone: '13812345678',
+    is_disable: 1, // 1-启用 2-禁用
     created_at: Math.floor(Date.now() / 1000) - 86400 * 30, // 30天前注册，秒级时间戳
     updated_at: Math.floor(Date.now() / 1000) - 86400 * 2 // 2天前更新，秒级时间戳
   },
   {
-    uid: '223456789012345678', // 字符串格式的雪花算法ID
+    user_id: 223456789012345678, // BIGINT类型的雪花算法ID
+    openid: 'oYYYYYYYYYYYYYYYYYYY',
+    unionid: 'oYYYYYYYYYYYYYYYYYYY',
     nickname: '账本达人',
     avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132',
     phone: '13912345678',
+    is_disable: 1, // 1-启用 2-禁用
     created_at: Math.floor(Date.now() / 1000) - 86400 * 60, // 60天前注册，秒级时间戳
     updated_at: Math.floor(Date.now() / 1000) - 86400 * 5 // 5天前更新，秒级时间戳
   }
@@ -28,7 +34,7 @@ const MOCK_USERS = [
 /**
  * 根据微信登录code获取用户信息
  * @param {String} code 微信登录返回的code
- * @returns {Object} 用户信息和token
+ * @returns {Object} 用户信息和token（注意：user_id是整数类型，前端需要保存为uid字段）
  */
 export function wxLogin(code) {
   // 模拟登录逻辑，实际项目中会发送code到服务器换取openid和session_key
@@ -43,19 +49,22 @@ export function wxLogin(code) {
     };
   }
   
-  // 生成一个新用户 - 使用雪花算法生成UID
-  const uid = generateSnowflakeId();
+  // 生成一个新用户 - 使用雪花算法生成user_id
+  const userId = generateSnowflakeId();
   const now = Math.floor(Date.now() / 1000); // 秒级时间戳
   
-  // 生成随机头像URL
+  // 生成随机头像网址
   const randomAvatar = `https://thirdwx.qlogo.cn/mmopen/vi_32/${Math.random().toString(36).substr(2)}/${Math.floor(Math.random() * 999)}`;
   
   // 新用户信息
   return {
-    uid: uid, // 字符串格式的雪花算法ID
-    nickname: `用户${uid.substr(-4)}`, // 使用UID后4位作为默认昵称
+    user_id: userId, // BIGINT类型的雪花算法ID
+    openid: `openid_${userId}`,
+    unionid: `unionid_${userId}`,
+    nickname: `用户${String(userId).substr(-4)}`, // 使用user_id后4位作为默认昵称
     avatar: randomAvatar,
     phone: '',
+    is_disable: 1, // 1-启用 2-禁用
     created_at: now,
     updated_at: now,
     token: `mock_token_${Math.random().toString(36).substr(2)}`
@@ -64,7 +73,7 @@ export function wxLogin(code) {
 
 /**
  * 获取用户信息
- * @returns {Object} 用户信息
+ * @returns {Object} 用户信息（注意：user_id是整数类型，前端需要保存为uid字段）
  */
 export function getUserInfo() {
   // 随机返回一个已存在的用户或创建一个新用户
@@ -74,19 +83,22 @@ export function getUserInfo() {
     const user = { ...MOCK_USERS[Math.floor(Math.random() * MOCK_USERS.length)] };
     return user;
   } else {
-    // 生成一个新用户 - 使用雪花算法生成UID
-    const uid = generateSnowflakeId();
+    // 生成一个新用户 - 使用雪花算法生成user_id
+    const userId = generateSnowflakeId();
     const now = Math.floor(Date.now() / 1000); // 秒级时间戳
     
-    // 生成随机头像URL
+    // 生成随机头像网址
     const randomAvatar = `https://thirdwx.qlogo.cn/mmopen/vi_32/${Math.random().toString(36).substr(2)}/${Math.floor(Math.random() * 999)}`;
     
     // 新用户信息
     return {
-      uid: uid, // 字符串格式的雪花算法ID
-      nickname: `用户${uid.substr(-4)}`, // 使用UID后4位作为默认昵称
+      user_id: userId, // BIGINT类型的雪花算法ID
+      openid: `openid_${userId}`,
+      unionid: `unionid_${userId}`,
+      nickname: `用户${String(userId).substr(-4)}`, // 使用user_id后4位作为默认昵称
       avatar: randomAvatar,
       phone: '',
+      is_disable: 1, // 1-启用 2-禁用
       created_at: now,
       updated_at: now
     };
@@ -96,7 +108,7 @@ export function getUserInfo() {
 /**
  * 更新用户信息
  * @param {Object} data 要更新的用户信息
- * @returns {Object} 更新后的用户信息
+ * @returns {Object} 更新后的用户信息（注意：user_id是整数类型，前端需要保存为uid字段）
  */
 export function updateUserInfo(data) {
   // 模拟更新用户信息

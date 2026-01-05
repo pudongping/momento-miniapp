@@ -13,7 +13,7 @@
             <image src="/static/images/app-logo.png" mode="aspectFit" class="app-logo"></image>
           </view>
           <view class="brand-text-group">
-            <text class="app-name">时光小账本</text>
+            <text class="app-name">时光账记</text>
             <text class="app-slogan">每一笔账单，都是生活的旁白</text>
           </view>
         </view>

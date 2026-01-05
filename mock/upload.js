@@ -21,7 +21,9 @@ export default {
         file_size: 1024 * 100, // 100KB
         file_type: file_type,
         business_type: business_type,
-        upload_time: Math.floor(Date.now() / 1000)
+        upload_time: Math.floor(Date.now() / 1000),
+        user_id: 12345, // 添加 user_id 字段
+        file_id: `${timestamp}_${randomStr}`, // 添加 file_id 字段
       }
     };
   }

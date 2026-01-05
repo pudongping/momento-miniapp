@@ -1,4 +1,4 @@
-# 时光小账本 API 接口文档
+# 时光账记 API 接口文档
 
 ## 接口规范
 
@@ -30,7 +30,17 @@
 ```
 Content-Type: application/json
 Authorization: Bearer {token}
+X-Request-ID: {request_id}          // 请求唯一标识，用于防重复提交
+X-Device-ID: {device_id}            // 设备ID，用于设备识别
+X-User-ID: {user_id}                // 用户ID（可选，已登录时携带）
 ```
+
+**请求头字段说明**:
+- `X-Request-ID`: 每次请求都会生成一个唯一的请求ID，用于幂等性控制和防重复提交
+- `X-Device-ID`: 设备唯一标识，首次生成后存储在本地，用于设备识别和统计
+- `X-User-ID`: 用户ID，仅在用户已登录时携带，用于关联用户请求
+
+**注意**: 前端会自动在所有请求中添加这些请求头，无需在每个接口文档中重复说明
 
 ---
 

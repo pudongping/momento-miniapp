@@ -17,6 +17,23 @@ function generateRequestId() {
 	return `${timestamp}_${random}`;
 }
 
+// 获取设备ID
+function getDeviceId() {
+	let deviceId = uni.getStorageSync('device_id');
+	if (!deviceId) {
+		const systemInfo = uni.getSystemInfoSync();
+		deviceId = `${systemInfo.model}_${systemInfo.platform}_${Date.now()}`;
+		uni.setStorageSync('device_id', deviceId);
+	}
+	return deviceId;
+}
+
+// 获取用户ID
+function getUserId() {
+	const userInfo = uni.getStorageSync('userInfo');
+	return userInfo?.uid || '';
+}
+
 export function setRequestConfig(partialConfig = {}) {
 	_config = {
 		..._config,
@@ -48,11 +65,8 @@ export function request(options = {}) {
 		const url = options.url || ''
 		const method = (options.method || 'GET').toUpperCase()
 		
-		// 为请求添加唯一标识
-		const requestId = generateRequestId();
 		const requestData = {
-			...options.data,
-			request_id: requestId
+			...options.data
 		};
 		
 		// 处理mock数据
@@ -88,6 +102,17 @@ export function request(options = {}) {
 
 		const header = {
 			...(options.header || {})
+		}
+
+		// 添加请求头字段
+		const requestId = generateRequestId();
+		const deviceId = getDeviceId();
+		const userId = getUserId();
+		
+		header['X-Request-ID'] = requestId;
+		header['X-Device-ID'] = deviceId;
+		if (userId) {
+			header['X-User-ID'] = userId;
 		}
 
 		const token = typeof _config.getToken === 'function' ? _config.getToken() : uni.getStorageSync('token')
@@ -151,11 +176,8 @@ export function del(url, data, options = {}) {
 // 文件上传专用方法
 export function upload(url, filePath, formData = {}, options = {}) {
 	return new Promise((resolve, reject) => {
-		// 为请求添加唯一标识
-		const requestId = generateRequestId();
 		const uploadData = {
-			...formData,
-			request_id: requestId
+			...formData
 		};
 		
 		// 处理mock数据
@@ -196,6 +218,17 @@ export function upload(url, filePath, formData = {}, options = {}) {
 			...(options.header || {})
 		}
 		
+		// 添加请求头字段
+		const requestId = generateRequestId();
+		const deviceId = getDeviceId();
+		const userId = getUserId();
+		
+		header['X-Request-ID'] = requestId;
+		header['X-Device-ID'] = deviceId;
+		if (userId) {
+			header['X-User-ID'] = userId;
+		}
+
 		const token = typeof _config.getToken === 'function' ? _config.getToken() : uni.getStorageSync('token')
 		if (token && !header[_config.tokenHeader]) {
 			header[_config.tokenHeader] = _config.tokenPrefix ? _config.tokenPrefix + token : token

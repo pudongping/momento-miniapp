@@ -13,7 +13,7 @@
 		{
 			"path": "pages/home/index",
 			"style": {
-				"navigationBarTitleText": "时光小账本",
+				"navigationBarTitleText": "时光账记",
 				"navigationBarBackgroundColor": "#FAFAFA",
 				"navigationBarTextStyle": "black",
 				"backgroundColor": "#FAFAFA",
