@@ -756,8 +756,8 @@ export default {
         const books = await getAccountBooksApi();
         if (books && Array.isArray(books)) {
           this.allBooks = books;
-          this.createdBooks = books.filter(b => b.is_creator);
-          this.joinedBooks = books.filter(b => !b.is_creator);
+          this.createdBooks = books.filter(b => b.is_creator === 1);
+          this.joinedBooks = books.filter(b => b.is_creator === 2);
           
           // 尝试从本地存储恢复
           const savedBook = restoreAccountBookState();
@@ -771,7 +771,7 @@ export default {
             this.currentBook = books.find(b => b.book_id === savedBook.book_id);
           } else {
             // 优先选择标记为默认的账本
-            const defaultBook = books.find(b => b.is_default);
+            const defaultBook = books.find(b => b.is_default === 1);
             if (defaultBook) {
               this.currentBook = defaultBook;
             } else if (books.length > 0) {

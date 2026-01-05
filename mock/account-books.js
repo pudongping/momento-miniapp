@@ -7,9 +7,9 @@ const MOCK_ACCOUNT_BOOKS = [
   {
     book_id: 1,
     name: '家庭账本',
-    creator_user_id: 123456789012345678,
-    is_creator: true,
-    is_default: true,
+    creator_user_id: '123456789012345678', // 字符串类型
+    is_creator: 1, // 1-是创建者 2-不是
+    is_default: 1, // 1-是默认 2-不是
     member_count: 2,
     created_at: Math.floor(Date.now() / 1000) - 86400 * 30,
     updated_at: Math.floor(Date.now() / 1000) - 86400 * 2
@@ -17,9 +17,9 @@ const MOCK_ACCOUNT_BOOKS = [
   {
     book_id: 2,
     name: '旅游账本',
-    creator_user_id: 223456789012345678,
-    is_creator: false,
-    is_default: false,
+    creator_user_id: '223456789012345678', // 字符串类型
+    is_creator: 2, // 1-是创建者 2-不是
+    is_default: 2, // 1-是默认 2-不是
     member_count: 3,
     created_at: Math.floor(Date.now() / 1000) - 86400 * 15,
     updated_at: Math.floor(Date.now() / 1000) - 86400 * 1
@@ -32,9 +32,9 @@ const MOCK_INVITATIONS = [
     invitation_id: 1,
     book_id: 3,
     book_name: '公司聚餐账本',
-    inviter_uid: 223456789012345678,
+    inviter_uid: '223456789012345678', // 字符串类型
     inviter_nickname: '账本达人',
-    target_uid: 123456789012345678,
+    target_uid: '123456789012345678', // 字符串类型
     status: 'pending',
     created_at: Math.floor(Date.now() / 1000) - 3600
   }
@@ -44,13 +44,13 @@ const MOCK_INVITATIONS = [
 const MOCK_MEMBERS = {
   1: [
     {
-      user_id: 123456789012345678,
+      user_id: '123456789012345678', // 字符串类型
       nickname: '小时光',
       avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJfN8DhRLHyHoUQL6Vicic2gzmyj3xZjcwqcxgNrhAD6wfhOgHWTiaKYI69B9BSZDCRibnDMurZpdbLyQ/132',
       status: 'joined'
     },
     {
-      user_id: 223456789012345678,
+      user_id: '223456789012345678', // 字符串类型
       nickname: '账本达人',
       avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/kAqKtjL7YrDzQmvDpticCINGvfxgkMFXAGJMJFUYNhX6y1n74NJpKAeJB5gyzytbq6EmV4tCZ6Kibwe5puMD0HnQ/132',
       status: 'waiting'
@@ -58,19 +58,19 @@ const MOCK_MEMBERS = {
   ],
   2: [
     {
-      user_id: 223456789012345678,
+      user_id: '223456789012345678', // 字符串类型
       nickname: '账本达人',
       avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/kAqKtjL7YrDzQmvDpticCINGvfxgkMFXAGJMJFUYNhX6y1n74NJpKAeJB5gyzytbq6EmV4tCZ6Kibwe5puMD0HnQ/132',
       status: 'joined'
     },
     {
-      user_id: 123456789012345678,
+      user_id: '123456789012345678', // 字符串类型
       nickname: '小时光',
       avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJfN8DhRLHyHoUQL6Vicic2gzmyj3xZjcwqcxgNrhAD6wfhOgHWTiaKYI69B9BSZDCRibnDMurZpdbLyQ/132',
       status: 'joined'
     },
     {
-      user_id: 323456789012345678,
+      user_id: '323456789012345678', // 字符串类型
       nickname: '旅游小能手',
       avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/DYAOo6OH5seFZkzsTEaVw8N0nxrsKcjMFXo9NjxjgqKYL5V8ibZGWA8m0saP8OQcaYOQVVVVVVVVVVVVVVVVVVV/132',
       status: 'joined'
@@ -92,9 +92,9 @@ export function createAccountBook(data) {
   const newBook = {
     book_id: Math.max(...MOCK_ACCOUNT_BOOKS.map(b => b.book_id), 0) + 1,
     name: data.name,
-    creator_user_id: 123456789012345678,
-    is_creator: true,
-    is_default: false,
+    creator_user_id: '123456789012345678', // 字符串类型
+    is_creator: 1, // 1-是创建者 2-不是
+    is_default: 2, // 1-是默认 2-不是
     member_count: 1,
     created_at: Math.floor(Date.now() / 1000),
     updated_at: Math.floor(Date.now() / 1000)
@@ -102,7 +102,7 @@ export function createAccountBook(data) {
   MOCK_ACCOUNT_BOOKS.push(newBook);
   MOCK_MEMBERS[newBook.book_id] = [
     {
-      user_id: 123456789012345678,
+      user_id: '123456789012345678', // 字符串类型
       nickname: '小时光',
       avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJfN8DhRLHyHoUQL6Vicic2gzmyj3xZjcwqcxgNrhAD6wfhOgHWTiaKYI69B9BSZDCRibnDMurZpdbLyQ/132',
       status: 'joined'

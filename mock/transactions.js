@@ -57,7 +57,7 @@ const generateTransactions = () => {
     transactions.push({
       transaction_id: i,
       book_id: Math.floor(Math.random() * 2) + 1, // 随机分配到账本1或2
-      user_id: 123456789012345678, // 用户ID
+      user_id: '123456789012345678', // 字符串类型
       type,
       amount,
       tag_id: tag.tag_id,

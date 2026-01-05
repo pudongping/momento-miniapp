@@ -15,7 +15,7 @@ export const RECURRING_TYPES = {
 let RECURRING_TRANSACTIONS = [
   {
     recurring_id: 1,
-    user_id: 1,
+    user_id: '123456789012345678', // 字符串类型
     book_id: 1,
     name: '房贷',
     type: 'expense',
@@ -34,7 +34,7 @@ let RECURRING_TRANSACTIONS = [
   },
   {
     recurring_id: 2,
-    user_id: 1,
+    user_id: '123456789012345678', // 字符串类型
     book_id: 1,
     name: '物业费',
     type: 'expense',
@@ -53,7 +53,7 @@ let RECURRING_TRANSACTIONS = [
   },
   {
     recurring_id: 3,
-    user_id: 1,
+    user_id: '123456789012345678', // 字符串类型
     book_id: 1,
     name: '工资',
     type: 'income',

@@ -12,7 +12,7 @@ let _festivalAutoIncId = 3;
 let festivalsData = [
   {
     festival_id: 1,
-    user_id: 123456789012345678,
+    user_id: '123456789012345678', // 字符串类型
     festival_name: '春节',
     festival_date: 20240210,
     is_show_home: 1,
@@ -21,7 +21,7 @@ let festivalsData = [
   },
   {
     festival_id: 2,
-    user_id: 123456789012345678,
+    user_id: '123456789012345678', // 字符串类型
     festival_name: '结婚纪念日',
     festival_date: 20240615,
     is_show_home: 1,
@@ -30,7 +30,7 @@ let festivalsData = [
   },
   {
     festival_id: 3,
-    user_id: 123456789012345678,
+    user_id: '123456789012345678', // 字符串类型
     festival_name: '生日',
     festival_date: 20240812,
     is_show_home: 1,
@@ -59,7 +59,7 @@ export function addFestival(festival) {
   // 创建新节日
   const newFestival = {
     festival_id,
-    user_id: 123456789012345678,
+    user_id: '123456789012345678', // 字符串类型
     festival_name: festival.festival_name,
     festival_date: festival.festival_date,
     is_show_home: festival.is_show_home !== undefined ? festival.is_show_home : 1,

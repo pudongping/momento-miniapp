@@ -224,8 +224,8 @@ export default {
       try {
         const data = await getAccountBooksApi();
         if (data && Array.isArray(data)) {
-          this.createdBooks = data.filter(book => book.is_creator);
-          this.joinedBooks = data.filter(book => !book.is_creator);
+          this.createdBooks = data.filter(book => book.is_creator === 1);
+          this.joinedBooks = data.filter(book => book.is_creator === 2);
         }
       } catch (error) {
         console.error('加载账本失败', error);
@@ -286,7 +286,7 @@ export default {
 
     async selectBook(book) {
       this.selectedBook = book;
-      this.isBookCreator = book.is_creator;
+      this.isBookCreator = book.is_creator === 1;
       this.inviteUid = '';
       this.showBookDetailModal = true;
       

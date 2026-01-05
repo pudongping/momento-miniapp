@@ -8,7 +8,7 @@ import { generateSnowflakeId } from '../utils/snowflake.js';
 // 生成固定的user_id，模拟数据库中已存在的用户
 const MOCK_USERS = [
   {
-    user_id: 123456789012345678, // BIGINT类型的雪花算法ID
+    user_id: '123456789012345678', // 字符串类型（数据库中是BIGINT，但返回给前端为字符串）
     openid: 'oXXXXXXXXXXXXXXXXXXX',
     unionid: 'oXXXXXXXXXXXXXXXXXXX',
     nickname: '小时光',
@@ -19,7 +19,7 @@ const MOCK_USERS = [
     updated_at: Math.floor(Date.now() / 1000) - 86400 * 2 // 2天前更新，秒级时间戳
   },
   {
-    user_id: 223456789012345678, // BIGINT类型的雪花算法ID
+    user_id: '223456789012345678', // 字符串类型（数据库中是BIGINT，但返回给前端为字符串）
     openid: 'oYYYYYYYYYYYYYYYYYYY',
     unionid: 'oYYYYYYYYYYYYYYYYYYY',
     nickname: '账本达人',
@@ -58,7 +58,7 @@ export function wxLogin(code) {
   
   // 新用户信息
   return {
-    user_id: userId, // BIGINT类型的雪花算法ID
+    user_id: String(userId), // 字符串类型（数据库中是BIGINT，但返回给前端为字符串）
     openid: `openid_${userId}`,
     unionid: `unionid_${userId}`,
     nickname: `用户${String(userId).substr(-4)}`, // 使用user_id后4位作为默认昵称
@@ -92,7 +92,7 @@ export function getUserInfo() {
     
     // 新用户信息
     return {
-      user_id: userId, // BIGINT类型的雪花算法ID
+      user_id: String(userId), // 字符串类型（数据库中是BIGINT，但返回给前端为字符串）
       openid: `openid_${userId}`,
       unionid: `unionid_${userId}`,
       nickname: `用户${String(userId).substr(-4)}`, // 使用user_id后4位作为默认昵称

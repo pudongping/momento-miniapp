@@ -632,14 +632,14 @@ export default {
         const books = await getAccountBooksApi();
         if (books && Array.isArray(books)) {
           this.allBooks = books;
-          this.createdBooks = books.filter(b => b.is_creator);
-          this.joinedBooks = books.filter(b => !b.is_creator);
+          this.createdBooks = books.filter(b => b.is_creator === 1);
+          this.joinedBooks = books.filter(b => b.is_creator === 2);
           
           // 如果有保存的账本且仍在列表中，使用它；否则使用默认账本
           if (savedBook && books.some(b => b.book_id === savedBook.book_id)) {
             this.currentBook = savedBook;
           } else {
-            const defaultBook = books.find(b => b.is_default) || books[0];
+            const defaultBook = books.find(b => b.is_default === 1) || books[0];
             this.currentBook = defaultBook;
             if (defaultBook) {
               setCurrentBook(defaultBook);
