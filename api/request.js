@@ -1,13 +1,21 @@
 import { mockApis } from '../mock/index.js';
 
+// 生产环境
+const baseURL = 'https://api-momento.gqgogogo.cn'
+const useMock = false
+
+// 本地环境
+// const baseURL = ''
+// const useMock = true
+
 let _config = {
-	baseURL: '',
+	baseURL: baseURL,
 	timeout: 15000,
 	showErrorToast: true,
 	getToken: null,
 	tokenHeader: 'Authorization',
 	tokenPrefix: 'Bearer ',
-	useMock: true // 使用mock数据，生产环境请设置为false
+	useMock: useMock // 使用mock数据，生产环境请设置为false
 }
 
 // 生成唯一的请求ID
