@@ -135,15 +135,6 @@ export function getTags() {
   return [...SYSTEM_TAGS, ...USER_TAGS];
 }
 
-// 获取系统标签
-export function getSystemTags() {
-  return SYSTEM_TAGS;
-}
-
-// 获取用户自定义标签
-export function getUserTags() {
-  return USER_TAGS;
-}
 
 // 根据类型获取标签
 export function getTagsByType(type) {

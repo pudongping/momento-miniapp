@@ -25,9 +25,11 @@ export function clearAuth() {
  * @returns {boolean} 是否已登录
  */
 export function checkLoginStatus(redirectUrl = '') {
-  const hasToken = checkToken();
+  const token = uni.getStorageSync('token');
+  const userInfo = uni.getStorageSync('userInfo');
   
-  if (!hasToken) {
+  // 检查token和userInfo是否都存在
+  if (!token || !userInfo) {
     // 清除所有认证信息
     clearAuth();
     

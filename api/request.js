@@ -68,6 +68,28 @@ function _toast(title) {
 	})
 }
 
+// 处理token失效的公共函数
+function _handleTokenExpired() {
+	console.log('Token已失效，自动退出登录')
+	// 清除本地存储
+	uni.removeStorageSync('token')
+	uni.removeStorageSync('userInfo')
+	
+	// 显示提示信息
+	uni.showToast({
+		title: '登录已过期，请重新登录',
+		icon: 'none',
+		duration: 2000
+	})
+	
+	// 延迟跳转到登录页面
+	setTimeout(() => {
+		uni.reLaunch({
+			url: '/pages/login/index'
+		})
+	}, 2000)
+}
+
 export function request(options = {}) {
 	return new Promise((resolve, reject) => {
 		const url = options.url || ''
@@ -147,6 +169,13 @@ export function request(options = {}) {
 				if (body && typeof body === 'object' && Object.prototype.hasOwnProperty.call(body, 'code')) {
 					if (body.code === 0) {
 						resolve(body.data)
+						return
+					}
+
+					// 处理token失效（401状态码）
+					if (body.code === 401) {
+						_handleTokenExpired()
+						reject(body)
 						return
 					}
 
@@ -270,6 +299,13 @@ export function upload(url, filePath, formData = {}, options = {}) {
 				if (body && typeof body === 'object' && Object.prototype.hasOwnProperty.call(body, 'code')) {
 					if (body.code === 0 || body.code === 200) {
 						resolve(body.data)
+						return
+					}
+					
+					// 处理token失效（401状态码）
+					if (body.code === 401) {
+						_handleTokenExpired()
+						reject(body)
 						return
 					}
 					

@@ -28,8 +28,6 @@ import {
 } from './transactions.js';
 import {
   getTags,
-  getSystemTags,
-  getUserTags,
   getTagsByType,
   addTag,
   updateTag,
@@ -260,12 +258,6 @@ export const mockApis = {
       return success(getTagsByType(type));
     }
     return success(getTags());
-  },
-  '/tags/system': () => {
-    return success(getSystemTags());
-  },
-  '/tags/user': () => {
-    return success(getUserTags());
   },
   '/tags/add': (options) => {
     const { name, color } = options.data;
