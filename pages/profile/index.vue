@@ -10,14 +10,8 @@
       </button>
       <view class="user-info">
         <view class="nickname-row">
-          <input 
-            type="nickname" 
-            v-model="userInfo.nickname" 
-            class="nickname-input" 
-            placeholder="请输入昵称"
-            @blur="updateNicknameOnBlur"
-          />
-          <view class="edit-btn">
+          <text class="nickname">{{ userInfo.nickname || '未设置昵称' }}</text>
+          <view class="edit-btn" @click="showEditNickname">
             <uni-icons type="compose" size="16" color="#999"></uni-icons>
           </view>
         </view>
@@ -75,6 +69,30 @@
         <text>退出登录</text>
       </button>
     </view>
+
+    <view v-if="showNicknameModal" class="modal-mask" @click="hideEditNickname">
+      <view class="modal-content" @click.stop>
+        <view class="modal-header">
+          <text class="modal-title">修改昵称</text>
+        </view>
+        <view class="modal-body">
+          <button class="wx-nickname-btn" @click="useWxNickname">使用微信昵称</button>
+          <input
+            type="nickname"
+            v-model="newNickname"
+            class="modal-nickname-input"
+            placeholder="点击获取微信昵称或手动输入"
+            maxlength="20"
+            :focus="nicknameFocus"
+            @input="onNicknameInput"
+          />
+        </view>
+        <view class="modal-footer">
+          <button class="cancel-btn" @click="hideEditNickname">取消</button>
+          <button class="confirm-btn" :loading="isUpdatingNickname" :disabled="isUpdatingNickname" @click="updateNickname">确认</button>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -87,11 +105,16 @@ export default {
     return {
       userInfo: {
         uid: '',
+        user_id: '',
         nickname: '',
         avatar: '',
         phone: ''
       },
-      isUpdatingNickname: false
+      isUpdatingNickname: false,
+      showNicknameModal: false,
+      newNickname: '',
+      nicknameFocus: false,
+      isSelectingWxNickname: false
     };
   },
   
@@ -150,43 +173,75 @@ export default {
       }
     },
     
-    // 昵称失去焦点时更新
-    async updateNicknameOnBlur() {
-      const nickname = this.userInfo.nickname ? this.userInfo.nickname.trim() : '';
-      
+    showEditNickname() {
+      this.newNickname = '';
+      this.showNicknameModal = true;
+      this.nicknameFocus = false;
+      this.isSelectingWxNickname = false;
+      this.$nextTick(() => {
+        this.nicknameFocus = true;
+      });
+    },
+
+    hideEditNickname() {
+      this.showNicknameModal = false;
+      this.newNickname = '';
+      this.nicknameFocus = false;
+      this.isSelectingWxNickname = false;
+    },
+
+    useWxNickname() {
+      this.newNickname = '';
+      this.isSelectingWxNickname = true;
+      this.nicknameFocus = false;
+      this.$nextTick(() => {
+        this.nicknameFocus = true;
+      });
+    },
+
+    async onNicknameInput(e) {
+      if (!this.isSelectingWxNickname) return;
+      const value = (e?.detail?.value || '').trim();
+      if (!value) return;
+
+      this.newNickname = value;
+      this.isSelectingWxNickname = false;
+
+      await this.updateNickname();
+    },
+
+    async updateNickname() {
+      const nickname = this.newNickname ? this.newNickname.trim() : '';
       if (!nickname) {
         uni.showToast({
           title: '昵称不能为空',
           icon: 'none'
         });
-        // 恢复原来的昵称
-        await this.getUserInfo();
         return;
       }
-      
+
+      if (this.isUpdatingNickname) return;
+
       try {
-        uni.showLoading({ title: '更新中...' });
-        
+        this.isUpdatingNickname = true;
         await updateUserInfoApi({
-          nickname: nickname
+          nickname
         });
-        
+
         this.userInfo.nickname = nickname;
-        
-        uni.hideLoading();
+        this.hideEditNickname();
         uni.showToast({
           title: '昵称更新成功',
           icon: 'success'
         });
       } catch (error) {
-        uni.hideLoading();
         uni.showToast({
           title: '昵称更新失败',
           icon: 'none'
         });
         console.error('昵称更新失败', error);
-        // 恢复原来的昵称
-        await this.getUserInfo();
+      } finally {
+        this.isUpdatingNickname = false;
       }
     },
     
@@ -316,16 +371,121 @@ export default {
   margin-right: $spacing-xs;
 }
 
-.nickname-input {
+
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-content {
+  width: 100%;
+  background: $color-bg-primary;
+  border-radius: $border-radius-lg $border-radius-lg 0 0;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  padding: 30rpx;
+  text-align: center;
+  border-bottom: 1px solid $color-bg-tertiary;
+}
+
+.modal-title {
   font-size: $font-size-h3;
-  color: $color-text-inverse;
-  font-weight: $font-weight-bold;
-  margin-right: $spacing-xs;
-  background: transparent;
-  border: none;
-  padding: 0;
-  max-width: 400rpx;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.modal-body {
+  padding: 30rpx;
+}
+
+.modal-nickname-input {
+  border: 1px solid $color-border-normal;
+  height: 80rpx;
+  border-radius: $border-radius-md;
+  padding: 0 20rpx;
+  font-size: $font-size-body;
+  box-sizing: border-box;
+}
+
+.wx-nickname-btn {
+  height: 80rpx;
+  border-radius: $border-radius-md;
+  border: 1px solid $color-border-normal;
+  background: $color-bg-tertiary;
+  color: $color-text-primary;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wx-nickname-btn:active {
+  background: $color-bg-secondary;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 12rpx;
+  padding: $spacing-md;
+  padding-bottom: calc($spacing-md + env(safe-area-inset-bottom));
+  border-top: 1px solid $color-bg-tertiary;
+}
+
+.cancel-btn, .confirm-btn {
   flex: 1;
+  height: 88rpx;
+  border-radius: $border-radius-full;
+  font-size: $font-size-body;
+  border: none;
+  font-weight: $font-weight-semibold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn {
+  background: $color-bg-tertiary;
+  color: $color-text-secondary;
+  box-shadow: $shadow-light;
+}
+
+.cancel-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.03);
+}
+
+.confirm-btn {
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  color: $color-text-inverse;
+  box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
+}
+
+.confirm-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 6rpx rgba(255, 154, 90, 0.1);
 }
 
 .edit-btn {
