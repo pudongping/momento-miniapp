@@ -39,7 +39,7 @@ function getDeviceId() {
 // 获取用户ID
 function getUserId() {
 	const userInfo = uni.getStorageSync('userInfo');
-	return userInfo?.uid || '';
+	return userInfo?.user_id || userInfo?.uid || '';
 }
 
 export function setRequestConfig(partialConfig = {}) {

@@ -101,7 +101,8 @@ export default {
     // 检查登录状态
     checkLoginStatus() {
       const token = uni.getStorageSync('token');
-      if (token) {
+      const userInfo = uni.getStorageSync('userInfo');
+      if (token && userInfo) {
         // 已登录，跳转到重定向页面或首页
         this.navigateAfterLogin();
       }
@@ -141,7 +142,8 @@ export default {
             
             // 保存用户信息
             uni.setStorageSync('userInfo', {
-              uid: result.uid,
+              uid: result.user_id || result.uid,
+              user_id: result.user_id || result.uid,
               nickname: result.nickname || '',
               avatar: result.avatar || '',
               phone: result.phone || ''

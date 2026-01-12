@@ -23,7 +23,7 @@
         </view>
         <view class="uid-row">
           <text class="uid-label">UID:</text>
-          <text class="uid-value">{{ userInfo.uid || '未登录' }}</text>
+          <text class="uid-value">{{ userInfo.user_id || userInfo.uid || '未登录' }}</text>
           <view class="copy-btn" @click="copyUid">
             <uni-icons type="paperclip" size="16" color="#999"></uni-icons>
             <text class="copy-text">复制</text>
@@ -192,7 +192,8 @@ export default {
     
     // 复制UID
     copyUid() {
-      if (!this.userInfo.uid) {
+      const uid = this.userInfo?.user_id || this.userInfo?.uid;
+      if (!uid) {
         uni.showToast({
           title: '请先登录',
           icon: 'none'
@@ -201,7 +202,7 @@ export default {
       }
       
       uni.setClipboardData({
-        data: this.userInfo.uid,
+        data: uid,
         success: () => {
           uni.showToast({
             title: 'UID已复制',
