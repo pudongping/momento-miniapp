@@ -221,9 +221,9 @@ export default {
       uni.showModal({
         title: '提示',
         content: '确定要退出登录吗？',
-        success: (res) => {
+        success: async (res) => {
           if (res.confirm) {
-            logout();
+            await logout();
           }
         }
       });

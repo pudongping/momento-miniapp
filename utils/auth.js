@@ -2,6 +2,8 @@
  * 认证相关工具函数
  */
 
+import { logoutApi } from '@/api/index.js';
+
 /**
  * 检查token是否存在
  * @returns {boolean}
@@ -17,6 +19,7 @@ export function checkToken() {
 export function clearAuth() {
   uni.removeStorageSync('token');
   uni.removeStorageSync('userInfo');
+  uni.removeStorageSync('current_book');
 }
 
 /**
@@ -48,9 +51,15 @@ export function checkLoginStatus(redirectUrl = '') {
 /**
  * 退出登录
  */
-export function logout() {
-  clearAuth();
-  uni.reLaunch({
-    url: '/pages/login/index'
-  });
+export async function logout() {
+  try {
+    await logoutApi();
+  } catch (error) {
+    console.error('退出登录接口调用失败', error);
+  } finally {
+    clearAuth();
+    uni.reLaunch({
+      url: '/pages/login/index'
+    });
+  }
 }
