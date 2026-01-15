@@ -98,7 +98,7 @@
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "时光小账本",
+		"navigationBarTitleText": "时光账记",
 		"navigationBarBackgroundColor": "#FAFAFA",
 		"backgroundColor": "#FAFAFA"
 	},

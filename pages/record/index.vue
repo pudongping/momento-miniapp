@@ -1251,7 +1251,7 @@ export default {
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '有人拍了拍你：时光小账本，让记账变得简单有趣',
+      title: '有人拍了拍你：时光账记，让记账变得简单有趣',
       query: '',
       imageUrl: '/static/images/share-cover.png'
     };

@@ -297,7 +297,7 @@ export default {
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '有人拍了拍你：时光小账本，记录美好生活',
+      title: '有人拍了拍你：时光账记，记录美好生活',
       query: '',
       imageUrl: '/static/images/share-cover.png'
     };

@@ -214,7 +214,7 @@ export default {
               {
                 items: [
                   '邮箱：privacy@momento.com',
-                  '微信：时光小账本官方客服'
+                  '微信：时光账记官方客服'
                 ]
               }
             ]
