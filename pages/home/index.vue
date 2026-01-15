@@ -2665,13 +2665,7 @@ export default {
   justify-content: center;
   padding: 80rpx 40rpx;
   text-align: center;
-}
-
-.empty-recurring {
-  width: 200rpx;
-  height: 200rpx;
-  margin-bottom: 32rpx;
-  opacity: 0.6;
+  min-height: 360rpx;
 }
 
 .empty-recurring .empty-text {
