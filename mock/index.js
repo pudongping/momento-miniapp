@@ -3,7 +3,7 @@
  * 所有的时间戳均为秒级时间戳，避免前端精度问题
  * 约定：仅用户 uid 为雪花算法分布式 ID（字符串）；其他业务主键为 int 自增 ID
  */
-import { wxLogin, getUserInfo, updateUserInfo, bindPhone, getUserSettings, updateUserSettings } from './user.js';
+import { wxLogin, getUserInfo, updateUserInfo, getUserSettings, updateUserSettings } from './user.js';
 import uploadMock from './upload.js';
 import { getFestivals, addFestival, updateFestival, deleteFestival, toggleFestivalVisibility } from './festivals.js';
 import { 
@@ -35,11 +35,7 @@ import {
 } from './tags.js';
 import {
   getRecurringTransactions,
-  addRecurringTransaction,
-  updateRecurringTransaction,
-  deleteRecurringTransaction,
-  toggleRecurringTransaction,
-  processRecurringTransactions
+  deleteRecurringTransaction
 } from './recurring-transactions.js';
 
 // 统一返回格式
@@ -76,12 +72,8 @@ export const mockApis = {
     const data = options.data;
     return success(updateUserInfo(data));
   },
-  '/user/bind-phone': (options) => {
-    const { phone, code } = options.data;
-    if (!phone || !code) {
-      return error('绑定失败：参数不完整');
-    }
-    return success(bindPhone({ phone, code }));
+  '/user/logout': () => {
+    return success();
   },
 
   // 用户设置相关接口（包含预算和背景图片）
@@ -297,28 +289,6 @@ export const mockApis = {
   '/recurring/list': (options) => {
     return success(getRecurringTransactions(options.data || {}));
   },
-  '/recurring/add': (options) => {
-    const { book_id, name, amount, tag_id, recurring_type, recurring_hour, recurring_minute } = options.data;
-    if (!book_id || !name || !amount || !tag_id || !recurring_type || recurring_hour === undefined || recurring_minute === undefined) {
-      return error('添加失败：参数不完整');
-    }
-    try {
-      return success(addRecurringTransaction(options.data));
-    } catch (err) {
-      return error(err.message);
-    }
-  },
-  '/recurring/update': (options) => {
-    const { recurring_id } = options.data;
-    if (!recurring_id) {
-      return error('更新失败：缺少recurring_id参数');
-    }
-    try {
-      return success(updateRecurringTransaction(options.data));
-    } catch (err) {
-      return error(err.message);
-    }
-  },
   '/recurring/delete': (options) => {
     const { recurring_id } = options.data;
     if (!recurring_id) {
@@ -329,36 +299,6 @@ export const mockApis = {
     } catch (err) {
       return error(err.message);
     }
-  },
-  '/recurring/toggle': (options) => {
-    const { recurring_id, status } = options.data;
-    if (!recurring_id || status === undefined) {
-      return error('操作失败：参数不完整');
-    }
-    try {
-      return success(toggleRecurringTransaction(recurring_id, status));
-    } catch (err) {
-      return error(err.message);
-    }
-  },
-  '/recurring/process': () => {
-    try {
-      return success(processRecurringTransactions());
-    } catch (err) {
-      return error(err.message);
-    }
-  },
-  
-  // 预算相关接口
-  '/budget/get': () => {
-    return success(getBudget());
-  },
-  '/budget/update': (options) => {
-    const { budget } = options.data;
-    if (!budget || isNaN(Number(budget)) || Number(budget) <= 0) {
-      return error('更新失败：预算金额无效');
-    }
-    return success(updateBudget(budget));
   },
   
   // 文件上传相关接口

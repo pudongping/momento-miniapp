@@ -127,27 +127,6 @@ export function updateUserInfo(data) {
 }
 
 /**
- * 绑定手机号
- * @param {Object} data 包含手机号和验证码的数据
- * @returns {Object} 更新后的用户信息
- */
-export function bindPhone(data) {
-  // 模拟绑定手机号
-  // 实际项目中会发送请求到服务器验证验证码并绑定手机号
-  
-  // 获取随机一个现有用户作为基础
-  const user = { ...MOCK_USERS[Math.floor(Math.random() * MOCK_USERS.length)] };
-  
-  // 更新手机号
-  user.phone = data.phone;
-  
-  // 更新时间戳
-  user.updated_at = Math.floor(Date.now() / 1000);
-  
-  return user;
-}
-
-/**
  * 获取用户设置（包含背景图片和预算）
  * @returns {Object} 用户设置信息
  */
