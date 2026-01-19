@@ -518,13 +518,27 @@ export default {
 
     formatDate(dateStr) {
       if (!dateStr) return '';
-      const date = new Date(dateStr);
+      let ts = dateStr;
+      if (typeof ts === 'string' && /^\d+$/.test(ts)) {
+        ts = Number(ts);
+      }
+      if (typeof ts === 'number' && ts > 0 && ts < 1e12) {
+        ts = ts * 1000;
+      }
+      const date = new Date(ts);
       return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     },
 
     formatDateTime(dateStr) {
       if (!dateStr) return '';
-      const date = new Date(dateStr);
+      let ts = dateStr;
+      if (typeof ts === 'string' && /^\d+$/.test(ts)) {
+        ts = Number(ts);
+      }
+      if (typeof ts === 'number' && ts > 0 && ts < 1e12) {
+        ts = ts * 1000;
+      }
+      const date = new Date(ts);
       return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
     },
 
