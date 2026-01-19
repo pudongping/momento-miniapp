@@ -150,14 +150,25 @@ export default {
       
       try {
         uni.showLoading({ title: '更新中...' });
-        
-        // 直接使用微信返回的头像URL更新用户信息
+
+        const uploadResult = await uploadFileApi(avatarUrl, 'image', 'user_avatar');
+        const avatar = uploadResult?.absolute_url;
+        if (!avatar) {
+          throw new Error('上传失败：未获取到头像地址');
+        }
+
         await updateUserInfoApi({
-          avatar: avatarUrl
+          avatar
         });
-        
-        this.userInfo.avatar = avatarUrl;
-        
+
+        this.userInfo.avatar = avatar;
+
+        const localUserInfo = uni.getStorageSync('userInfo') || {};
+        uni.setStorageSync('userInfo', {
+          ...localUserInfo,
+          avatar
+        });
+
         uni.hideLoading();
         uni.showToast({
           title: '头像更新成功',
