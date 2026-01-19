@@ -45,7 +45,7 @@
           <view class="book-card-left">
             <view class="book-header">
               <text class="book-name">{{ book.name }}</text>
-              <view v-if="book.is_default" class="default-badge">默认</view>
+              <view v-if="book.is_default === 1" class="default-badge">默认</view>
             </view>
             <view class="book-info">
               <text class="info-item">{{ book.member_count }}人</text>
@@ -66,7 +66,7 @@
           <view class="book-card-left">
             <view class="book-header">
               <text class="book-name">{{ book.name }}</text>
-              <view v-if="book.is_default" class="default-badge">默认</view>
+              <view v-if="book.is_default === 1" class="default-badge">默认</view>
             </view>
             <view class="book-info">
               <text class="info-item">{{ book.member_count }}人</text>
@@ -82,9 +82,16 @@
 
       <!-- 空状态 -->
       <view v-if="createdBooks.length === 0 && joinedBooks.length === 0" class="empty-state">
-        <text class="empty-icon">📚</text>
+        <view class="empty-illustration">
+          <view class="empty-illustration-bg"></view>
+          <uni-icons type="folder-add-filled" size="44" color="#FF9A5A"></uni-icons>
+        </view>
         <text class="empty-title">还没有账本</text>
         <text class="empty-desc">创建或加入账本，开始记录账单</text>
+        <button class="empty-action" @click="showCreateModal">
+          <uni-icons type="plusempty" size="16" color="#FFFFFF"></uni-icons>
+          <text>创建第一个账本</text>
+        </button>
       </view>
     </view>
 
@@ -151,10 +158,10 @@
           <!-- 操作按钮 -->
           <view class="actions-section">
             <button
-              :class="['btn-action', 'btn-default', selectedBook.is_default ? 'active' : '']"
+              :class="['btn-action', 'btn-default', selectedBook.is_default === 1 ? 'active' : '']"
               @click="toggleDefault"
             >
-              {{ selectedBook.is_default ? '✓ 默认账本' : '设为默认' }}
+              {{ selectedBook.is_default === 1 ? '✓ 默认账本' : '设为默认' }}
             </button>          
             <button 
               v-if="!isBookCreator"
@@ -395,7 +402,7 @@ export default {
           icon: 'success'
         });
 
-        this.selectedBook.is_default = !this.selectedBook.is_default;
+        this.selectedBook.is_default = this.selectedBook.is_default === 1 ? 2 : 1;
         this.loadAccountBooks();
       } catch (error) {
         uni.hideLoading();
@@ -764,14 +771,34 @@ export default {
 }
 
 .empty-state {
+  margin: 60rpx 20rpx 0;
+  padding: 64rpx 36rpx;
+  background: $color-bg-primary;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-normal;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  padding: 80rpx 40rpx;
 }
 
-.empty-icon {
-  font-size: 80rpx;
-  display: block;
-  margin-bottom: 20rpx;
+.empty-illustration {
+  position: relative;
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 70rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24rpx;
+}
+
+.empty-illustration-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 70rpx;
+  background: linear-gradient(135deg, rgba(255, 154, 90, 0.18), rgba(255, 209, 102, 0.18));
+  border: 1px solid rgba(255, 154, 90, 0.22);
 }
 
 .empty-title {
@@ -786,6 +813,28 @@ export default {
   font-size: $font-size-small;
   color: $color-text-secondary;
   display: block;
+  margin-bottom: 28rpx;
+}
+
+.empty-action {
+  height: 84rpx;
+  border-radius: $border-radius-full;
+  padding: 0 28rpx;
+  background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  color: $color-text-inverse;
+  border: none;
+  font-size: $font-size-small;
+  font-weight: $font-weight-semibold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  box-shadow: 0 4rpx 12rpx rgba(255, 154, 90, 0.2);
+}
+
+.empty-action:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 6rpx rgba(255, 154, 90, 0.1);
 }
 
 /* 模态框 */
