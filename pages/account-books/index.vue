@@ -650,20 +650,22 @@ export default {
 
 .section-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 24rpx;
-  padding: 0 20rpx;
+  padding: 0;
 }
 
 .header-left {
   display: flex;
   align-items: center;
   gap: 8rpx;
+  flex: 1;
 }
 
 .btn-add {
   @extend .btn-small;
+  margin-left: auto;
 }
 
 .books-group {
@@ -681,7 +683,7 @@ export default {
   background: $color-bg-primary;
   border-radius: $border-radius-md;
   padding: $spacing-md;
-  margin: 0 20rpx $spacing-sm;
+  margin: 0 0 $spacing-sm;
   display: flex;
   justify-content: space-between;
   align-items: center;
