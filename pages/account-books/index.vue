@@ -129,14 +129,14 @@
           <!-- 成员列表 -->
           <view class="members-section">
             <text class="subsection-title">成员（{{ selectedBook.member_count }}人）</text>
-            <view v-for="member in bookMembers" :key="member.uid" class="member-item">
+            <view v-for="member in bookMembers" :key="member.user_id || member.uid" class="member-item">
               <image :src="member.avatar || '/static/images/default-avatar.png'" class="member-avatar"></image>
               <view class="member-info">
                 <text class="member-name">{{ member.nickname }}</text>
                 <text class="member-status">{{ getMemberStatusText(member.status) }}</text>
               </view>
               <view v-if="isBookCreator && member.status !== 'waiting'" class="member-action">
-                <text class="remove-btn" @click="removeMember(member.uid)">移除</text>
+                <text class="remove-btn" @click="removeMember(member.user_id || member.uid)">移除</text>
               </view>
             </view>
           </view>
@@ -480,7 +480,7 @@ export default {
       });
     },
 
-    removeMember(uid) {
+    removeMember(userId) {
       uni.showModal({
         title: '移除成员',
         content: '确定要移除该成员吗？',
@@ -493,7 +493,7 @@ export default {
             uni.showLoading({ title: '移除中...' });
             await removeAccountBookMemberApi({
               book_id: this.selectedBook.book_id,
-              target_uid: uid
+              user_id: String(userId)
             });
             uni.hideLoading();
 
@@ -507,7 +507,7 @@ export default {
           } catch (error) {
             uni.hideLoading();
             uni.showToast({
-              title: '移除失败，请重试',
+              title: error?.msg || error?.message || '移除失败，请重试',
               icon: 'none'
             });
             console.error('移除成员失败', error);
