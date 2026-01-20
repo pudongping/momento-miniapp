@@ -202,7 +202,7 @@ export default {
       } catch (error) {
         console.error('获取节日列表失败', error);
         uni.showToast({
-          title: '获取节日列表失败',
+          title: error?.msg || error?.data?.msg || '获取节日列表失败',
           icon: 'none'
         });
       }
@@ -382,7 +382,7 @@ export default {
       } catch (error) {
         console.error('切换节日可见性失败', error);
         uni.showToast({
-          title: '操作失败',
+          title: error?.msg || error?.data?.msg || error?.message || '操作失败',
           icon: 'none'
         });
       }
@@ -421,7 +421,7 @@ export default {
       } catch (error) {
         console.error('删除节日失败', error);
         uni.showToast({
-          title: '删除失败',
+          title: error?.msg || error?.data?.msg || error?.message || '删除失败',
           icon: 'none'
         });
       } finally {
@@ -486,7 +486,7 @@ export default {
       } catch (error) {
         console.error('保存节日失败', error);
         uni.showToast({
-          title: '操作失败',
+          title: error?.msg || error?.data?.msg || error?.message || '操作失败',
           icon: 'none'
         });
       } finally {

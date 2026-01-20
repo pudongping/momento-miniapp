@@ -66,7 +66,7 @@ export default {
       } catch (error) {
         console.error('获取预算设置失败', error);
         uni.showToast({
-          title: '获取预算设置失败',
+          title: error?.msg || error?.data?.msg || '获取预算设置失败',
           icon: 'none'
         });
       }
@@ -134,7 +134,7 @@ export default {
       } catch (error) {
         console.error('预算设置失败', error);
         uni.showToast({
-          title: '预算设置失败',
+          title: error?.msg || error?.data?.msg || '预算设置失败',
           icon: 'none'
         });
       } finally {

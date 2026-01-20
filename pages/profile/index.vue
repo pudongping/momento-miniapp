@@ -177,7 +177,7 @@ export default {
       } catch (error) {
         uni.hideLoading();
         uni.showToast({
-          title: '头像更新失败',
+          title: error?.msg || error?.data?.msg || error?.message || '头像更新失败',
           icon: 'none'
         });
         console.error('头像更新失败', error);
@@ -247,7 +247,7 @@ export default {
         });
       } catch (error) {
         uni.showToast({
-          title: '昵称更新失败',
+          title: error?.msg || error?.data?.msg || error?.message || '昵称更新失败',
           icon: 'none'
         });
         console.error('昵称更新失败', error);

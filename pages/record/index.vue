@@ -776,7 +776,7 @@ export default {
       } catch (error) {
         console.error('添加标签失败', error);
         uni.showToast({
-          title: '添加标签失败',
+          title: error?.msg || error?.data?.msg || error?.message || '添加标签失败',
           icon: 'none'
         });
       } finally {
@@ -832,7 +832,7 @@ export default {
       } catch (error) {
         console.error('删除标签失败', error);
         uni.showToast({
-          title: '删除失败',
+          title: error?.msg || error?.data?.msg || error?.message || '删除失败',
           icon: 'none'
         });
       } finally {
@@ -905,7 +905,7 @@ export default {
       } catch (error) {
         console.error('修改标签失败', error);
         uni.showToast({
-          title: '修改标签失败',
+          title: error?.msg || error?.data?.msg || error?.message || '修改标签失败',
           icon: 'none'
         });
       } finally {
@@ -1254,7 +1254,7 @@ export default {
         uni.hideLoading();
         console.error('保存交易失败', error);
         uni.showToast({
-          title: '保存失败，请重试',
+          title: error?.msg || error?.data?.msg || '保存失败，请重试',
           icon: 'none'
         });
       } finally {

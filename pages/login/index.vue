@@ -173,7 +173,7 @@ export default {
         this.loginStatus = 'fail';
         
         uni.showToast({
-          title: '登录失败，请重试',
+          title: error?.msg || error?.data?.msg || error?.message || '登录失败，请重试',
           icon: 'none'
         });
       } finally {

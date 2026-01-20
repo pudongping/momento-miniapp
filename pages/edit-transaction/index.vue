@@ -420,7 +420,7 @@ export default {
         uni.hideLoading();
         console.error('更新交易失败', error);
         uni.showToast({
-          title: '更新失败，请重试',
+          title: error?.msg || error?.data?.msg || '更新失败，请重试',
           icon: 'none'
         });
       }

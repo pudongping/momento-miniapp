@@ -284,7 +284,7 @@ export default {
       } catch (error) {
         uni.hideLoading();
         uni.showToast({
-          title: '创建失败，请重试',
+          title: error?.msg || error?.data?.msg || '创建失败，请重试',
           icon: 'none'
         });
         console.error('创建账本失败', error);
@@ -362,7 +362,7 @@ export default {
       } catch (error) {
         uni.hideLoading();
         uni.showToast({
-          title: '操作失败，请重试',
+          title: error?.msg || error?.data?.msg || '操作失败，请重试',
           icon: 'none'
         });
         console.error('接受邀请失败', error);
@@ -384,7 +384,7 @@ export default {
       } catch (error) {
         uni.hideLoading();
         uni.showToast({
-          title: '操作失败，请重试',
+          title: error?.msg || error?.data?.msg || '操作失败，请重试',
           icon: 'none'
         });
         console.error('拒绝邀请失败', error);
@@ -407,7 +407,7 @@ export default {
       } catch (error) {
         uni.hideLoading();
         uni.showToast({
-          title: '设置失败，请重试',
+          title: error?.msg || error?.data?.msg || '设置失败，请重试',
           icon: 'none'
         });
         console.error('设置默认账本失败', error);
@@ -438,7 +438,7 @@ export default {
           } catch (error) {
             uni.hideLoading();
             uni.showToast({
-              title: '退出失败，请重试',
+              title: error?.msg || error?.data?.msg || '退出失败，请重试',
               icon: 'none'
             });
             console.error('退出账本失败', error);
@@ -471,7 +471,7 @@ export default {
           } catch (error) {
             uni.hideLoading();
             uni.showToast({
-              title: '删除失败，请重试',
+              title: error?.msg || error?.data?.msg || '删除失败，请重试',
               icon: 'none'
             });
             console.error('删除账本失败', error);

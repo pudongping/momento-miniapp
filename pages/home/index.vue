@@ -793,7 +793,7 @@ export default {
       } catch (error) {
         console.error('初始化账本失败', error);
         uni.showToast({
-          title: '加载账本失败，请重试',
+          title: error?.msg || error?.data?.msg || '加载账本失败，请重试',
           icon: 'none'
         });
       }
@@ -864,7 +864,7 @@ export default {
                   uni.hideLoading();
                   console.error('上传背景图片失败', error);
                   uni.showToast({
-                    title: '上传失败，请重试',
+                    title: error?.msg || error?.data?.msg || '上传失败，请重试',
                     icon: 'none'
                   });
                 }
@@ -901,7 +901,7 @@ export default {
         uni.hideLoading();
         console.error('恢复默认背景失败', error);
         uni.showToast({
-          title: '操作失败，请重试',
+          title: error?.msg || error?.data?.msg || '操作失败，请重试',
           icon: 'none'
         });
       }
@@ -1024,7 +1024,7 @@ export default {
       } catch (error) {
         console.error('加载交易数据失败', error);
         uni.showToast({
-          title: '加载交易数据失败',
+          title: error?.msg || error?.data?.msg || error?.message || '加载交易数据失败',
           icon: 'none'
         });
       } finally {
@@ -1062,7 +1062,7 @@ export default {
       } catch (error) {
         console.error('加载更多交易数据失败', error);
         uni.showToast({
-          title: '加载更多数据失败',
+          title: error?.msg || error?.data?.msg || error?.message || '加载更多数据失败',
           icon: 'none'
         });
       } finally {
@@ -1109,7 +1109,7 @@ export default {
       } catch (error) {
         console.error('刷新交易数据失败', error);
         uni.showToast({
-          title: '刷新失败',
+          title: error?.msg || error?.data?.msg || error?.message || '刷新失败',
           icon: 'error'
         });
       } finally {
@@ -1222,7 +1222,7 @@ export default {
         } catch (error) {
           console.error('删除交易失败', error);
           uni.showToast({
-            title: '删除失败',
+            title: error?.msg || error?.data?.msg || error?.message || '删除失败',
             icon: 'error'
           });
         }
@@ -1244,7 +1244,7 @@ export default {
         } catch (error) {
           console.error('删除周期记账失败', error);
           uni.showToast({
-            title: '删除失败',
+            title: error?.msg || error?.data?.msg || error?.message || '删除失败',
             icon: 'none'
           });
         }
@@ -1839,7 +1839,7 @@ export default {
       } catch (error) {
         console.error('搜索交易失败', error);
         uni.showToast({
-          title: '搜索失败',
+          title: error?.msg || error?.data?.msg || error?.message || '搜索失败',
           icon: 'error'
         });
       } finally {
