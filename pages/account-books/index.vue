@@ -136,7 +136,11 @@
                 <text class="member-status">{{ getMemberStatusText(member.status) }}</text>
               </view>
               <view v-if="isBookCreator && member.status !== 'waiting'" class="member-action">
-                <text class="remove-btn" @click="removeMember(member.user_id || member.uid)">移除</text>
+                <text
+                  class="remove-btn"
+                  :class="{ disabled: String(member.user_id || member.uid) === currentUserId }"
+                  @click="String(member.user_id || member.uid) !== currentUserId && removeMember(member.user_id || member.uid)"
+                >移除</text>
               </view>
             </view>
           </view>
@@ -214,6 +218,14 @@ export default {
       inviteUid: '',
       isBookCreator: false
     };
+  },
+
+  computed: {
+    currentUserId() {
+      const userInfo = uni.getStorageSync('userInfo') || {};
+      const uid = userInfo.user_id || userInfo.uid;
+      return uid ? String(uid) : '';
+    }
   },
 
   onShow() {
@@ -481,6 +493,14 @@ export default {
     },
 
     removeMember(userId) {
+      if (String(userId) === this.currentUserId) {
+        uni.showToast({
+          title: '不能移除自己',
+          icon: 'none'
+        });
+        return;
+      }
+
       uni.showModal({
         title: '移除成员',
         content: '确定要移除该成员吗？',
@@ -1030,6 +1050,14 @@ export default {
   border-radius: 20rpx;
   box-shadow: 0 2rpx 6rpx rgba(255, 107, 107, 0.1);
 }
+
+ .remove-btn.disabled {
+  color: $color-text-tertiary;
+  background: $color-bg-tertiary;
+  box-shadow: none;
+  opacity: 0.8;
+  pointer-events: none;
+ }
 
 .invite-section {
   margin-bottom: $spacing-lg;
