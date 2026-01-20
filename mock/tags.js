@@ -109,7 +109,7 @@ let USER_TAGS = [
     name: '健身',
     color: '#E91E63', // 粉色
     icon: 'fitness',
-    is_system: false,
+    is_system: 2,
     type: 'expense'
   },
   {
@@ -117,7 +117,7 @@ let USER_TAGS = [
     name: '旅游',
     color: '#00BCD4', // 青色
     icon: 'plane',
-    is_system: false,
+    is_system: 2,
     type: 'expense'
   },
   {
@@ -125,7 +125,7 @@ let USER_TAGS = [
     name: '兼职',
     color: '#8BC34A', // 浅绿色
     icon: 'work',
-    is_system: false,
+    is_system: 2,
     type: 'income'
   }
 ];
@@ -148,7 +148,7 @@ export function addTag(tagData) {
     name: tagData.name,
     color: tagData.color,
     icon: tagData.icon || 'tag',
-    is_system: false,
+    is_system: 2,
     type: tagData.type || 'expense'
   };
   

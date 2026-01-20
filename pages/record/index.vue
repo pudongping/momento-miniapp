@@ -108,13 +108,13 @@
             v-for="tag in filteredTags" 
             :key="tag.tag_id"
             class="tag-item"
-            :class="{ active: selectedTagId === tag.tag_id, 'custom-tag-item': !tag.is_system }"
+            :class="{ active: selectedTagId === tag.tag_id, 'custom-tag-item': tag.is_system === 2 }"
             :style="{ backgroundColor: selectedTagId === tag.tag_id ? tag.color : '#F5F5F5' }"
             @click="selectTag(tag)"
-            @longpress="!tag.is_system && showTagActions(tag)"
+            @longpress="tag.is_system === 2 && showTagActions(tag)"
           >
             <!-- 自定义标签标识 -->
-            <view v-if="!tag.is_system" class="custom-tag-badge"></view>
+            <view v-if="tag.is_system === 2" class="custom-tag-badge"></view>
             
             <!-- FA图标或uni-icons -->
             <view v-if="tag.fa_icon" class="fa-icon" :style="{ color: selectedTagId === tag.tag_id ? '#FFFFFF' : tag.color }">
@@ -549,7 +549,7 @@ export default {
       tagIcons: [
         'home', 'shop', 'cart', 'calendar', 'camera', 'chat',
         'gift', 'wallet', 'heart', 'star', 'phone', 'paperclip',
-        'email', 'sound', 'videocam', 'fire', 'medal', 'navigate',
+        'map-pin', 'sound', 'videocam', 'fire', 'medal', 'navigate',
         'flag', 'chatboxes', 'chatbubble', 'circle', 'spinner-cycle', 
 		'color', 'email', 'eye', 'folder-add', 'headphones', 'mic',
         'medal', 'staff', 'gear', 'hand-up', 'paperplane', 'vip', 'more'
@@ -679,16 +679,18 @@ export default {
     },
     
     // 标签相关方法
-    async initTags() {
+    async initTags(keepSelection = false) {
       try {
         const tags = await getTagsApi();
         if (tags && Array.isArray(tags)) {
           this.tags = tags;
           
-          // 默认选择第一个标签
-          const defaultTags = tags.filter(tag => tag.type === this.transactionType);
-          if (defaultTags.length > 0) {
-            this.selectedTagId = defaultTags[0].tag_id;
+          if (!keepSelection) {
+            // 默认选择第一个标签
+            const defaultTags = tags.filter(tag => tag.type === this.transactionType);
+            if (defaultTags.length > 0) {
+              this.selectedTagId = defaultTags[0].tag_id;
+            }
           }
         }
       } catch (error) {
@@ -752,8 +754,17 @@ export default {
         });
         
         if (newTag) {
-          this.tags.push(newTag);
-          this.selectedTagId = newTag.tag_id;
+          // 重新获取标签列表以确保数据一致性，并保留当前状态以便稍后设置
+          await this.initTags(true);
+          
+          // 查找 tag_id 最大的标签并选中
+          if (this.tags.length > 0) {
+            const maxIdTag = this.tags.reduce((prev, current) => {
+              return (prev.tag_id > current.tag_id) ? prev : current;
+            });
+            this.selectedTagId = maxIdTag.tag_id;
+          }
+          
           this.resetCustomTagForm();
           this.closeCustomTagModal();
           
@@ -800,16 +811,14 @@ export default {
         this.isSavingTag = true;
         await deleteTagApi(this.tagToDelete.tag_id);
         
-        // 从本地列表中移除
-        const index = this.tags.findIndex(t => t.tag_id === this.tagToDelete.tag_id);
-        if (index !== -1) {
-          this.tags.splice(index, 1);
-        }
+        // 重新获取标签列表
+        await this.initTags(true);
         
-        // 如果删除的是当前选中的标签，重新选择第一个标签
-        if (this.selectedTagId === this.tagToDelete.tag_id) {
-          const defaultTags = this.tags.filter(tag => tag.type === this.transactionType);
-          this.selectedTagId = defaultTags.length > 0 ? defaultTags[0].tag_id : null;
+        // 检查当前选中的标签是否还在列表中（可能刚被删除）
+        const currentTagExists = this.tags.some(t => t.tag_id === this.selectedTagId);
+        if (!currentTagExists) {
+           const defaultTags = this.tags.filter(tag => tag.type === this.transactionType);
+           this.selectedTagId = defaultTags.length > 0 ? defaultTags[0].tag_id : null;
         }
         
         this.closeDeleteTagModal();
@@ -878,11 +887,8 @@ export default {
         });
         
         if (updatedTag) {
-          // 更新本地列表
-          const index = this.tags.findIndex(t => t.tag_id === this.editTagId);
-          if (index !== -1) {
-            this.tags[index] = updatedTag;
-          }
+          // 重新获取标签列表以确保数据一致性
+          await this.initTags(true);
           
           this.closeEditTagModal();
           
