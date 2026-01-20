@@ -518,7 +518,6 @@
 </template>
 
 <script>
-import { getAccountBooks, getCurrentBook, setCurrentBook, restoreAccountBookState } from '@/utils/account-book.js';
 import { checkLoginStatus } from '@/utils/auth.js';
 import { 
   getAccountBooksApi, 
@@ -758,32 +757,11 @@ export default {
           this.allBooks = books;
           this.createdBooks = books.filter(b => b.is_creator === 1);
           this.joinedBooks = books.filter(b => b.is_creator === 2);
-          
-          // 尝试从本地存储恢复
-          const savedBook = restoreAccountBookState();
-          
-          // 选择账本的优先级：
-          // 1. 如果有保存的账本且仍在列表中，使用它
-          // 2. 如果有标记为默认的账本，使用它
-          // 3. 否则使用列表中的第一个账本
-          
-          if (savedBook && books.some(b => b.book_id === savedBook.book_id)) {
-            this.currentBook = books.find(b => b.book_id === savedBook.book_id);
-          } else {
-            // 优先选择标记为默认的账本
-            const defaultBook = books.find(b => b.is_default === 1);
-            if (defaultBook) {
-              this.currentBook = defaultBook;
-            } else if (books.length > 0) {
-              // 如果没有默认账本，使用第一个账本
-              this.currentBook = books[0];
-            }
-          }
-          
-          // 将选中的账本保存到本地存储
+
+          // 选择默认账本：is_default === 1，否则取第一个
+          this.currentBook = books.find(b => b.is_default === 1) || books[0] || null;
+
           if (this.currentBook) {
-            setCurrentBook(this.currentBook);
-            
             // 加载交易数据
             this.loadTransactions();
             this.loadMonthStats();
@@ -1264,7 +1242,6 @@ export default {
 
     selectBook(book) {
       this.currentBook = book;
-      setCurrentBook(book);
       this.closeBookPicker();
       
       // 切换账本后重新加载数据

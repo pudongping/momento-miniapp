@@ -1,7 +1,6 @@
 /**
  * 账本管理工具函数
  */
-
 import { getAccountBooksApi } from '@/api/index.js';
 
 // 账本状态存储
@@ -21,7 +20,7 @@ export async function initAccountBooks() {
       accountBookState.books = books;
       
       // 获取默认账本
-      const defaultBook = books.find(b => b.is_default);
+      const defaultBook = books.find(b => b.is_default === 1) || books[0];
       accountBookState.defaultBook = defaultBook || books[0];
       accountBookState.currentBook = accountBookState.defaultBook;
       
@@ -30,6 +29,7 @@ export async function initAccountBooks() {
   } catch (error) {
     console.error('初始化账本失败', error);
   }
+
   return accountBookState;
 }
 
@@ -59,19 +59,6 @@ export function getCurrentBook() {
  */
 export function setCurrentBook(book) {
   accountBookState.currentBook = book;
-  // 保存到本地存储
-  uni.setStorageSync('current_book', book);
-}
-
-/**
- * 从本地存储恢复账本状态
- */
-export function restoreAccountBookState() {
-  const savedBook = uni.getStorageSync('current_book');
-  if (savedBook) {
-    accountBookState.currentBook = savedBook;
-  }
-  return accountBookState.currentBook;
 }
 
 /**

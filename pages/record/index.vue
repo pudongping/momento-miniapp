@@ -494,7 +494,6 @@
 </template>
 
 <script>
-import { getAccountBooks, getCurrentBook, setCurrentBook, restoreAccountBookState } from '@/utils/account-book.js';
 import { checkLoginStatus } from '@/utils/auth.js';
 import { 
   getAccountBooksApi, 
@@ -628,9 +627,6 @@ export default {
     // 账本相关方法
     async initBooks() {
       try {
-        // 尝试从本地存储恢复
-        const savedBook = restoreAccountBookState();
-        
         // 获取最新的账本列表
         const books = await getAccountBooksApi();
         if (books && Array.isArray(books)) {
@@ -659,16 +655,8 @@ export default {
             return;
           }
           
-          // 如果有保存的账本且仍在列表中，使用它；否则使用默认账本
-          if (savedBook && books.some(b => b.book_id === savedBook.book_id)) {
-            this.currentBook = savedBook;
-          } else {
-            const defaultBook = books.find(b => b.is_default === 1) || books[0];
-            this.currentBook = defaultBook;
-            if (defaultBook) {
-              setCurrentBook(defaultBook);
-            }
-          }
+          // 选择默认账本：is_default === 1，否则取第一个
+          this.currentBook = books.find(b => b.is_default === 1) || books[0] || null;
         }
       } catch (error) {
         console.error('初始化账本失败', error);
@@ -685,7 +673,6 @@ export default {
 
     selectBook(book) {
       this.currentBook = book;
-      setCurrentBook(book);
       this.closeBookPicker();
     },
     

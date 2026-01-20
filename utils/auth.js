@@ -19,7 +19,6 @@ export function checkToken() {
 export function clearAuth() {
   uni.removeStorageSync('token');
   uni.removeStorageSync('userInfo');
-  uni.removeStorageSync('current_book');
 }
 
 /**
