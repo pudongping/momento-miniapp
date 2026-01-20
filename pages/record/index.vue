@@ -305,6 +305,7 @@
       
       <!-- 保存按钮 -->
       <view class="save-section">
+        <button v-if="!isEdit" class="btn-clear" @click="clearInput">一键清空</button>
         <button class="btn-save" :loading="isSaving" :disabled="isSaving" @click="saveTransaction">保存</button>
       </view>
     </view>
@@ -516,6 +517,7 @@ export default {
       showBookPickerModal: false,
       
       // 交易类型
+      isEdit: false,
       transactionType: 'expense', // expense, income
       amount: '',
       remark: '',
@@ -1133,6 +1135,28 @@ export default {
       }
     },
     
+    // 一键清空
+    clearInput() {
+      // 清空金额
+      this.amount = '';
+      
+      // 清空备注
+      this.remark = '';
+      
+      // 重置标签为默认（当前类型的第一个）
+      const defaultTags = this.tags.filter(tag => tag.type === this.transactionType);
+      if (defaultTags.length > 0) {
+        this.selectedTagId = defaultTags[0].tag_id;
+      } else {
+        this.selectedTagId = null;
+      }
+      
+      uni.showToast({
+        title: '已清空',
+        icon: 'none'
+      });
+    },
+
     // 保存交易
     async saveTransaction() {
       if (this.isSaving) return;
@@ -1818,10 +1842,12 @@ export default {
 /* 保存按钮 */
 .save-section {
   padding: 20rpx 0;
+  display: flex;
+  gap: 20rpx;
 }
 
 .btn-save {
-  width: 100%;
+  flex: 1;
   height: 88rpx;
   background: linear-gradient(135deg, $color-primary, $color-primary-light);
   color: $color-text-inverse;
@@ -1831,6 +1857,27 @@ export default {
   box-shadow: 0 6rpx 16rpx rgba(255, 154, 90, 0.25);
   border: none;
   transition: all 0.3s ease;
+}
+
+.btn-clear {
+  flex: 1;
+  height: 88rpx;
+  background: $color-bg-tertiary;
+  color: $color-text-secondary;
+  border-radius: 44rpx;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-semibold;
+  box-shadow: $shadow-light;
+  border: none;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-clear:active {
+  transform: translateY(2rpx);
+  background: darken($color-bg-tertiary, 5%);
 }
 
 .btn-save:active {
