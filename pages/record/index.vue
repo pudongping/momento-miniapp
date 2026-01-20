@@ -513,10 +513,11 @@ export default {
       allBooks: [],
       createdBooks: [],
       joinedBooks: [],
+      hasShownNoBookModal: false,
       showBookPickerModal: false,
       
-      // 交易相关
-      transactionType: 'expense', // 默认支出
+      // 交易类型
+      transactionType: 'expense', // expense, income
       amount: '',
       remark: '',
       selectedDate: new Date(),
@@ -603,6 +604,9 @@ export default {
     if (!checkLoginStatus('/pages/record/index')) {
       return;
     }
+
+    // 每次进入页面都允许再次提示（但同一次 onShow 周期内只弹一次）
+    this.hasShownNoBookModal = false;
     
     // 每次显示页面时重新加载账本和标签
     this.initBooks();
@@ -616,8 +620,7 @@ export default {
     if (!checkLoginStatus('/pages/record/index')) {
       return;
     }
-    
-    this.initBooks();
+
     this.initDatePicker();
   },
 
@@ -634,6 +637,27 @@ export default {
           this.allBooks = books;
           this.createdBooks = books.filter(b => b.is_creator === 1);
           this.joinedBooks = books.filter(b => b.is_creator === 2);
+
+          if (books.length === 0) {
+            this.currentBook = null;
+            if (!this.hasShownNoBookModal) {
+              this.hasShownNoBookModal = true;
+              uni.showModal({
+                title: '提示',
+                content: '当前没有账本，无法记账。是否前往“账本管理”添加账本？',
+                confirmText: '确定',
+                cancelText: '取消',
+                success: (res) => {
+                  if (res.confirm) {
+                    uni.navigateTo({
+                      url: '/pages/account-books/index'
+                    });
+                  }
+                }
+              });
+            }
+            return;
+          }
           
           // 如果有保存的账本且仍在列表中，使用它；否则使用默认账本
           if (savedBook && books.some(b => b.book_id === savedBook.book_id)) {
