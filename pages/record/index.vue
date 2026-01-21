@@ -261,6 +261,42 @@
             <!-- 每月配置 -->
             <view v-if="recurringType === 'monthly'" class="config-container">
               <view class="config-description">
+                <text>每月{{ recurringDay }}日 {{ recurringTime }} 执行</text>
+              </view>
+              <view class="monthly-picker-container">
+                <view class="picker-labels">
+                  <text class="picker-label">日期</text>
+                  <text class="picker-label">小时</text>
+                  <text class="picker-label">分钟</text>
+                </view>
+                <picker-view 
+                  :indicator-style="'height: 50px; background-color: rgba(255, 154, 90, 0.1); border-top: 1px solid #FF9A5A; border-bottom: 1px solid #FF9A5A;'"
+                  :value="monthlyPickerValue"
+                  @change="onMonthlyPickerChange"
+                  class="monthly-picker-view"
+                >
+                  <picker-view-column>
+                    <view class="picker-item" v-for="day in 31" :key="day">
+                      <text>{{ day }}日</text>
+                    </view>
+                  </picker-view-column>
+                  <picker-view-column>
+                    <view class="picker-item" v-for="hour in hours" :key="hour">
+                      <text>{{ hour.toString().padStart(2, '0') }}</text>
+                    </view>
+                  </picker-view-column>
+                  <picker-view-column>
+                    <view class="picker-item" v-for="minute in minutes" :key="minute">
+                      <text>{{ minute.toString().padStart(2, '0') }}</text>
+                    </view>
+                  </picker-view-column>
+                </picker-view>
+              </view>
+            </view>
+
+            <!-- 每年配置 -->
+            <view v-if="recurringType === 'yearly'" class="config-container">
+              <view class="config-description">
                 <text>每年{{ recurringMonth }}月{{ recurringDay }}日 {{ recurringTime }} 执行</text>
               </view>
               <view class="monthly-picker-container">
@@ -272,8 +308,8 @@
                 </view>
                 <picker-view 
                   :indicator-style="'height: 50px; background-color: rgba(255, 154, 90, 0.1); border-top: 1px solid #FF9A5A; border-bottom: 1px solid #FF9A5A;'"
-                  :value="monthlyPickerValue"
-                  @change="onMonthlyPickerChange"
+                  :value="yearlyPickerValue"
+                  @change="onYearlyPickerChange"
                   class="monthly-picker-view"
                 >
                   <picker-view-column>
@@ -567,7 +603,7 @@ export default {
       
       // 周期记账
       isRecurring: false,
-      recurringType: 'daily', // daily, weekly, monthly
+      recurringType: 'daily', // daily, weekly, monthly, yearly
       recurringTime: '23:59',
       recurringWeekday: 0, // 0=周日, 1=周一, ..., 6=周六
       recurringMonth: 1, // 1-12月
@@ -577,13 +613,15 @@ export default {
       recurringTypes: [
         { value: 'daily', label: '每天' },
         { value: 'weekly', label: '每周' },
-        { value: 'monthly', label: '每月' }
+        { value: 'monthly', label: '每月' },
+        { value: 'yearly', label: '每年' }
       ],
       
       // 时间选择器数据
       timePickerValue: [23, 59], // [小时, 分钟]
       weeklyPickerValue: [0, 23, 59], // [星期, 小时, 分钟]
-      monthlyPickerValue: [0, 0, 23, 59], // [月份, 日期, 小时, 分钟]
+      monthlyPickerValue: [0, 23, 59], // [日期, 小时, 分钟]
+      yearlyPickerValue: [0, 0, 23, 59], // [月份, 日期, 小时, 分钟]
       
       // 选项数据
       hours: [],
@@ -1039,7 +1077,11 @@ export default {
       } else if (type === 'weekly') {
         this.weeklyPickerValue = [0, 23, 59];
       } else if (type === 'monthly') {
-        this.monthlyPickerValue = [0, 0, 23, 59];
+        this.monthlyPickerValue = [0, 23, 59];
+        this.recurringDay = 1;
+      } else if (type === 'yearly') {
+        this.yearlyPickerValue = [0, 0, 23, 59];
+        this.recurringMonth = 1;
         this.updateAvailableDays();
       }
       this.updateRecurringTime();
@@ -1064,6 +1106,14 @@ export default {
     onMonthlyPickerChange(e) {
       const values = e.detail.value;
       this.monthlyPickerValue = values;
+      this.recurringDay = values[0] + 1; // 1-31
+      this.updateRecurringTime();
+    },
+
+    // 每年选择器变化
+    onYearlyPickerChange(e) {
+      const values = e.detail.value;
+      this.yearlyPickerValue = values;
       this.recurringMonth = values[0] + 1; // 月份从1开始
       this.recurringDay = this.availableDays[values[1]];
       this.updateAvailableDays(); // 月份变化时更新可用日期
@@ -1081,8 +1131,11 @@ export default {
         hour = this.weeklyPickerValue[1];
         minute = this.weeklyPickerValue[2];
       } else if (this.recurringType === 'monthly') {
-        hour = this.monthlyPickerValue[2];
-        minute = this.monthlyPickerValue[3];
+        hour = this.monthlyPickerValue[1];
+        minute = this.monthlyPickerValue[2];
+      } else if (this.recurringType === 'yearly') {
+        hour = this.yearlyPickerValue[2];
+        minute = this.yearlyPickerValue[3];
       }
       
       this.recurringTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
@@ -1104,7 +1157,9 @@ export default {
       // 如果当前选择的日期超过了该月的最大天数，重置为1号
       if (this.recurringDay > daysInMonth) {
         this.recurringDay = 1;
-        this.monthlyPickerValue[1] = 0;
+        if (this.recurringType === 'yearly') {
+          this.yearlyPickerValue[1] = 0;
+        }
       }
     },
     
@@ -1241,6 +1296,8 @@ export default {
           if (this.recurringType === 'weekly') {
             recurringData.recurring_weekday = this.recurringWeekday; // 0-6 (0=周日)
           } else if (this.recurringType === 'monthly') {
+            recurringData.recurring_day = this.recurringDay; // 1-31
+          } else if (this.recurringType === 'yearly') {
             recurringData.recurring_month = this.recurringMonth; // 1-12
             recurringData.recurring_day = this.recurringDay; // 1-31
           }

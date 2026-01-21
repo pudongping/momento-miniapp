@@ -1955,11 +1955,9 @@ export default {
           const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
           return `每${weekdays[recurring_weekday]} ${timeStr}`;
         case 'monthly':
-          if (recurring_month) {
-            return `每年${recurring_month}月${recurring_day}日 ${timeStr}`;
-          } else {
-            return `每月${recurring_day}日 ${timeStr}`;
-          }
+          return `每月${recurring_day}日 ${timeStr}`;
+        case 'yearly':
+          return `每年${recurring_month}月${recurring_day}日 ${timeStr}`;
         default:
           return '未知计划';
       }
