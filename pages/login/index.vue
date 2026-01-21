@@ -468,15 +468,20 @@ export default {
 }
 
 .login-action {
-  margin-top: 0;
-  padding: 80rpx 0 0 0;
+  margin-top: auto;
+  padding: 40rpx 0 0 0;
   animation: slideUp 0.8s ease-out 0.4s both;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .wx-login-btn {
   @extend .btn-primary;
+  width: 100%;
   box-shadow: 0 12rpx 28rpx rgba(255, 154, 90, 0.35);
   letter-spacing: 0.5rpx;
+  margin-bottom: 20rpx;
 }
 
 .wx-login-btn:active {
@@ -511,11 +516,11 @@ export default {
   gap: 12rpx;
 }
 
-
 .features-list {
   display: flex;
   justify-content: space-around;
-  margin-top: 32rpx;
+  margin-top: 60rpx;
+  margin-bottom: 40rpx;
   padding: 30rpx 20rpx;
   background: rgba(255, 255, 255, 0.6);
   border-radius: 20rpx;

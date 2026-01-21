@@ -3,7 +3,7 @@
     <view class="privacy-header">
       <view class="header-top">
         <view class="back-btn-wrapper" @tap="goBack">
-          <uni-icons type="left" size="24" color="#FFFFFF"></uni-icons>
+          <uni-icons type="left" size="28" color="#FFFFFF"></uni-icons>
         </view>
         <text class="header-title">隐私政策</text>
         <view class="placeholder"></view>
@@ -12,9 +12,13 @@
 
     <scroll-view class="privacy-content" scroll-y="true">
       <view class="content-inner">
+        <view class="intro-section">
+          <text class="intro-text">时光账记（以下简称"我们"）非常重视您的隐私保护。本隐私政策旨在帮助您了解我们如何收集、使用、存储和保护您的个人信息。</text>
+        </view>
+
         <view v-for="section in privacyData.sections" :key="section.id" class="section">
           <text class="section-title">{{ section.title }}</text>
-          <view v-for="(paragraph, idx) in section.paragraphs" :key="idx">
+          <view v-for="(paragraph, idx) in section.paragraphs" :key="idx" class="paragraph-wrapper">
             <text v-if="!paragraph.items" class="section-text">{{ paragraph.text }}</text>
             <view v-else class="list-items">
               <text v-for="(item, itemIdx) in paragraph.items" :key="itemIdx" class="list-item">{{ item }}</text>
@@ -22,9 +26,9 @@
           </view>
         </view>
 
-
         <view class="section-footer">
-          <text class="footer-text">最后更新时间：{{ privacyData.updateTime }}</text>
+          <text class="footer-text">更新日期：{{ privacyData.updateTime }}</text>
+          <text class="copyright">Copyright © 2024 Momento. All Rights Reserved.</text>
         </view>
       </view>
     </scroll-view>
@@ -36,184 +40,113 @@ export default {
   data() {
     return {
       privacyData: {
-        updateTime: '2024年12月29日',
+        updateTime: '2026年01月22日',
         sections: [
           {
             id: 1,
-            title: '1. 信息收集',
+            title: '1. 我们收集的信息',
             paragraphs: [
               {
-                text: '本应用通过微信授权登录收集以下信息：'
+                text: '为了向您提供服务，我们会收集以下类型的信息：'
               },
               {
                 items: [
-                  '• 微信用户基本信息（昵称、头像）',
-                  '• 用户在本应用中输入的账单信息和交易记录',
+                  '• 账号信息：您通过微信授权登录时，我们会收集您的微信昵称、头像等公开信息，用于建立您的用户档案。',
+                  '• 账单数据：您主动输入的账单记录、分类、备注等信息。',
+                  '• 设备信息：我们会收集您的设备型号、操作系统版本等信息，用于优化应用适配和解决技术问题。'
                 ]
               }
             ]
           },
           {
             id: 2,
-            title: '2. 信息使用',
+            title: '2. 信息的用途',
             paragraphs: [
               {
-                text: '我们收集的信息仅用于以下目的：'
+                text: '我们收集的信息将用于以下目的：'
               },
               {
                 items: [
-                  '• 提供和改进本应用的服务',
-                  '• 个性化用户体验',
-                  '• 分析应用使用情况和性能',
-                  '• 解决技术问题和提供客户支持',
-                  '• 遵守法律和监管要求'
+                  '• 提供核心记账服务：存储和展示您的账单数据；',
+                  '• 统计分析：为您生成收支报表和消费趋势分析；',
+                  '• 产品优化：分析使用情况以改进产品功能和体验；',
+                  '• 安全保障：检测和防止欺诈、滥用等非法活动。'
                 ]
-              },
-              {
-                text: '我们不会将您的个人信息用于上述目的以外的任何目的，除非获得您的明确同意。'
               }
             ]
           },
           {
             id: 3,
-            title: '3. 信息存储和安全',
+            title: '3. 信息共享与披露',
             paragraphs: [
               {
-                text: '我们采取适当的技术和组织措施来保护您的个人信息，包括：'
+                text: '我们承诺不会向任何第三方出售您的个人信息。我们仅在以下情况共享您的信息：'
               },
               {
                 items: [
-                  '• 使用加密技术保护数据传输',
-                  '• 限制对个人信息的访问权限',
-                  '• 定期进行安全审计和评估',
-                  '• 制定和执行数据安全政策'
+                  '• 获得您的明确同意；',
+                  '• 法律法规规定或司法机关要求；',
+                  '• 为了保护我们的合法权益或用户的安全。'
                 ]
-              },
-              {
-                text: '尽管我们尽力保护您的信息，但没有任何系统是完全安全的。如果您发现任何安全问题，请立即联系我们。'
               }
             ]
           },
           {
             id: 4,
-            title: '4. 信息共享',
+            title: '4. 信息存储与安全',
             paragraphs: [
               {
-                text: '我们不会与第三方共享您的个人信息，除非：'
+                text: '4.1 存储地点：您的信息将存储在中国境内的服务器上。'
               },
               {
-                items: [
-                  '• 获得您的明确同意',
-                  '• 法律或监管要求',
-                  '• 保护我们的权利、隐私、安全或财产',
-                  '• 与服务提供商合作（这些提供商受保密协议约束）'
-                ]
+                text: '4.2 安全措施：我们采用业界标准的安全技术（如SSL加密传输）和管理制度来保护您的信息安全，防止未经授权的访问、使用或泄露。'
               }
             ]
           },
           {
             id: 5,
-            title: '5. Cookie和追踪技术',
+            title: '5. 您的权利',
             paragraphs: [
               {
-                text: '本应用可能使用Cookie和类似的追踪技术来增强用户体验。您可以通过浏览器设置来控制Cookie的使用。'
+                text: '根据相关法律法规，您拥有以下权利：'
               },
               {
-                text: '我们不会使用追踪技术来识别您的身份或跟踪您在其他网站上的活动。'
+                items: [
+                  '• 访问权：您可以在应用内随时查看您的账单数据；',
+                  '• 更正权：您可以随时修改您的账单记录；',
+                  '• 删除权：您可以联系我们申请注销账号并删除您的全部数据。'
+                ]
               }
             ]
           },
           {
             id: 6,
-            title: '6. 第三方链接',
+            title: '6. 未成年人保护',
             paragraphs: [
               {
-                text: '本应用可能包含指向第三方网站或服务的链接。我们对第三方的隐私政策和做法不负责。'
-              },
-              {
-                text: '在访问第三方网站前，请查看其隐私政策。'
+                text: '我们非常重视未成年人的隐私保护。若您是未成年人，建议您在监护人的指导下使用本应用。'
               }
             ]
           },
           {
             id: 7,
-            title: '7. 儿童隐私',
+            title: '7. 隐私政策更新',
             paragraphs: [
               {
-                text: '本应用不面向13岁以下的儿童。我们不会故意收集13岁以下儿童的个人信息。'
-              },
-              {
-                text: '如果我们发现收集了儿童的个人信息，我们将立即删除这些信息。'
+                text: '我们会根据业务发展和法律法规变化更新本隐私政策。更新后的政策将在应用内发布。您继续使用本应用即表示同意更新后的隐私政策。'
               }
             ]
           },
           {
             id: 8,
-            title: '8. 您的权利',
+            title: '8. 联系我们',
             paragraphs: [
               {
-                text: '根据适用的法律，您可能有权：'
+                text: '如您对本隐私政策有任何疑问或投诉，请通过以下方式联系我们：'
               },
               {
                 items: [
-                  '• 访问和获取您的个人信息副本',
-                  '• 更正或更新您的个人信息',
-                  '• 删除您的个人信息',
-                  '• 限制或反对我们对您信息的处理',
-                  '• 撤回同意'
-                ]
-              },
-              {
-                text: '如需行使这些权利，请联系我们。'
-              }
-            ]
-          },
-          {
-            id: 9,
-            title: '9. 数据保留',
-            paragraphs: [
-              {
-                text: '我们将保留您的个人信息，只要您使用本应用或根据法律要求。'
-              },
-              {
-                text: '当您删除账户时，我们将删除或匿名化您的个人信息，除非法律要求我们保留。'
-              }
-            ]
-          },
-          {
-            id: 10,
-            title: '10. 国际数据传输',
-            paragraphs: [
-              {
-                text: '您的个人信息可能被传输到、存储在或处理于中国境内的服务器上。'
-              },
-              {
-                text: '通过使用本应用，您同意您的信息可能被传输到中国。'
-              }
-            ]
-          },
-          {
-            id: 11,
-            title: '11. 政策变更',
-            paragraphs: [
-              {
-                text: '我们可能随时更新本隐私政策。更新后的政策将在本应用中发布，并标注更新日期。'
-              },
-              {
-                text: '继续使用本应用表示您接受更新后的隐私政策。'
-              }
-            ]
-          },
-          {
-            id: 12,
-            title: '12. 联系我们',
-            paragraphs: [
-              {
-                text: '如对本隐私政策有任何疑问或关于您的个人信息的请求，请通过以下方式联系我们：'
-              },
-              {
-                items: [
-                  '微信：1414818093',
+                  '微信号：1414818093'
                 ]
               }
             ]
@@ -238,44 +171,44 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: #FAFAFA;
+  background: #F5F7FA;
 }
 
 .privacy-header {
   background: linear-gradient(135deg, #FF9A5A 0%, #FFD166 100%);
-  padding: calc(60rpx + env(safe-area-inset-top)) 40rpx 20rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+  padding: calc(60rpx + env(safe-area-inset-top)) 40rpx 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 154, 90, 0.2);
+  position: relative;
+  z-index: 10;
 }
 
 .header-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 100rpx;
-  min-height: 100rpx;
+  height: 88rpx;
 }
 
 .back-btn-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
+  justify-content: flex-start;
+  width: 88rpx;
+  height: 88rpx;
   margin-left: -20rpx;
+  padding-left: 20rpx;
   
   &:active {
-    background: rgba(255, 255, 255, 0.3);
+    opacity: 0.7;
   }
 }
 
 .placeholder {
-  width: 80rpx;
+  width: 88rpx;
 }
 
 .header-title {
-  font-size: 34rpx;
+  font-size: 36rpx;
   color: #FFFFFF;
   font-weight: 600;
   letter-spacing: 2rpx;
@@ -284,60 +217,106 @@ export default {
 .privacy-content {
   flex: 1;
   overflow-y: auto;
+  padding: 0;
 }
 
 .content-inner {
   padding: 40rpx;
-  padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+  padding-bottom: calc(60rpx + env(safe-area-inset-bottom));
+}
+
+.intro-section {
+  margin-bottom: 50rpx;
+  padding: 30rpx;
+  background: rgba(255, 154, 90, 0.08);
+  border-radius: 16rpx;
+  border-left: 8rpx solid #FF9A5A;
+}
+
+.intro-text {
+  font-size: 28rpx;
+  color: #555;
+  line-height: 1.6;
+  text-align: justify;
 }
 
 .section {
-  margin-bottom: 40rpx;
+  margin-bottom: 50rpx;
 }
 
 .section-title {
   display: block;
   font-size: 32rpx;
   font-weight: 700;
-  color: #2C3E50;
+  color: #333;
+  margin-bottom: 24rpx;
+  position: relative;
+  padding-left: 24rpx;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8rpx;
+    height: 32rpx;
+    background: linear-gradient(to bottom, #FF9A5A, #FFD166);
+    border-radius: 4rpx;
+  }
+}
+
+.paragraph-wrapper {
   margin-bottom: 16rpx;
-  letter-spacing: 0.5rpx;
 }
 
 .section-text {
   display: block;
   font-size: 28rpx;
-  color: #666666;
+  color: #666;
   line-height: 1.8;
-  margin-bottom: 12rpx;
-  letter-spacing: 0.3rpx;
+  text-align: justify;
 }
 
 .list-items {
   display: flex;
   flex-direction: column;
-  margin-bottom: 12rpx;
+  margin-top: 10rpx;
+  padding-left: 10rpx;
+  background: #fff;
+  padding: 20rpx;
+  border-radius: 12rpx;
 }
 
 .list-item {
   display: block;
   font-size: 28rpx;
-  color: #666666;
+  color: #666;
   line-height: 1.8;
-  margin-bottom: 8rpx;
-  letter-spacing: 0.3rpx;
+  margin-bottom: 10rpx;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .section-footer {
   text-align: center;
-  padding-top: 40rpx;
-  border-top: 1rpx solid #E5E5E5;
-  margin-top: 60rpx;
+  padding-top: 60rpx;
+  border-top: 2rpx dashed #E0E0E0;
+  margin-top: 40rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
 }
 
 .footer-text {
   font-size: 24rpx;
-  color: #999999;
-  font-weight: 400;
+  color: #999;
+}
+
+.copyright {
+  font-size: 20rpx;
+  color: #CCC;
 }
 </style>
