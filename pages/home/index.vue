@@ -1768,7 +1768,7 @@ export default {
         const params = {
           book_id: this.currentBook.book_id,
           keyword: this.searchParams.keyword || '',  // 确保关键词为空字符串而不是undefined
-          limit: 50
+          per_page: 20
         };
         
         // 添加类型过滤
