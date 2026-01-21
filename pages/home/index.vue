@@ -906,7 +906,9 @@ export default {
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
       
       // 处理所有节日
-      const events = this.festivals.map(festival => {
+      const events = this.festivals
+        .filter(festival => festival.is_show_home === 1) // 仅处理需要显示的节日
+        .map(festival => {
         // 解析节日日期
         const festivalDate = new Date(festival.festival_date * 1000);
         

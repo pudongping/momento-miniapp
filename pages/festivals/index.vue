@@ -358,7 +358,7 @@ export default {
     
     // 可见性开关变化
     onVisibilityChange(e) {
-      this.festivalForm.is_show_home = e.detail.value ? 1 : 0;
+      this.festivalForm.is_show_home = e.detail.value ? 1 : 2;
     },
     
     // 切换节日可见性
@@ -366,13 +366,13 @@ export default {
       try {
         await toggleFestivalVisibilityApi({
           festival_id: festival.festival_id,
-          is_show_home: festival.is_show_home === 1 ? 0 : 1
+          is_show_home: festival.is_show_home === 1 ? 2 : 1
         });
         
         // 更新本地数据
         const index = this.festivals.findIndex(item => item.festival_id === festival.festival_id);
         if (index !== -1) {
-          this.festivals[index].is_show_home = festival.is_show_home === 1 ? 0 : 1;
+          this.festivals[index].is_show_home = festival.is_show_home === 1 ? 2 : 1;
         }
         
         uni.showToast({
