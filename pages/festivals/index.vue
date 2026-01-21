@@ -456,25 +456,13 @@ export default {
           // 编辑节日
           await updateFestivalApi(this.festivalForm);
           
-          // 更新本地数据
-          const index = this.festivals.findIndex(item => item.festival_id === this.festivalForm.festival_id);
-          if (index !== -1) {
-            this.festivals[index] = { ...this.festivalForm };
-          }
-          
           uni.showToast({
             title: '更新成功',
             icon: 'success'
           });
         } else {
           // 添加节日
-          const result = await addFestivalApi(this.festivalForm);
-          
-          // 添加到本地数据
-          this.festivals.push({
-            ...this.festivalForm,
-            festival_id: result.festival_id
-          });
+          await addFestivalApi(this.festivalForm);
           
           uni.showToast({
             title: '添加成功',
@@ -483,6 +471,9 @@ export default {
         }
         
         this.hideModal();
+        
+        // 重新获取列表以确保数据同步
+        await this.getFestivals();
       } catch (error) {
         console.error('保存节日失败', error);
         uni.showToast({
