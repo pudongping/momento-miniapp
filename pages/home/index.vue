@@ -1935,8 +1935,8 @@ export default {
           book_id: this.currentBook.book_id
         });
         
-        if (result && Array.isArray(result)) {
-          this.recurringTransactions = result;
+        if (result && result.list) {
+          this.recurringTransactions = result.list;
         }
       } catch (error) {
         console.error('加载周期记账数据失败', error);
