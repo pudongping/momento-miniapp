@@ -2,9 +2,11 @@
   <view class="agreement-container">
     <view class="agreement-header">
       <view class="header-top">
-        <text class="back-btn" @tap="goBack">← 返回</text>
+        <view class="back-btn-wrapper" @tap="goBack">
+          <uni-icons type="left" size="24" color="#FFFFFF"></uni-icons>
+        </view>
         <text class="header-title">用户协议</text>
-        <view style="width: 60rpx;"></view>
+        <view class="placeholder"></view>
       </view>
     </view>
 
@@ -152,8 +154,7 @@ export default {
               },
               {
                 items: [
-                  '邮箱：support@momento.com',
-                  '微信：时光账记官方客服'
+                  '微信：1414818093'
                 ]
               }
             ]
@@ -195,19 +196,30 @@ export default {
   min-height: 100rpx;
 }
 
-.back-btn {
-  font-size: 28rpx;
-  color: #FFFFFF;
-  font-weight: 600;
-  padding: 8rpx 12rpx;
+.back-btn-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  margin-left: -20rpx;
+  
+  &:active {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.placeholder {
+  width: 80rpx;
 }
 
 .header-title {
-  font-size: 36rpx;
+  font-size: 34rpx;
   color: #FFFFFF;
-  font-weight: 700;
-  letter-spacing: 1rpx;
-  margin-top: 20rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
 }
 
 .agreement-content {

@@ -39,6 +39,7 @@
         </button>
         
         <button 
+          v-if="showDemoMode"
           class="demo-mode-btn" 
           @tap="handleDemoMode"
         >
@@ -77,13 +78,15 @@
 
 <script>
 import { loginApi } from '@/api/index.js';
+import { useMock } from '@/api/request.js';
 
 export default {
   data() {
     return {
       isLoading: false,
       loginStatus: 'pending', // pending, success, fail
-      redirectUrl: '' // 登录成功后的重定向URL
+      redirectUrl: '', // 登录成功后的重定向URL
+      showDemoMode: useMock
     };
   },
   

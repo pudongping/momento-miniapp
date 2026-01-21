@@ -2,11 +2,11 @@ import { mockApis } from '../mock/index.js';
 
 // 生产环境
 const baseURL = 'https://api-momento.gqgogogo.cn'
-const useMock = false
+export const useMock = false
 
 // 本地环境
 // const baseURL = ''
-// const useMock = true
+// export const useMock = true
 
 let _config = {
 	baseURL: baseURL,
