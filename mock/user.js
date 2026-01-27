@@ -31,6 +31,13 @@ const MOCK_USERS = [
   }
 ];
 
+// 模拟用户设置存储
+let MOCK_USER_SETTINGS = {
+  background_url: null,
+  budget: 10000,
+  updated_at: Math.floor(Date.now() / 1000)
+};
+
 /**
  * 根据微信登录code获取用户信息
  * @param {String} code 微信登录返回的code
@@ -131,14 +138,8 @@ export function updateUserInfo(data) {
  * @returns {Object} 用户设置信息
  */
 export function getUserSettings() {
-  // 模拟获取用户设置
-  const hasCustomBackground = Math.random() > 0.7;
-  
-  return {
-    background_url: hasCustomBackground ? 'https://cdn.example.com/uploads/background/sample_bg.jpg' : null,
-    budget: 10000,
-    updated_at: Math.floor(Date.now() / 1000)
-  };
+  // 返回持久化的mock设置
+  return { ...MOCK_USER_SETTINGS };
 }
 
 /**
@@ -147,10 +148,20 @@ export function getUserSettings() {
  * @returns {Object} 更新结果
  */
 export function updateUserSettings(data) {
-  // 模拟更新用户设置
-  return {
-    background_url: data.background_url !== undefined ? data.background_url : null,
-    budget: data.budget !== undefined ? data.budget : 10000,
-    updated_at: Math.floor(Date.now() / 1000)
-  };
+  // 更新预算
+  if (data.budget !== undefined) {
+    MOCK_USER_SETTINGS.budget = data.budget;
+  }
+  
+  // 更新背景图
+  // 特别处理：如果传递了background_url（包括空字符串），则更新
+  if (data.background_url !== undefined) {
+    MOCK_USER_SETTINGS.background_url = data.background_url;
+  }
+  
+  // 更新时间戳
+  MOCK_USER_SETTINGS.updated_at = Math.floor(Date.now() / 1000);
+  
+  // 返回更新后的设置
+  return { ...MOCK_USER_SETTINGS };
 }

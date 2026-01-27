@@ -71,7 +71,8 @@
     </view>
 
     <!-- 背景墙 -->
-    <view class="background-wall" :style="backgroundStyle" @click="changeBackground">
+    <view class="background-wall" @click="changeBackground">
+      <image class="bg-image" :src="backgroundImageSrc" mode="aspectFill"></image>
       <!-- 倒计时区域 -->
       <view class="countdown-container">
         <swiper 
@@ -638,21 +639,9 @@ export default {
       return groups;
     },
     
-    // 背景样式
-    backgroundStyle() {
-      if (this.customBackground) {
-        return {
-          backgroundImage: `url(${this.customBackground})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        };
-      } else {
-        return {
-          backgroundImage: `url(${this.defaultBackground})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        };
-      }
+    // 背景图片路径
+    backgroundImageSrc() {
+      return this.customBackground || this.defaultBackground;
     },
     
     // 预算状态颜色
@@ -2173,9 +2162,6 @@ export default {
 .background-wall {
   height: 400rpx;
   width: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -2184,6 +2170,16 @@ export default {
   box-sizing: border-box;
   margin-bottom: $spacing-md;
   position: relative;
+  overflow: hidden;
+}
+
+.bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
 }
 
 .background-wall::after {

@@ -78,7 +78,7 @@
 
 <script>
 import { loginApi } from '@/api/index.js';
-import { useMock } from '@/api/request.js';
+import { useMock } from '@/config/index.js';
 
 export default {
   data() {
