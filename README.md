@@ -6,7 +6,9 @@
 
 > 微信扫描下方二维码，即可体验**时光账记**小程序。
 
-![时光账记小程序二维码](./static/screenshot/gh_qrcode.jpg)
+<p align="center">
+  <img src="./static/screenshot/gh_qrcode.jpg" alt="时光账记小程序二维码" width="350" style="border-radius: 10px;" />
+</p>
 
 ## ✨ 主要功能
 
@@ -29,11 +31,11 @@
 
 页面 | 展示
 --- | ---
-首页 | ![首页](./static/screenshot/homepage.png)
-登录页 | ![登录页](./static/screenshot/login.png)
-个人中心 | ![个人中心](./static/screenshot/profile.png)
-记账 | ![记账](./static/screenshot/transaction.png)
-周期性自动记账 | ![周期性自动记账](./static/screenshot/recurring.png)
+首页 | <img src="./static/screenshot/homepage.png" alt="首页" width="200" />
+登录页 | <img src="./static/screenshot/login.png" alt="登录页" width="200" />
+个人中心 | <img src="./static/screenshot/profile.png" alt="个人中心" width="200" />
+记账 | <img src="./static/screenshot/transaction.png" alt="记账" width="200" />
+周期性自动记账 | <img src="./static/screenshot/recurring.png" alt="周期性自动记账" width="200" />
 
 
 
