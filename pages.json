@@ -1,9 +1,9 @@
 {
 	"pages": [
 		{
-			"path": "pages/login/index",
+			"path": "pages/home/index",
 			"style": {
-				"navigationBarTitleText": "登录",
+				"navigationBarTitleText": "时光账记",
 				"navigationBarBackgroundColor": "#FAFAFA",
 				"navigationBarTextStyle": "black",
 				"backgroundColor": "#FAFAFA",
@@ -11,9 +11,9 @@
 			}
 		},
 		{
-			"path": "pages/home/index",
+			"path": "pages/login/index",
 			"style": {
-				"navigationBarTitleText": "时光账记",
+				"navigationBarTitleText": "登录",
 				"navigationBarBackgroundColor": "#FAFAFA",
 				"navigationBarTextStyle": "black",
 				"backgroundColor": "#FAFAFA",

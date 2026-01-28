@@ -7,7 +7,7 @@
     
     <!-- 节日列表 -->
     <view class="empty-tip" v-if="festivals.length === 0">
-      <image src="/static/images/empty.png" mode="aspectFit" class="empty-image"></image>
+      <uni-icons type="calendar-filled" size="100" color="#e0e0e0" class="empty-icon"></uni-icons>
       <text class="empty-text">暂无节日，点击下方按钮添加</text>
     </view>
     
@@ -541,9 +541,7 @@ export default {
   margin-top: 100rpx;
 }
 
-.empty-image {
-  width: 200rpx;
-  height: 200rpx;
+.empty-icon {
   margin-bottom: 20rpx;
 }
 

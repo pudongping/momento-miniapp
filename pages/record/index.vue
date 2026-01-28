@@ -1,5 +1,16 @@
 <template>
   <view class="page-container">
+    <!-- 未登录提示 -->
+    <view v-if="!hasLogin" class="login-guide">
+      <view class="login-guide-content">
+        <uni-icons type="wallet" size="64" color="#FF9A5A" class="login-icon"></uni-icons>
+        <text class="login-title">登录后开始记账</text>
+        <text class="login-desc">记录生活中的每一笔收支，让财务管理更简单</text>
+        <button class="login-btn" @click="goToLogin">立即登录</button>
+      </view>
+    </view>
+
+    <block v-else>
     <!-- 账本选择器 -->
     <view class="book-selector">
       <view class="book-selector-header">
@@ -527,6 +538,7 @@
         </view>
       </view>
     </view>
+  </block>
   </view>
 </template>
 
@@ -551,6 +563,7 @@ export default {
       joinedBooks: [],
       hasShownNoBookModal: false,
       showBookPickerModal: false,
+      hasLogin: false,
       
       // 交易类型
       isEdit: false,
@@ -638,9 +651,12 @@ export default {
     }
   },
 
-  async onShow() {
+  onShow() {
     // 检查登录状态
-    if (!checkLoginStatus('/pages/record/index')) {
+    const token = uni.getStorageSync('token');
+    this.hasLogin = !!token;
+    
+    if (!this.hasLogin) {
       return;
     }
 
@@ -649,21 +665,28 @@ export default {
     
     // 每次显示页面时重新加载账本和标签
     this.initBooks();
-    await this.initTags();
+    this.initTags(); // initTags is async but we don't need to await it here
     this.initDatePicker();
     this.initRecurringOptions();
   },
 
   onLoad() {
     // 检查登录状态
-    if (!checkLoginStatus('/pages/record/index')) {
-      return;
+    const token = uni.getStorageSync('token');
+    this.hasLogin = !!token;
+    
+    if (this.hasLogin) {
+      this.initDatePicker();
     }
-
-    this.initDatePicker();
   },
 
   methods: {
+    goToLogin() {
+      uni.navigateTo({
+        url: '/pages/login/index'
+      });
+    },
+
     // 账本相关方法
     async initBooks() {
       try {
@@ -2343,5 +2366,60 @@ export default {
   background: linear-gradient(135deg, #FF5252, #FF4444);
   transform: scale(0.98);
   box-shadow: 0 2rpx 8rpx rgba(255, 107, 107, 0.4);
+}
+
+/* 登录引导样式 */
+.login-guide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #FFFFFF;
+  padding: 0 40rpx;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+.login-guide-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -100rpx;
+}
+
+.login-icon {
+  margin-bottom: 40rpx;
+}
+
+.login-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 20rpx;
+}
+
+.login-desc {
+  font-size: 28rpx;
+  color: #999999;
+  text-align: center;
+  margin-bottom: 60rpx;
+  line-height: 1.5;
+}
+
+.login-btn {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  background: linear-gradient(135deg, #FF9A5A 0%, #FF7B5F 100%);
+  color: #FFFFFF;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  padding: 0 100rpx;
+  box-shadow: 0 10rpx 20rpx rgba(255, 154, 90, 0.3);
 }
 </style>

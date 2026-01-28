@@ -60,13 +60,28 @@
         </view>
         <uni-icons type="right" size="16" color="#CCCCCC"></uni-icons>
       </view>
+
+      <view class="menu-item" @click="handleDeleteAccount">
+        <view class="menu-icon">
+          <uni-icons type="trash" size="24" color="#FF5A5A"></uni-icons>
+        </view>
+        <view class="menu-content">
+          <text class="menu-title" style="color: #FF5A5A">注销账号</text>
+          <text class="menu-desc">永久删除账号及所有数据</text>
+        </view>
+        <uni-icons type="right" size="16" color="#CCCCCC"></uni-icons>
+      </view>
     </view>
 
-    <!-- 退出登录按钮 -->
+    <!-- 登录/退出按钮 -->
     <view class="logout-section">
-      <button class="logout-button" @click="logout">
+      <button v-if="hasLogin" class="logout-button" @click="logout">
         <uni-icons type="logout" size="20" color="#FFFFFF"></uni-icons>
         <text>退出登录</text>
+      </button>
+      <button v-else class="logout-button login-btn" @click="goToLogin">
+        <uni-icons type="person" size="20" color="#FFFFFF"></uni-icons>
+        <text>立即登录</text>
       </button>
     </view>
 
@@ -99,6 +114,7 @@
 <script>
 import { getUserInfoApi, updateUserInfoApi, uploadFileApi } from '@/api/index.js';
 import { checkLoginStatus, logout } from '@/utils/auth.js';
+import { whiteList } from '@/config/permission.js';
 
 export default {
   data() {
@@ -110,6 +126,7 @@ export default {
         avatar: '',
         phone: ''
       },
+      hasLogin: false,
       isUpdatingNickname: false,
       showNicknameModal: false,
       newNickname: '',
@@ -119,15 +136,68 @@ export default {
   },
   
   onShow() {
+    // 权限检查
+    const pages = getCurrentPages();
+    const currentPage = pages[pages.length - 1];
+    // 获取当前页面路径（带前导斜杠）
+    const currentPath = '/' + currentPage.route;
+    
     // 检查登录状态
-    if (!checkLoginStatus('/pages/profile/index')) {
+    const token = uni.getStorageSync('token');
+    this.hasLogin = !!token;
+    
+    // 如果未登录且当前页面不在白名单中，强制跳转登录
+    if (!this.hasLogin && !whiteList.includes(currentPath)) {
+      uni.redirectTo({
+        url: '/pages/login/index'
+      });
       return;
     }
     
-    this.getUserInfo();
+    if (this.hasLogin) {
+      this.getUserInfo();
+    } else {
+      // 重置用户信息
+      this.userInfo = {
+        uid: '',
+        user_id: '',
+        nickname: '',
+        avatar: '',
+        phone: ''
+      };
+    }
   },
   
   methods: {
+    goToLogin() {
+      uni.navigateTo({
+        url: '/pages/login/index'
+      });
+    },
+
+    handleAvatarClick() {
+      if (!this.hasLogin) {
+        this.goToLogin();
+      }
+    },
+
+    handleUserInfoClick() {
+      if (!this.hasLogin) {
+        this.goToLogin();
+      }
+    },
+
+    // 页面跳转
+    navigateTo(url) {
+      if (!this.hasLogin) {
+        this.goToLogin();
+        return;
+      }
+      uni.navigateTo({
+        url
+      });
+    },
+
     // 获取用户信息
     async getUserInfo() {
       try {
@@ -290,6 +360,49 @@ export default {
         success: async (res) => {
           if (res.confirm) {
             await logout();
+          }
+        }
+      });
+    },
+
+    // 注销账号
+    handleDeleteAccount() {
+      if (!this.hasLogin) {
+        this.goToLogin();
+        return;
+      }
+      
+      uni.showModal({
+        title: '危险操作',
+        content: '注销账号将永久删除您的所有数据且无法恢复，确定要继续吗？',
+        confirmColor: '#FF5A5A',
+        success: async (res) => {
+          if (res.confirm) {
+            // 再次确认
+            uni.showModal({
+              title: '最终确认',
+              content: '该操作不可撤销，请再次确认是否注销账号？',
+              confirmColor: '#FF5A5A',
+              success: async (innerRes) => {
+                if (innerRes.confirm) {
+                  uni.showLoading({ title: '注销中...' });
+                  try {
+                    await logout({ type: 'delete' });
+                    uni.hideLoading();
+                    uni.showToast({
+                      title: '账号已注销',
+                      icon: 'none'
+                    });
+                  } catch (error) {
+                    uni.hideLoading();
+                    uni.showToast({
+                      title: '注销失败，请重试',
+                      icon: 'none'
+                    });
+                  }
+                }
+              }
+            });
           }
         }
       });

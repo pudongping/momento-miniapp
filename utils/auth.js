@@ -49,10 +49,11 @@ export function checkLoginStatus(redirectUrl = '') {
 
 /**
  * 退出登录
+ * @param {Object} data 退出登录参数，如 { type: 'delete' } 表示注销账号
  */
-export async function logout() {
+export async function logout(data = {}) {
   try {
-    await logoutApi();
+    await logoutApi(data);
   } catch (error) {
     console.error('退出登录接口调用失败', error);
   } finally {

@@ -668,36 +668,34 @@ export default {
 
   onShow() {
     // 检查登录状态
-    if (!checkLoginStatus('/pages/home/index')) {
-      return;
+    const token = uni.getStorageSync('token');
+    if (token) {
+      this.initBooks();
+      this.loadCustomBackground();
+      this.getBudget();
+      this.loadEvents();
     }
-    
-    this.initBooks();
-    this.loadCustomBackground();
-    this.getBudget();
-    this.loadEvents();
   },
 
   onLoad() {
-    // 检查登录状态
-    if (!checkLoginStatus('/pages/home/index')) {
-      return;
-    }
-    
     // 获取系统信息，计算导航栏高度
     this.initNavBarHeight();
     
     // 初始化自定义日历选择器
     this.initCustomDateTimePicker();
     
-    // 加载自定义背景
-    this.loadCustomBackground();
-    
-    // 加载节日和纪念日
-    this.loadEvents();
-    
-    // 检查是否需要显示账本切换提示
-    this.checkSwitcherTooltip();
+    // 检查登录状态
+    const token = uni.getStorageSync('token');
+    if (token) {
+      // 加载自定义背景
+      this.loadCustomBackground();
+      
+      // 加载节日和纪念日
+      this.loadEvents();
+      
+      // 检查是否需要显示账本切换提示
+      this.checkSwitcherTooltip();
+    }
   },
   
   methods: {
@@ -791,6 +789,23 @@ export default {
     },
     
     changeBackground() {
+      // 检查登录状态
+      const token = uni.getStorageSync('token');
+      if (!token) {
+        uni.showModal({
+          title: '提示',
+          content: '登录后即可自定义背景，是否前往登录？',
+          success: (res) => {
+            if (res.confirm) {
+              uni.navigateTo({
+                url: '/pages/login/index'
+              });
+            }
+          }
+        });
+        return;
+      }
+
       uni.showActionSheet({
         itemList: ['从相册选择', '恢复默认背景'],
         success: (res) => {

@@ -1,5 +1,7 @@
 <script>
 	import { generateSnowflakeId } from './utils/snowflake.js';
+	import { whiteList } from './config/permission.js';
+
 	export default {
 		onLaunch: function() {
 			console.log('App Launch');
@@ -17,7 +19,8 @@
 		
 		onShow: function() {
 			console.log('App Show');
-			this.ensureAuthedOnShow();
+			// 移除强制登录检查，允许用户浏览
+			// this.ensureAuthedOnShow();
 		},
 		
 		onHide: function() {
@@ -27,42 +30,25 @@
 		// 方法
 		methods: {
 			ensureAuthedOnShow() {
-				const token = uni.getStorageSync('token');
-				if (token) return;
-
-				try {
-					const pages = getCurrentPages();
-					const current = pages?.[pages.length - 1];
-					const route = current?.route || '';
-					const fullPath = route ? `/${route}` : '';
-					if (fullPath === '/pages/login/index') return;
-
-					uni.reLaunch({
-						url: `/pages/login/index${fullPath ? `?redirect=${encodeURIComponent(fullPath)}` : ''}`
-					});
-				} catch (e) {
-					uni.reLaunch({
-						url: '/pages/login/index'
-					});
-				}
+				// 已移除强制跳转逻辑
 			},
 
 			// 初始化路由拦截
 			initRouteGuard() {
 				// 添加页面拦截器
-				const whiteList = ['/pages/login/index']; // 不需要登录即可访问的页面
+				// 白名单配置已移至 config/permission.js
 				
 				// 监听路由跳转
 				uni.addInterceptor('navigateTo', {
 					invokeStart: (args) => {
 						const token = uni.getStorageSync('token');
-						const url = args.url;
+						const url = args.url.split('?')[0]; // 忽略参数
 						
 						// 检查是否需要登录
 						if (!token && !whiteList.some(white => url.startsWith(white))) {
 							// 未登录，跳转到登录页
 							uni.navigateTo({
-								url: `/pages/login/index?redirect=${encodeURIComponent(url)}`
+								url: `/pages/login/index?redirect=${encodeURIComponent(args.url)}`
 							});
 							return false;
 						}
@@ -76,9 +62,8 @@
 						const token = uni.getStorageSync('token');
 						const url = args.url;
 						
-						// 检查是否需要登录
+						// TabBar页面通常都在白名单中，但为了保险起见还是检查一下
 						if (!token && !whiteList.some(white => url.startsWith(white))) {
-							// 未登录，跳转到登录页
 							uni.navigateTo({
 								url: `/pages/login/index?redirect=${encodeURIComponent(url)}`
 							});
@@ -92,13 +77,11 @@
 				uni.addInterceptor('reLaunch', {
 					invokeStart: (args) => {
 						const token = uni.getStorageSync('token');
-						const url = args.url;
+						const url = args.url.split('?')[0];
 						
-						// 检查是否需要登录
 						if (!token && !whiteList.some(white => url.startsWith(white))) {
-							// 未登录，跳转到登录页
 							uni.navigateTo({
-								url: `/pages/login/index?redirect=${encodeURIComponent(url)}`
+								url: `/pages/login/index?redirect=${encodeURIComponent(args.url)}`
 							});
 							return false;
 						}

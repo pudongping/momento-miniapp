@@ -5,7 +5,7 @@ import { get, post, put, del, upload } from './request.js'
 // 用户相关接口
 export const getUserInfoApi = () => get('/user/info');
 export const loginApi = (code) => post('/user/login', { code });
-export const logoutApi = () => post('/user/logout');
+export const logoutApi = (data) => post('/user/logout', data);
 export const updateUserInfoApi = (data) => put('/user/update', data);
 
 // 用户设置相关接口（包含预算和背景图片）
