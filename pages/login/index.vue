@@ -63,12 +63,16 @@
           </view>
         </view>
         
-        <view class="privacy-container">
+        <view class="privacy-container" @tap="togglePrivacy">
+          <view class="checkbox-area">
+            <uni-icons v-if="isPrivacyChecked" type="checkbox-filled" size="18" color="#FF9A5A"></uni-icons>
+            <uni-icons v-else type="circle" size="18" color="#CCCCCC"></uni-icons>
+          </view>
           <text class="privacy-tip">
-            登录即表示同意
-            <text class="privacy-link" @tap="goToUserAgreement">《用户协议》</text>
+            我已阅读并同意
+            <text class="privacy-link" @tap.stop="goToUserAgreement">《用户协议》</text>
             和
-            <text class="privacy-link" @tap="goToPrivacyPolicy">《隐私政策》</text>
+            <text class="privacy-link" @tap.stop="goToPrivacyPolicy">《隐私政策》</text>
           </text>
         </view>
       </view>
@@ -86,7 +90,8 @@ export default {
       isLoading: false,
       loginStatus: 'pending', // pending, success, fail
       redirectUrl: '', // 登录成功后的重定向URL
-      showDemoMode: useMock
+      showDemoMode: useMock,
+      isPrivacyChecked: false
     };
   },
   
@@ -101,6 +106,11 @@ export default {
   },
   
   methods: {
+    // 切换隐私政策勾选状态
+    togglePrivacy() {
+      this.isPrivacyChecked = !this.isPrivacyChecked;
+    },
+
     // 检查登录状态
     checkLoginStatus() {
       const token = uni.getStorageSync('token');
@@ -113,6 +123,15 @@ export default {
     
     // 处理微信登录
     async handleWxLogin() {
+      // 检查隐私政策勾选状态
+      if (!this.isPrivacyChecked) {
+        uni.showToast({
+          title: '请先阅读并同意隐私政策',
+          icon: 'none'
+        });
+        return;
+      }
+
       // 直接登录，不在登录时获取用户信息
       // 用户可以在登录后在个人中心页面主动更新头像和昵称
       await this.handleLogin();
@@ -217,6 +236,15 @@ export default {
     
     // 体验模式
     handleDemoMode() {
+      // 检查隐私政策勾选状态
+      if (!this.isPrivacyChecked) {
+        uni.showToast({
+          title: '请先阅读并同意隐私政策',
+          icon: 'none'
+        });
+        return;
+      }
+
       // TODO: 实现体验模式逻辑
       // 1. 设置 localStorage 标记为 demo 模式
       // 2. 加载 mock 数据
@@ -556,15 +584,25 @@ export default {
 .privacy-container {
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   margin-top: 20rpx;
+  padding: 0 10rpx;
+}
+
+.checkbox-area {
+  margin-right: 12rpx;
+  display: flex;
+  align-items: center;
+  height: 34rpx;
 }
 
 .privacy-tip {
-  font-size: 22rpx;
-  color: #BDC3C7;
-  text-align: center;
-  line-height: 1.5;
+  font-size: 24rpx;
+  color: #909399;
+  text-align: left;
+  line-height: 1.4;
   font-weight: 400;
+  flex: 1;
 }
 
 .privacy-link {
