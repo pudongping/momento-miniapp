@@ -31,15 +31,13 @@
 
 ## 部分功能展示
 
-页面 | 展示
---- | ---
-首页 | <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/homepage.png" alt="首页" width="200" />
-登录页 | <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/login.png" alt="登录页" width="200" />
-个人中心 | <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/profile.png" alt="个人中心" width="200" />
-记账 | <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/transaction.png" alt="记账" width="200" />
-周期性自动记账 | <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/recurring.png" alt="周期性自动记账" width="200" />
-
-
+<div align="center">
+  <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/homepage.png" alt="首页" width="200" style="display:inline-block;margin:10px" />
+  <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/login.png" alt="登录页" width="200" style="display:inline-block;margin:10px"/>
+  <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/profile.png" alt="个人中心" width="200" style="display:inline-block;margin:10px"/>
+  <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/transaction.png" alt="记账页面" width="200" style="display:inline-block;margin:10px"/>
+  <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/recurring.png" alt="周期记账页面" width="200" style="display:inline-block;margin:10px"/>
+</div>
 
 ## 🛠 技术栈
 
