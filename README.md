@@ -4,10 +4,12 @@
 
 ## 体验
 
-> 微信扫描下方二维码，即可体验**时光账记**小程序。
+可以直接使用微信扫描下方小程序二维码进行体验：
+
+> 微信小程序需要完成**微信认证后，账号才可获得“被搜索”和“被分享”能力**，我没有进行**微信认证**，因此，暂时**无法通过小程序名称搜索此小程序**，只能通过扫描小程序码进行体验。
 
 <p align="center">
-  <img src="./static/screenshot/gh_qrcode.jpg" alt="时光账记小程序二维码" width="350" style="border-radius: 10px;" />
+  <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/gh_qrcode.jpg" alt="时光账记小程序二维码" width="350" style="border-radius: 10px;" />
 </p>
 
 ## ✨ 主要功能
@@ -31,11 +33,11 @@
 
 页面 | 展示
 --- | ---
-首页 | <img src="./static/screenshot/homepage.png" alt="首页" width="200" />
-登录页 | <img src="./static/screenshot/login.png" alt="登录页" width="200" />
-个人中心 | <img src="./static/screenshot/profile.png" alt="个人中心" width="200" />
-记账 | <img src="./static/screenshot/transaction.png" alt="记账" width="200" />
-周期性自动记账 | <img src="./static/screenshot/recurring.png" alt="周期性自动记账" width="200" />
+首页 | <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/homepage.png" alt="首页" width="200" />
+登录页 | <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/login.png" alt="登录页" width="200" />
+个人中心 | <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/profile.png" alt="个人中心" width="200" />
+记账 | <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/transaction.png" alt="记账" width="200" />
+周期性自动记账 | <img src="https://github.com/pudongping/momento-api/blob/master/public/screenshot/recurring.png" alt="周期性自动记账" width="200" />
 
 
 
@@ -76,28 +78,33 @@ momento-miniapp/
 
 ## 🚀 快速开始
 
-1.  **环境准备**：
-    - 安装 [HBuilderX](https://www.dcloud.io/hbuilderx.html) 编辑器。
-    - 安装 [微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)。
+1. 环境准备：
 
-2.  **克隆代码到本地**：
-    ```bash
-    # GitHub
-    git clone https://github.com/pudongping/momento-miniapp.git
-    # gitee
-    git clone https://gitee.com/pudongping/momento-miniapp.git
-    ```
+- 安装 [HBuilderX](https://www.dcloud.io/hbuilderx.html) 编辑器。
+- 安装 [微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)。
 
-3.  **导入项目**：
-    - 打开 HBuilderX，选择“文件” -> “导入” -> “从本地目录导入”，选择项目根目录。
+2. 克隆代码到本地：
 
-4.  **配置项目**：
-    - 打开 `manifest.json` 文件，配置小程序 AppID（修改 `mp-weixin` 下的 `appid`）。
-    - 修改 `config/index.js` 文件中的 `baseURL` 为你的后端 API 地址。
+```bash
+# GitHub
+git clone https://github.com/pudongping/momento-miniapp.git
+# gitee
+git clone https://gitee.com/pudongping/momento-miniapp.git
+```
 
-5.  **运行项目**：
-    - 在 HBuilderX 中点击菜单栏的“运行” -> “运行到小程序模拟器” -> “微信开发者工具”。
-    - 等待编译完成，微信开发者工具将自动启动并加载项目。
+3. 导入项目：
+
+- 打开 HBuilderX，选择“文件” -> “导入” -> “从本地目录导入”，选择项目根目录。
+
+4. 配置项目：
+
+- 打开 `manifest.json` 文件，配置小程序 AppID（修改 `mp-weixin` 下的 `appid`）。
+- 修改 `config/index.js` 文件中的 `baseURL` 为你的后端 API 地址。
+
+5. 运行项目：
+
+- 在 HBuilderX 中点击菜单栏的“运行” -> “运行到小程序模拟器” -> “微信开发者工具”。
+- 等待编译完成，微信开发者工具将自动启动并加载项目。
 
 ## 📝 开发说明
 
