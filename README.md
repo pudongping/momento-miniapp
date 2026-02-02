@@ -2,6 +2,11 @@
 
 **时光账记**是一款基于 `Uni-app` + `Vue 3` 开发的个人记账微信小程序。它不仅支持基础的收支记录，还提供了多账本管理、周期性自动记账、预算控制以及节日倒计时等贴心功能，帮助用户更好地管理个人及家庭财务。
 
+## 源码
+
+- 前端小程序端源码：[Momento MiniApp](https://github.com/pudongping/momento-miniapp) 或者 [Momento MiniApp (Gitee)](https://gitee.com/pudongping/momento-miniapp)
+- 后端 API 接口源码：[Momento API](https://github.com/pudongping/momento-api) 或者 [Momento API (Gitee)](https://gitee.com/pudongping/momento-api)
+
 ## 体验
 
 可以直接使用微信扫描下方小程序二维码进行体验：
